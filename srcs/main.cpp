@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Window.hpp"
+#include "Engine.hpp"
 
 
 int main()
@@ -21,13 +22,15 @@ int main()
         return -1;
     }
 
-    if (!window.Init())
+    if (window.Init())
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
         glfwTerminate();
         return -1;
     }
-    
+
+    Engine particle;
+    particle.loadShader();
     window.RenderLoop();
 
     glfwTerminate();

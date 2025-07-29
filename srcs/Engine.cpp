@@ -1,6 +1,9 @@
 #include "Engine.hpp"
 
 #include <fstream>
+#include <sstream>
+#include <iostream>
+#include <string>
 
 Engine::Engine()
 {
@@ -30,8 +33,12 @@ void Engine::Init()
 
 int Engine::loadShader()
 {
-    std::string shader;
+    std::ifstream shaderFile(vertexPath);
+    std::stringstream shaderStream;
+    shaderStream << shaderFile.rdbuf();
 
-    std::ifstream shaderFile("")
+    vertexShader = shaderStream.str();
+    std::cout << vertexShader << "\n";
+    return 0;
 }
 

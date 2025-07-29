@@ -6,7 +6,7 @@ CPPFLAGS := -Wall -Wextra -Werror -MMD --std=c++20
 OBJDIR := objs
 SRCDIR := srcs
 
-SRCS := main.cpp glad.cpp Window.cpp
+SRCS := main.cpp glad.cpp Window.cpp Engine.cpp
 
 OBJS := $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
 DEPS := $(patsubst %.cpp,$(OBJDIR)/%.d,$(SRCS))
