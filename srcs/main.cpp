@@ -30,8 +30,7 @@ int main()
     }
 
     Engine particle;
-    particle.loadShader();
-    window.RenderLoop();
+    window.RenderLoop(particle);
 
     glfwTerminate();
     return 0;

@@ -43,18 +43,34 @@ int Window::Init()
     return 0;
 }
 
-void Window::ProcessInput()
+void Window::ProcessInput(Engine &engine)
 {
     if(glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(_window, true);
+    if(glfwGetKey(_window, GLFW_KEY_Q) == GLFW_PRESS)
+        engine.camera.direction.y += 0.1;
+    if(glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS)
+        engine.camera.direction.y -= 0.1;
+    if(glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS)
+        engine.camera.position.z -= 1;
+    if(glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS)
+        engine.camera.position.x -= 1;
+    if(glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS)
+        engine.camera.position.z += 1;
+    if(glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
+        engine.camera.position.x += 1;
 }
 
-void Window::RenderLoop()
+void Window::RenderLoop(Engine &engine)
 {
     while(!glfwWindowShouldClose(_window))
     {
-        this->ProcessInput();
+        this->ProcessInput(engine);
+        glClear(GL_COLOR_BUFFER_BIT);
+        engine.useShader(baseHeight, baseWidth);
+        glBindVertexArray(engine.VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
         glfwSwapBuffers(_window);
-        glfwPollEvents();    
+        glfwPollEvents();
     }
 }

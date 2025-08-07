@@ -3,6 +3,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Engine.hpp"
+
 class Window
 {
     private:
@@ -18,7 +20,7 @@ class Window
 
         bool WasCreated();
         int Init();
-        void ProcessInput();
-        void RenderLoop();
+        void ProcessInput(Engine &engine);
+        void RenderLoop(Engine &engine);
 
 };
