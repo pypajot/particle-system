@@ -33,10 +33,26 @@ Engine::~Engine()
 {
 }
 
-void Engine::useShader(float height, float width)
+Engine Engine::operator=(Engine &other)
+{
+    VBO[0] = other.VBO[0];
+    VAO = other.VAO;
+    shader = other.shader;
+    camera = other.camera;
+    return *this;
+}
+
+void Engine::useShader(/*float frameTime, float cursorX, float cursorY, float width, float height*/)
 {
     int camLoc = glGetUniformLocation(shader.program, "camera");
+    glUniformMatrix4fv(camLoc, 1, GL_FALSE, glm::value_ptr(camera.proj));
+    // shader.setFloatUniform("frameTimeX", sin(frameTime));
+    // shader.setFloatUniform("frameTimeY", sin(frameTime + 2 * M_PI / 3));
+    // shader.setFloatUniform("frameTimeZ", sin(frameTime - 2 * M_PI / 3));
+    // shader.setFloatUniform("cursorX", cursorX);
+    // shader.setFloatUniform("cursorY", cursorY);
+    // shader.setFloatUniform("height", height);
+    // shader.setFloatUniform("width", width);
     shader.use();
-    glm::mat4 camMatrix = camera.coordToScreenMatrix(height, width);
-    glUniformMatrix4fv(camLoc, 1, GL_FALSE, glm::value_ptr(camMatrix));
+
 }

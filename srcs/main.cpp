@@ -11,8 +11,7 @@ int main()
 {
     
     glfwInit();
-    
-    
+
     Window window;
     
     if (!window.WasCreated())
@@ -30,7 +29,8 @@ int main()
     }
 
     Engine particle;
-    window.RenderLoop(particle);
+    window.bindEngine(&particle);
+    window.RenderLoop();
 
     glfwTerminate();
     return 0;

@@ -12,6 +12,7 @@ class Camera
         const float fov = glm::radians(60.0f);
         const float near = 0.1f;
         const float far = 100.0f;
+        glm::mat4 proj;
 
         Camera();
         Camera(glm::vec3 postiion);
@@ -20,5 +21,6 @@ class Camera
 
         Camera operator=(Camera &other);
 
-        glm::mat4 coordToScreenMatrix(float height, float width);
+        void computeProjectionMatrix(float height, float width);
+        glm::mat4 coordToScreenMatrix();
 };

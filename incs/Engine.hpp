@@ -22,5 +22,7 @@ class Engine
         Engine(Engine &other);
         ~Engine();
 
-        void useShader(float height, float width);
+        Engine operator=(Engine &other);
+
+        void useShader(/*float frameTime, float cursorX, float cursorY, float currentWidth, float currentHeight*/);
 };

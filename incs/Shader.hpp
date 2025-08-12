@@ -13,6 +13,8 @@ class Shader
         Shader operator=(Shader &other);
         
         void use();
+
+        void setFloatUniform(const char *name, float value);
 };
 
 std::string loadShader(std::string shaderPath);

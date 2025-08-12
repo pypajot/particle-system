@@ -1,7 +1,7 @@
 NAME := particle
 CC := c++
 GLFLAGS := -lGL -lGLU -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi
-CPPFLAGS := -Wall -Wextra -Werror -MMD --std=c++20
+CPPFLAGS := -Wall -Wextra -Werror -g -MMD --std=c++20
 
 OBJDIR := objs
 SRCDIR := srcs

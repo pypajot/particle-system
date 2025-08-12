@@ -89,6 +89,15 @@ int compileShader(std::string shaderSourceString, int shaderType)
     return shader;
 }
 
+void Shader::setFloatUniform(const char *name, float value)
+{
+    int loc = glGetUniformLocation(program, name);
+    if (loc == -1)
+        std::cout << "Error setting uniform: " << name << "\n";
+    glUniform1f(loc, value);
+}
+
+
 void Shader::use()
 {
     glUseProgram(program);

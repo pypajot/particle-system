@@ -13,14 +13,21 @@ class Window
     public:
         const int baseHeight = 600;
         const int baseWidth = 800;
+        int currentHeight;
+        int currentWidth;
+        double cursorX;
+        double cursorY;
+        Engine *engine;
+
 
         Window();
         Window(Window &other);
         ~Window();
 
         bool WasCreated();
+        void bindEngine(Engine *engine);
         int Init();
-        void ProcessInput(Engine &engine);
-        void RenderLoop(Engine &engine);
+        void ProcessInput();
+        void RenderLoop();
 
 };
