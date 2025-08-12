@@ -57,6 +57,7 @@ int Window::Init()
     currentWidth = baseWidth;
     currentHeight = baseHeight;
     glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
+    glEnable(GL_DEPTH_TEST);
     return 0;
 }
 
@@ -103,10 +104,10 @@ void Window::RenderLoop()
             fps = 0;
         }
         this->ProcessInput();
-        glClear(GL_COLOR_BUFFER_BIT);
-        engine->useShader(/*currentFrame, cursorX, cursorY, currentWidth, currentHeight*/);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        engine->useShader(currentFrame, cursorX, cursorY, currentWidth, currentHeight);
         glBindVertexArray(engine->VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        engine->draw();
         glfwSwapBuffers(_window);
         glfwPollEvents();
     }

@@ -7,9 +7,19 @@
 #include "Engine.hpp"
 
 
-int main()
+int parseArgs(int ac, char **av)
 {
-    
+    if (ac != 2)
+        return 0;
+    return atoi(av[1]);
+}
+
+int main(int ac, char **av)
+{
+    int particleQty = parseArgs(ac, av);
+    if (particleQty == 0)
+        return 1;
+
     glfwInit();
 
     Window window;
@@ -28,7 +38,7 @@ int main()
         return -1;
     }
 
-    Engine particle;
+    Engine particle(particleQty);
     window.bindEngine(&particle);
     window.RenderLoop();
 
