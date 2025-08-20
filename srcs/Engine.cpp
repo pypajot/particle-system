@@ -75,7 +75,7 @@ Engine Engine::operator=(Engine &other)
     return *this;
 }
 
-void Engine::useShader(float frameTime, float cursorX, float cursorY, float width, float height)
+void Engine::useShader(float frameTime, float cursorX, float cursorY, float height)
 {
     glm::mat4 toScreen = camera.coordToScreenMatrix();
     int camLoc = glGetUniformLocation(shader.program, "camera");
@@ -86,7 +86,6 @@ void Engine::useShader(float frameTime, float cursorX, float cursorY, float widt
     shader.setFloatUniform("cursorX", cursorX);
     shader.setFloatUniform("cursorY", cursorY);
     shader.setFloatUniform("height", height);
-    shader.setFloatUniform("width", width);
     shader.use();
 
 }

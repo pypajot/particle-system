@@ -11,8 +11,8 @@ class Window
         GLFWwindow *_window;
 
     public:
-        const int baseHeight = 600;
-        const int baseWidth = 800;
+        const int baseHeight = 768;
+        const int baseWidth = 1024;
         int currentHeight;
         int currentWidth;
         double cursorX;

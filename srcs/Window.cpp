@@ -105,7 +105,7 @@ void Window::RenderLoop()
         }
         this->ProcessInput();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        engine->useShader(currentFrame, cursorX, cursorY, currentWidth, currentHeight);
+        engine->useShader(currentFrame, cursorX, cursorY, currentHeight);
         glBindVertexArray(engine->VAO);
         engine->draw();
         glfwSwapBuffers(_window);

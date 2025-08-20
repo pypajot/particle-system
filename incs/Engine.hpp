@@ -25,6 +25,6 @@ class Engine
 
         Engine operator=(Engine &other);
 
-        void useShader(float frameTime, float cursorX, float cursorY, float currentWidth, float currentHeight);
+        void useShader(float frameTime, float cursorX, float cursorY, float currentHeight);
         void draw();
 };
