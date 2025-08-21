@@ -85,6 +85,12 @@ void Window::ProcessInput()
 
     if (glfwGetKey(_window, GLFW_KEY_ENTER) == GLFW_RELEASE)
         engine->simulationOn = !engine->simulationOn;
+
+    if (glfwGetKey(_window, GLFW_KEY_P) == GLFW_PRESS)
+        engine->initSphere();
+    
+    if (glfwGetKey(_window, GLFW_KEY_O) == GLFW_PRESS)
+        engine->initCube();
 }
 
 void Window::RenderLoop()

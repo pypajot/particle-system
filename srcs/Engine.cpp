@@ -78,7 +78,6 @@ void Engine::initSphere()
     float *buffer = reinterpret_cast<float *>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
     float angleY;
     float angleXZ;
-    std::cout << particleQty << "\n";
     for (int i = 0; i < particleQty; i++)
     {
         angleY = disY(gen);
@@ -106,7 +105,6 @@ Engine::Engine(int particleQuantity)
     glBindBuffer(GL_ARRAY_BUFFER, VBO);  
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
-    std::cout << particleQty << "\n";
     glBufferData(GL_ARRAY_BUFFER, particleQuantity * 6 * sizeof(float), 0, GL_STREAM_DRAW);
 
     initSphere();
