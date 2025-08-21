@@ -10,11 +10,17 @@
 class Engine
 {
     public:
-        unsigned int VAO;
-        GLuint VBO;
         std::string vertexPath = "shaders/vertexShader.vs";
         std::string fragmentPath = "shaders/fragmentShader.fs";
+
+        unsigned int VAO;
+        GLuint VBO;
+
         int particleQty;
+
+        bool simulationOn;
+        bool gravityOn;
+        glm::vec3 gravityPos;
 
         Shader shader;
         Camera camera;
@@ -27,4 +33,6 @@ class Engine
 
         void useShader(float frameTime, float cursorX, float cursorY, float currentHeight);
         void draw();
+        void initSphere();
+        void initCube();
 };

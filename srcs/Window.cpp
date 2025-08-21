@@ -67,21 +67,24 @@ void Window::ProcessInput()
         glfwSetWindowShouldClose(_window, true);
 
     if (glfwGetKey(_window, GLFW_KEY_Q) == GLFW_PRESS)
-        engine->camera.direction.y += 0.1f;
+        engine->camera.rotateLeft();
     if (glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS)
-        engine->camera.direction.y -= 0.1f;
+        engine->camera.rotateRight();
     if (glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS)
-        engine->camera.position.z -= 0.1f;
-    if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS)
-        engine->camera.position.x -= 0.1f;
+        engine->camera.moveFront();
     if (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS)
-        engine->camera.position.z += 0.1f;
+        engine->camera.moveBack();
+    if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS)
+        engine->camera.moveLeft();
     if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
-        engine->camera.position.x += 0.1f;
+        engine->camera.moveRight();
     if (glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS)
-        engine->camera.position.y += 0.1f;
+        engine->camera.moveUp();
     if (glfwGetKey(_window, GLFW_KEY_X) == GLFW_PRESS)
-        engine->camera.position.y -= 0.1f;
+        engine->camera.moveBack();
+
+    if (glfwGetKey(_window, GLFW_KEY_ENTER) == GLFW_RELEASE)
+        engine->simulationOn = !engine->simulationOn;
 }
 
 void Window::RenderLoop()

@@ -14,6 +14,9 @@ class Camera
         const float far = 100.0f;
         glm::mat4 proj;
 
+        const float rotateSpeed = 0.01f;
+        const float moveSpeed = 0.01f;
+
         Camera();
         Camera(glm::vec3 postiion);
         Camera(Camera &other);
@@ -23,4 +26,13 @@ class Camera
 
         void computeProjectionMatrix(float height, float width);
         glm::mat4 coordToScreenMatrix();
+
+        void moveFront();
+        void moveBack();
+        void moveLeft();
+        void moveRight();
+        void moveUp();
+        void moveDown();
+        void rotateLeft();
+        void rotateRight();
 };
