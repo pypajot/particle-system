@@ -1,15 +1,8 @@
-#include <glm/gtc/type_ptr.hpp>
-#include <iostream>
 #include <random>
 
-#include "Engine.hpp"
+#include "EngineStatic.hpp"
 
-// Engine::Engine()
-// {
-    
-// }
-
-void Engine::initCube()
+void EngineStatic::initCube()
 {
     float size = 0.7f;
     std::random_device rd;
@@ -68,7 +61,7 @@ void Engine::initCube()
     simulationOn = false;
 }
 
-void Engine::initSphere()
+void EngineStatic::initSphere()
 {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -90,22 +83,23 @@ void Engine::initSphere()
         buffer[i * 6 + 5] = speedDis(gen);
     }
     glUnmapBuffer(GL_ARRAY_BUFFER);
+}
+
+void EngineStatic::reset()
+{
+    initSphere();
+    camera.resetPosition();
     simulationOn = false;
 }
 
-Engine::Engine(int particleQuantity)
+EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity)
 {
-    Shader s(vertexPath.c_str(), fragmentPath.c_str());
-    shader = s;
-    gravityOn = false;
-    gravityPos = glm::vec3(0.0f, 0.0f, 0.0f);
-    particleQty = particleQuantity;
-
+    initType = "static";
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);  
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
-    glBufferData(GL_ARRAY_BUFFER, particleQuantity * 6 * sizeof(float), 0, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, particleQty * 6 * sizeof(float), 0, GL_STREAM_DRAW);
 
     initSphere();
     
@@ -113,54 +107,8 @@ Engine::Engine(int particleQuantity)
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    
 }
 
-Engine::Engine(Engine &other)
+void EngineStatic::run()
 {
-    VBO = other.VBO;
-    VAO = other.VAO;
-    shader = other.shader;
-    camera = other.camera;
-    particleQty = other.particleQty;
-    simulationOn = other.simulationOn;
-    gravityOn = other.gravityOn;
-    gravityPos = other.gravityPos;
-}
-
-Engine::~Engine()
-{
-}
-
-Engine Engine::operator=(Engine &other)
-{
-    VBO = other.VBO;
-    VAO = other.VAO;
-    shader = other.shader;
-    camera = other.camera;
-    particleQty = other.particleQty;
-    simulationOn = other.simulationOn;
-    gravityOn = other.gravityOn;
-    gravityPos = other.gravityPos;
-    return *this;
-}
-
-void Engine::useShader(float frameTime, float cursorX, float cursorY, float height)
-{
-    glm::mat4 toScreen = camera.coordToScreenMatrix();
-    int camLoc = glGetUniformLocation(shader.program, "camera");
-    glUniformMatrix4fv(camLoc, 1, GL_FALSE, glm::value_ptr(toScreen));
-    shader.setFloatUniform("frameTimeX", (1 + sin(frameTime)) / 2);
-    shader.setFloatUniform("frameTimeY", (1 + sin(frameTime + 2 * M_PI / 3)) / 2);
-    shader.setFloatUniform("frameTimeZ", (1 + sin(frameTime - 2 * M_PI / 3)) / 2);
-    shader.setFloatUniform("cursorX", cursorX);
-    shader.setFloatUniform("cursorY", cursorY);
-    shader.setFloatUniform("height", height);
-    shader.use();
-
-}
-
-void Engine::draw()
-{
-    glDrawArrays(GL_POINTS, 0, particleQty);
 }

@@ -27,12 +27,12 @@ class Camera
         void computeProjectionMatrix(float height, float width);
         glm::mat4 coordToScreenMatrix();
 
-        void moveFront();
-        void moveBack();
-        void moveLeft();
-        void moveRight();
-        void moveUp();
-        void moveDown();
-        void rotateLeft();
-        void rotateRight();
+        int moveFrontBack;
+        int moveLeftRight;
+        int moveUpDown;
+        int rotateLeftRight;
+
+        void move();
+        void resetPosition();
+
 };

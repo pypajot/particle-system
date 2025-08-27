@@ -6,7 +6,7 @@ CPPFLAGS := -Wall -Wextra -Werror -g -MMD --std=c++20
 OBJDIR := objs
 SRCDIR := srcs
 
-SRCS := main.cpp glad.cpp Window.cpp Engine.cpp Shader.cpp Camera.cpp
+SRCS := main.cpp glad.cpp Window.cpp AEngine.cpp EngineStatic.cpp EngineGen.cpp Shader.cpp Camera.cpp
 
 OBJS := $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
 DEPS := $(patsubst %.cpp,$(OBJDIR)/%.d,$(SRCS))
@@ -34,9 +34,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CC) $(CPPFLAGS) -o $@ -c $< -I$(INCS)
 
 clean:
-	rm -f $(OBJS)
-	rm -f $(DEPS)
-	rm -fd $(OBJDIR)
+	rm -rfd $(OBJDIR)
 
 fclean: clean
 	rm -f $(NAME)

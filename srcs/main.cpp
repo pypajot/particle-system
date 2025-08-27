@@ -4,19 +4,36 @@
 #include <iostream>
 
 #include "Window.hpp"
-#include "Engine.hpp"
+#include "AEngine.hpp"
+#include "EngineStatic.hpp"
+#include "EngineGen.hpp"
 
 
-int parseArgs(int ac, char **av)
+int getParticleQty(int ac, char **av)
 {
-    if (ac != 2)
+    if (ac == 1 || ac > 3)
         return 0;
+
     return atoi(av[1]);
+}
+
+bool getGeneratorOption(int ac, char **av)
+{
+    if (ac == 2)
+        return false;
+
+    std::string option(av[2]);
+    if (option == "-g")
+        return true;
+
+    return false;
 }
 
 int main(int ac, char **av)
 {
-    int particleQty = parseArgs(ac, av);
+    int particleQty = getParticleQty(ac, av);
+    bool hasGenerator = getGeneratorOption(ac, av);
+
     if (particleQty == 0)
         return 1;
 
@@ -37,11 +54,16 @@ int main(int ac, char **av)
         glfwTerminate();
         return -1;
     }
+    AEngine *particle;
+    if (hasGenerator)
+        particle = new EngineGen(particleQty);
+    else
+        particle = new EngineStatic(particleQty);
 
-    Engine particle(particleQty);
-    window.bindEngine(&particle);
+    window.bindEngine(particle);
     window.RenderLoop();
-
+    particle->deleteArrays();
+    delete(particle);
     glfwTerminate();
     return 0;
 }

@@ -7,12 +7,22 @@ Camera::Camera()
 {
     position = glm::vec3(0, 0, 2);
     direction = glm::vec3(0, 0, 1);
+
+    moveFrontBack = 0;
+    moveLeftRight = 0;
+    moveUpDown = 0;
+    rotateLeftRight = 0;
 }
 
 Camera::Camera(glm::vec3 pos)
 {
     position = pos;
     direction = glm::vec3(0, 0, 1);
+
+    moveFrontBack = 0;
+    moveLeftRight = 0;
+    moveUpDown = 0;
+    rotateLeftRight = 0;
 }
 
 Camera::Camera(Camera &other)
@@ -20,6 +30,11 @@ Camera::Camera(Camera &other)
     position = other.position;
     direction = other.direction;
     proj = other.proj;
+
+    moveFrontBack = other.moveFrontBack;
+    moveLeftRight = other.moveLeftRight;
+    moveUpDown = other.moveUpDown;
+    rotateLeftRight = other.rotateLeftRight;
 }
 
 Camera::~Camera()
@@ -31,6 +46,12 @@ Camera Camera::operator=(Camera &other)
     position = other.position;
     direction = other.direction;
     proj = other.proj;
+
+    moveFrontBack = other.moveFrontBack;
+    moveLeftRight = other.moveLeftRight;
+    moveUpDown = other.moveUpDown;
+    rotateLeftRight = other.rotateLeftRight;
+
     return *this;
 }
 
@@ -49,46 +70,21 @@ glm::mat4 Camera::coordToScreenMatrix()
     return proj * toCamera;
 }
 
-void Camera::moveFront()
+void Camera::move()
 {
-    position.x += -sin(direction.y) * moveSpeed;
-    position.z += -cos(direction.y) * moveSpeed;
+    direction.y += rotateSpeed * rotateLeftRight;
+
+    glm::vec4 movement(-moveLeftRight, moveUpDown, -moveFrontBack, 1.0f);
+    glm::mat4 rotate(1.0f);
+
+    movement /= movement.length();
+    rotate = glm::rotate(rotate, direction.y, glm::vec3(0.0f, 1.0f, 0.0f));
+    movement = movement * rotate;
+    position += movement * moveSpeed;
 }
 
-void Camera::moveBack()
+void Camera::resetPosition()
 {
-    position.x -= -sin(direction.y) * moveSpeed;
-    position.z -= -cos(direction.y) * moveSpeed;
-}
-
-void Camera::moveLeft()
-{
-    position.x += -cos(direction.y) * moveSpeed;
-    position.z += sin(direction.y) * moveSpeed;
-}
-
-void Camera::moveRight()
-{
-    position.x -= -cos(direction.y) * moveSpeed;
-    position.z -= sin(direction.y) * moveSpeed;
-}
-
-void Camera::moveUp()
-{
-    position.y += moveSpeed;
-}
-
-void Camera::moveDown()
-{
-    position.y -= moveSpeed;
-}
-
-void Camera::rotateLeft()
-{
-    direction.y += rotateSpeed;
-}
-
-void Camera::rotateRight()
-{
-    direction.y -= rotateSpeed;
+    position = glm::vec3(0, 0, 2);
+    direction = glm::vec3(0, 0, 1);
 }

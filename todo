@@ -1,6 +1,4 @@
-keuCallback
 cuda
-particle generator
-gravity mouse
+particle generator : low particle, kb commands and shader
 readme + setup
-comments
+comments / private / const

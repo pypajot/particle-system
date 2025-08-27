@@ -7,7 +7,7 @@
 #include "Shader.hpp"
 #include "Camera.hpp"
 
-class Engine
+class AEngine
 {
     public:
         std::string vertexPath = "shaders/vertexShader.vs";
@@ -25,14 +25,21 @@ class Engine
         Shader shader;
         Camera camera;
 
-        Engine(int particleQty);
-        Engine(Engine &other);
-        ~Engine();
+        std::string initType;
 
-        Engine operator=(Engine &other);
+        AEngine(int particleQty);
+        AEngine(AEngine &other);
+        virtual ~AEngine();
+
+        AEngine &operator=(AEngine &other);
+
+        void deleteArrays();
 
         void useShader(float frameTime, float cursorX, float cursorY, float currentHeight);
+        void setGravity(float cursorX, float cursorY);
         void draw();
-        void initSphere();
-        void initCube();
+
+        virtual void reset() = 0;
+
+        virtual void run() = 0;
 };

@@ -15,6 +15,7 @@ class Shader
         void use();
 
         void setFloatUniform(const char *name, float value);
+        void Shader::setFlIntUniform(const char *name, int value);
 };
 
 std::string loadShader(std::string shaderPath);

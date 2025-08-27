@@ -24,7 +24,7 @@ Window::~Window()
 {
 }
 
-void Window::bindEngine(Engine *newEngine)
+void Window::bindEngine(AEngine *newEngine)
 {
     glfwGetFramebufferSize(_window, &currentWidth, &currentHeight);
     engine = newEngine;
@@ -46,6 +46,69 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
     winInstance->engine->camera.computeProjectionMatrix(height, width);
 }  
 
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    (void)scancode;
+    (void)mods;
+
+    Window *winInstance = reinterpret_cast<Window *>(glfwGetWindowUserPointer(window));
+    AEngine *engine = winInstance->engine;
+    
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    else if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+        engine->camera.rotateLeftRight += 1;
+    else if (key == GLFW_KEY_Q && action == GLFW_RELEASE)
+        engine->camera.rotateLeftRight -= 1;
+    else if (key == GLFW_KEY_E && action == GLFW_PRESS)
+        engine->camera.rotateLeftRight -= 1;
+    else if (key == GLFW_KEY_E && action == GLFW_RELEASE)
+        engine->camera.rotateLeftRight += 1;
+
+    else if (key == GLFW_KEY_W && action == GLFW_PRESS)
+        engine->camera.moveFrontBack += 1;
+    else if (key == GLFW_KEY_W && action == GLFW_RELEASE)
+        engine->camera.moveFrontBack -= 1;
+    else if (key == GLFW_KEY_S && action == GLFW_PRESS)
+        engine->camera.moveFrontBack -= 1;
+    else if (key == GLFW_KEY_S && action == GLFW_RELEASE)
+        engine->camera.moveFrontBack += 1;
+
+    else if (key == GLFW_KEY_A && action == GLFW_PRESS)
+        engine->camera.moveLeftRight += 1;
+    else if (key == GLFW_KEY_A && action == GLFW_RELEASE)
+        engine->camera.moveLeftRight -= 1;
+    else if (key == GLFW_KEY_D && action == GLFW_PRESS)
+        engine->camera.moveLeftRight -= 1;
+    else if (key == GLFW_KEY_D && action == GLFW_RELEASE)
+        engine->camera.moveLeftRight += 1;
+
+    else if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+        engine->camera.moveUpDown += 1;
+    else if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
+        engine->camera.moveUpDown -= 1;
+    else if (key == GLFW_KEY_X && action == GLFW_PRESS)
+        engine->camera.moveUpDown -= 1;
+    else if (key == GLFW_KEY_X && action == GLFW_RELEASE)
+        engine->camera.moveUpDown += 1;
+
+    else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
+        engine->simulationOn = !engine->simulationOn;
+
+    else if (key == GLFW_KEY_R && action == GLFW_PRESS)
+        engine->reset();
+
+    else if (key == GLFW_KEY_G && action == GLFW_PRESS)
+        engine->setGravity(
+            2 * winInstance->cursorX / winInstance->currentWidth - 1,
+            -(2 * winInstance->cursorY / winInstance->currentHeight - 1)
+        );
+    else if (key == GLFW_KEY_H && action == GLFW_PRESS)
+        engine->gravityOn = false;
+
+}
+
 int Window::Init()
 {
     glfwMakeContextCurrent(_window);
@@ -53,44 +116,13 @@ int Window::Init()
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         return -1;
 
+    glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, baseWidth, baseHeight);
     currentWidth = baseWidth;
     currentHeight = baseHeight;
     glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
-    glEnable(GL_DEPTH_TEST);
+    glfwSetKeyCallback(_window, keyCallback);
     return 0;
-}
-
-void Window::ProcessInput()
-{
-    if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(_window, true);
-
-    if (glfwGetKey(_window, GLFW_KEY_Q) == GLFW_PRESS)
-        engine->camera.rotateLeft();
-    if (glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS)
-        engine->camera.rotateRight();
-    if (glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS)
-        engine->camera.moveFront();
-    if (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS)
-        engine->camera.moveBack();
-    if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS)
-        engine->camera.moveLeft();
-    if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
-        engine->camera.moveRight();
-    if (glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS)
-        engine->camera.moveUp();
-    if (glfwGetKey(_window, GLFW_KEY_X) == GLFW_PRESS)
-        engine->camera.moveBack();
-
-    if (glfwGetKey(_window, GLFW_KEY_ENTER) == GLFW_RELEASE)
-        engine->simulationOn = !engine->simulationOn;
-
-    if (glfwGetKey(_window, GLFW_KEY_P) == GLFW_PRESS)
-        engine->initSphere();
-    
-    if (glfwGetKey(_window, GLFW_KEY_O) == GLFW_PRESS)
-        engine->initCube();
 }
 
 void Window::RenderLoop()
@@ -112,7 +144,11 @@ void Window::RenderLoop()
             lastFrame = currentFrame;
             fps = 0;
         }
-        this->ProcessInput();
+        engine->camera.move();
+
+        if (engine->simulationOn)
+            engine->run();
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         engine->useShader(currentFrame, cursorX, cursorY, currentHeight);
         glBindVertexArray(engine->VAO);

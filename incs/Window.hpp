@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Engine.hpp"
+#include "AEngine.hpp"
 
 class Window
 {
@@ -17,7 +17,7 @@ class Window
         int currentWidth;
         double cursorX;
         double cursorY;
-        Engine *engine;
+        AEngine *engine;
 
 
         Window();
@@ -25,7 +25,7 @@ class Window
         ~Window();
 
         bool WasCreated();
-        void bindEngine(Engine *engine);
+        void bindEngine(AEngine *engine);
         int Init();
         void ProcessInput();
         void RenderLoop();

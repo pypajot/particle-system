@@ -97,6 +97,13 @@ void Shader::setFloatUniform(const char *name, float value)
     glUniform1f(loc, value);
 }
 
+void Shader::setFlIntUniform(const char *name, int value)
+{
+    int loc = glGetUniformLocation(program, name);
+    if (loc == -1)
+        std::cout << "Error setting uniform: " << name << "\n";
+    glUniform1i(loc, value);
+}
 
 void Shader::use()
 {
