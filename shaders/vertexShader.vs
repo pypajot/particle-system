@@ -6,6 +6,5 @@ uniform mat4 camera;
 
 void main()
 {
-    if (ttl = )
     gl_Position = camera * vec4(aPos, 1.0);
 }

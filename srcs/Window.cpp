@@ -1,7 +1,6 @@
 #include "Window.hpp"
 
 #include <iostream>
-#include <format>
 
 Window::Window()
 {
@@ -113,7 +112,7 @@ int Window::Init()
 {
     glfwMakeContextCurrent(_window);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    if (!gladLoadGL((GLADloadfunc)glfwGetProcAddress))
         return -1;
 
     glEnable(GL_DEPTH_TEST);

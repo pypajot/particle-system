@@ -1,8 +1,8 @@
 #pragma once
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "gl.h"
 #include "AEngine.hpp"
 
 class Window

@@ -1,4 +1,3 @@
-#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <random>
 
@@ -9,7 +8,7 @@ AEngine::AEngine(int particleQuantity)
     Shader s(vertexPath.c_str(), fragmentPath.c_str());
     shader = s;
     gravityOn = false;
-    gravityPos = glm::vec3(0.0f, 0.0f, 0.0f);
+    gravityPos = vec3(0.0f, 0.0f, 0.0f);
     particleQty = particleQuantity;
     simulationOn = false;
 }
@@ -51,9 +50,9 @@ void AEngine::deleteArrays()
 
 void AEngine::useShader(float frameTime, float cursorX, float cursorY, float height)
 {
-    glm::mat4 toScreen = camera.coordToScreenMatrix();
+    mat4 toScreen = camera.coordToScreenMatrix();
     int camLoc = glGetUniformLocation(shader.program, "camera");
-    glUniformMatrix4fv(camLoc, 1, GL_FALSE, glm::value_ptr(toScreen));
+    glUniformMatrix4fv(camLoc, 1, GL_FALSE, toScreen.value);
     shader.setFloatUniform("frameTimeX", (1 + sin(frameTime)) / 2);
     shader.setFloatUniform("frameTimeY", (1 + sin(frameTime + 2 * M_PI / 3)) / 2);
     shader.setFloatUniform("frameTimeZ", (1 + sin(frameTime - 2 * M_PI / 3)) / 2);
@@ -70,11 +69,10 @@ void AEngine::draw()
 
 void AEngine::setGravity(float cursorX, float cursorY)
 {
-    glm::vec4 test = glm::vec4(cursorX, cursorY, 0.9f, 1.0f);
-    glm::mat4 screenToCam = glm::inverse(camera.coordToScreenMatrix());
-    glm::vec4 testResult = screenToCam * test;
-    float inv = 1 / testResult.w;
-    testResult *= inv;
+    vec4 test = vec4(cursorX, cursorY, 0.9f, 1.0f);
+    mat4 screenToCam = inverse(camera.coordToScreenMatrix());
+    vec4 testResult = screenToCam * test;
+    testResult *= 1 / testResult.w;
     gravityPos = testResult;
 }
 

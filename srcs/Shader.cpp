@@ -1,4 +1,3 @@
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <fstream>
 #include <sstream>
@@ -6,6 +5,7 @@
 #include <string>
 #include <ios>
 
+#include "gl.h"
 #include "Shader.hpp"
 
 Shader::Shader()

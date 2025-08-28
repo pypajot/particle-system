@@ -6,7 +6,7 @@ CPPFLAGS := -Wall -Wextra -Werror -g -MMD --std=c++20
 OBJDIR := objs
 SRCDIR := srcs
 
-SRCS := main.cpp glad.cpp Window.cpp AEngine.cpp EngineStatic.cpp EngineGen.cpp Shader.cpp Camera.cpp
+SRCS := main.cpp Window.cpp AEngine.cpp EngineStatic.cpp EngineGen.cpp Shader.cpp Camera.cpp
 
 OBJS := $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
 DEPS := $(patsubst %.cpp,$(OBJDIR)/%.d,$(SRCS))

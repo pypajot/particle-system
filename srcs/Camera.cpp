@@ -1,12 +1,12 @@
-#include <glm/ext.hpp>
+#include <cmath>
 
+#include "math.hpp"
 #include "Camera.hpp"
-#include <iostream>
 
 Camera::Camera()
 {
-    position = glm::vec3(0, 0, 2);
-    direction = glm::vec3(0, 0, 1);
+    position = vec3(0, 0, 2);
+    direction = vec3(0, 0, 1);
 
     moveFrontBack = 0;
     moveLeftRight = 0;
@@ -14,10 +14,10 @@ Camera::Camera()
     rotateLeftRight = 0;
 }
 
-Camera::Camera(glm::vec3 pos)
+Camera::Camera(vec3 pos)
 {
     position = pos;
-    direction = glm::vec3(0, 0, 1);
+    direction = vec3(0, 0, 1);
 
     moveFrontBack = 0;
     moveLeftRight = 0;
@@ -57,15 +57,15 @@ Camera Camera::operator=(Camera &other)
 
 void Camera::computeProjectionMatrix(float height, float width)
 {
-    proj = glm::perspective(fov, width / height, near, far);
+    proj = perspective(fov, width / height, near, far);
 }
 
-glm::mat4 Camera::coordToScreenMatrix()
+mat4 Camera::coordToScreenMatrix()
 {
-    glm::vec3 cameraFront(-sin(direction.y), 0.0f, -cos(direction.y));
-    glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
+    vec3 cameraFront(-std::sin(direction.y), 0.0f, -std::cos(direction.y));
+    vec3 cameraUp(0.0f, 1.0f, 0.0f);
 
-    glm::mat4 toCamera = glm::lookAt(position, position + cameraFront, cameraUp);
+    mat4 toCamera = lookAt(position, position + cameraFront, cameraUp);
 
     return proj * toCamera;
 }
@@ -74,17 +74,17 @@ void Camera::move()
 {
     direction.y += rotateSpeed * rotateLeftRight;
 
-    glm::vec4 movement(-moveLeftRight, moveUpDown, -moveFrontBack, 1.0f);
-    glm::mat4 rotate(1.0f);
+    vec4 movement(-moveLeftRight, moveUpDown, -moveFrontBack, 1.0f);
+    mat4 rotate(1.0f);
 
-    movement /= movement.length();
-    rotate = glm::rotate(rotate, direction.y, glm::vec3(0.0f, 1.0f, 0.0f));
-    movement = movement * rotate;
+    movement *= 1 / movement.length();
+    rotate = rotation(rotate, direction.y, vec3(0.0f, 1.0f, 0.0f));
+    movement = rotate * movement;
     position += movement * moveSpeed;
 }
 
 void Camera::resetPosition()
 {
-    position = glm::vec3(0, 0, 2);
-    direction = glm::vec3(0, 0, 1);
+    position = vec3(0, 0, 2);
+    direction = vec3(0, 0, 1);
 }
