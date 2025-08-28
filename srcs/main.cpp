@@ -1,8 +1,8 @@
+#include "gl.h"
 #include <GLFW/glfw3.h>
 
 #include <iostream>
 
-#include "gl.h"
 #include "Window.hpp"
 #include "AEngine.hpp"
 #include "EngineStatic.hpp"

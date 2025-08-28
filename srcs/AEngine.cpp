@@ -1,7 +1,9 @@
 #include <iostream>
 #include <random>
 
+#include "math.hpp"
 #include "AEngine.hpp"
+
 
 AEngine::AEngine(int particleQuantity)
 {

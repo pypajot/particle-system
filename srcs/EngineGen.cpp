@@ -1,6 +1,7 @@
 #include <random>
-
+#include <cmath>
 #include "EngineGen.hpp"
+
 
 EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity)
 {

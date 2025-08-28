@@ -16,20 +16,20 @@ vec4::vec4(float val)
     z = val;
     w = val;
 }
-vec4::vec4(float x, float y, float z, float w)
+vec4::vec4(float a, float b, float c, float d)
 {
-    x = x;
-    y = y;
-    z = z;
-    w = w;
+    x = a;
+    y = b;
+    z = c;
+    w = d;
 }
 
-vec4::vec4(const vec3 &vector, float w)
+vec4::vec4(const vec3 &vector, float val)
 {
     x = vector.x;
     y = vector.y;
     z = vector.z;
-    w = w;
+    w = val;
 }
 
 
@@ -44,7 +44,6 @@ vec4::vec4(const vec4 &other)
 vec4::~vec4()
 {
 }
-
 
 vec4 &vec4::operator=(const vec4 &other)
 {

@@ -3,6 +3,9 @@
 #include "vec3.hpp"
 #include "mat4.hpp"
 
+class mat4;
+class vec3;
+
 class vec4
 {
     public:
@@ -20,7 +23,6 @@ class vec4
         vec4(const vec4 &vector);
         ~vec4();
         
-
         vec4 &operator=(const vec4 &other);
 
         vec4 &operator+=(const vec4 &other);

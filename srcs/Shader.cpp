@@ -1,11 +1,12 @@
+#include "gl.h"
 #include <GLFW/glfw3.h>
+
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <string>
 #include <ios>
 
-#include "gl.h"
 #include "Shader.hpp"
 
 Shader::Shader()
@@ -97,7 +98,7 @@ void Shader::setFloatUniform(const char *name, float value)
     glUniform1f(loc, value);
 }
 
-void Shader::setFlIntUniform(const char *name, int value)
+void Shader::setIntUniform(const char *name, int value)
 {
     int loc = glGetUniformLocation(program, name);
     if (loc == -1)

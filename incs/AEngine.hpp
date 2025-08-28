@@ -1,9 +1,10 @@
 #pragma once
 
+#include "gl.h"
 #include <GLFW/glfw3.h>
+
 #include <string>
 
-#include "gl.h"
 #include "Shader.hpp"
 #include "Camera.hpp"
 
