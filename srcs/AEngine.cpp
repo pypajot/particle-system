@@ -55,11 +55,6 @@ void AEngine::useShader(float frameTime, float cursorX, float cursorY, float hei
     mat4 toScreen = camera.coordToScreenMatrix();
     int camLoc = glGetUniformLocation(shader.program, "camera");
     
-    std::cout << toScreen.value[0][0] << " " << toScreen.value[0][1] << " " << toScreen.value[0][2] << " " << toScreen.value[0][3] << "\n";
-    std::cout << toScreen.value[1][0] << " " << toScreen.value[1][1] << " " << toScreen.value[1][2] << " " << toScreen.value[1][3] << "\n";
-    std::cout << toScreen.value[2][0] << " " << toScreen.value[2][1] << " " << toScreen.value[2][2] << " " << toScreen.value[2][3] << "\n";
-    std::cout << toScreen.value[3][0] << " " << toScreen.value[3][1] << " " << toScreen.value[3][2] << " " << toScreen.value[3][3] << "\n";
-    
     glUniformMatrix4fv(camLoc, 1, GL_FALSE, &toScreen.value[0][0]);
     shader.setFloatUniform("frameTimeX", (1 + sin(frameTime)) / 2);
     shader.setFloatUniform("frameTimeY", (1 + sin(frameTime + 2 * M_PI / 3)) / 2);
@@ -67,6 +62,8 @@ void AEngine::useShader(float frameTime, float cursorX, float cursorY, float hei
     shader.setFloatUniform("cursorX", cursorX);
     shader.setFloatUniform("cursorY", cursorY);
     shader.setFloatUniform("height", height);
+    shader.setFloatUniform("near", camera.near);
+    shader.setFloatUniform("far", camera.far);
     shader.use();
 }
 
@@ -81,9 +78,7 @@ void AEngine::setGravity(float cursorX, float cursorY)
     mat4 screenToCam = inverse(camera.coordToScreenMatrix());
     vec4 testResult = screenToCam * test;
     testResult *= 1 / testResult.w;
+    std::cout << testResult.x << " " << testResult.y << " " << testResult.z << "\n";
     gravityPos = testResult;
 }
 
-// void AEngine::run()
-// {
-// }

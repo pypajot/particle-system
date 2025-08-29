@@ -68,14 +68,6 @@ mat4 Camera::coordToScreenMatrix()
     vec3 cameraUp(0.0f, 1.0f, 0.0f);
 
     mat4 toCamera = lookAt(position, position + cameraFront, cameraUp);
-    std::cout << toCamera.value[0][0] << " " << toCamera.value[0][1] << " " << toCamera.value[0][2] << " " << toCamera.value[0][3] << "\n";
-    std::cout << toCamera.value[1][0] << " " << toCamera.value[1][1] << " " << toCamera.value[1][2] << " " << toCamera.value[1][3] << "\n";
-    std::cout << toCamera.value[2][0] << " " << toCamera.value[2][1] << " " << toCamera.value[2][2] << " " << toCamera.value[2][3] << "\n";
-    std::cout << toCamera.value[3][0] << " " << toCamera.value[3][1] << " " << toCamera.value[3][2] << " " << toCamera.value[3][3] << "\n";
-    std::cout << proj.value[0][0] << " " << proj.value[0][1] << " " << proj.value[0][2] << " " << proj.value[0][3] << "\n";
-    std::cout << proj.value[1][0] << " " << proj.value[1][1] << " " << proj.value[1][2] << " " << proj.value[1][3] << "\n";
-    std::cout << proj.value[2][0] << " " << proj.value[2][1] << " " << proj.value[2][2] << " " << proj.value[2][3] << "\n";
-    std::cout << proj.value[3][0] << " " << proj.value[3][1] << " " << proj.value[3][2] << " " << proj.value[3][3] << "\n";
 
     return proj * toCamera;
 }
@@ -89,10 +81,6 @@ void Camera::move()
 
     movement *= 1 / movement.length();
     rotate = rotation(rotate, direction.y, vec3(0.0f, 1.0f, 0.0f));
-    std::cout << rotate.value[0][0] << " " << rotate.value[0][1] << " " << rotate.value[0][2] << " " << rotate.value[0][3] << "\n";
-    std::cout << rotate.value[1][0] << " " << rotate.value[1][1] << " " << rotate.value[1][2] << " " << rotate.value[1][3] << "\n";
-    std::cout << rotate.value[2][0] << " " << rotate.value[2][1] << " " << rotate.value[2][2] << " " << rotate.value[2][3] << "\n";
-    std::cout << rotate.value[3][0] << " " << rotate.value[3][1] << " " << rotate.value[3][2] << " " << rotate.value[3][3] << "\n";
     movement = rotate * movement;
     position += movement * moveSpeed;
 }
