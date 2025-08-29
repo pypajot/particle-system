@@ -54,7 +54,9 @@ void AEngine::useShader(float frameTime, float cursorX, float cursorY, float hei
 {
     mat4 toScreen = camera.coordToScreenMatrix();
     int camLoc = glGetUniformLocation(shader.program, "camera");
-    glUniformMatrix4fv(camLoc, 1, GL_FALSE, toScreen.value);
+    
+    // std::cout << toScreen.value[0][0] << " " << toScreen.value[0][1] << " " << toScreen.value[1][0] << "\n";
+    glUniformMatrix4fv(camLoc, 1, GL_FALSE, &toScreen.value[0][0]);
     shader.setFloatUniform("frameTimeX", (1 + sin(frameTime)) / 2);
     shader.setFloatUniform("frameTimeY", (1 + sin(frameTime + 2 * M_PI / 3)) / 2);
     shader.setFloatUniform("frameTimeZ", (1 + sin(frameTime - 2 * M_PI / 3)) / 2);

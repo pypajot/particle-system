@@ -1,11 +1,12 @@
 #pragma once
 
 #include "vec4.hpp"
+// #include <std::vector>
 
 class mat4
 {
     public:
-        float value[16];
+        float value[4][4];
 
         mat4();
         mat4(float diag);

@@ -17,6 +17,7 @@ SRCS := main.cpp \
 		vec3.cpp \
 		vec4.cpp \
 		mat4.cpp \
+		gl.cpp
 
 
 OBJS := $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))

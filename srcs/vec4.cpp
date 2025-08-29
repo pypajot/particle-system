@@ -97,10 +97,10 @@ vec4 operator*(mat4 &matrix, vec4 &vector)
 {
     vec4 result(vector);
 
-    result.x = vector.x * matrix.value[0] + vector.y * matrix.value[1] + vector.z * matrix.value[2] + vector.w * matrix.value[3];
-    result.y = vector.x * matrix.value[4] + vector.y * matrix.value[5] + vector.z * matrix.value[6] + vector.w * matrix.value[7];
-    result.z = vector.x * matrix.value[8] + vector.y * matrix.value[9] + vector.z * matrix.value[10] + vector.w * matrix.value[11];
-    result.w = vector.x * matrix.value[12] + vector.y * matrix.value[13] + vector.z * matrix.value[14] + vector.w * matrix.value[15];
+    result.x = vector.x * matrix.value[0][0] + vector.y * matrix.value[0][1] + vector.z * matrix.value[0][2] + vector.w * matrix.value[0][3];
+    result.y = vector.x * matrix.value[1][0] + vector.y * matrix.value[1][1] + vector.z * matrix.value[1][2] + vector.w * matrix.value[1][3];
+    result.z = vector.x * matrix.value[2][0] + vector.y * matrix.value[2][1] + vector.z * matrix.value[2][2] + vector.w * matrix.value[2][3];
+    result.w = vector.x * matrix.value[3][0] + vector.y * matrix.value[3][1] + vector.z * matrix.value[3][2] + vector.w * matrix.value[3][3];
     return result;
 }
 

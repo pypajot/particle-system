@@ -3,6 +3,8 @@
 #include "math.hpp"
 #include "Camera.hpp"
 
+#include <iostream>
+
 Camera::Camera()
 {
     position = vec3(0, 0, 2);
@@ -66,6 +68,10 @@ mat4 Camera::coordToScreenMatrix()
     vec3 cameraUp(0.0f, 1.0f, 0.0f);
 
     mat4 toCamera = lookAt(position, position + cameraFront, cameraUp);
+    std::cout << toCamera.value[0][0] << " " << toCamera.value[0][1] << " " << toCamera.value[0][2] << " " << toCamera.value[0][3] << "\n";
+    std::cout << toCamera.value[1][0] << " " << toCamera.value[1][1] << " " << toCamera.value[1][2] << " " << toCamera.value[1][3] << "\n";
+    std::cout << proj.value[0][0] << " " << proj.value[0][1] << " " << proj.value[0][2] << " " << proj.value[0][3] << "\n";
+    std::cout << proj.value[1][0] << " " << proj.value[1][1] << " " << proj.value[1][2] << " " << proj.value[1][3] << "\n";
 
     return proj * toCamera;
 }
