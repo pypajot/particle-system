@@ -23,10 +23,10 @@ class vec3
         vec3 &operator=(const vec3 &other);
 
         vec3 &operator+=(const vec3 &other);
-        friend vec3 operator+(vec3 lhs, vec3& rhs);
+        friend vec3 operator+(vec3 lhs, vec3 const &rhs);
 
         vec3 &operator-=(const vec3 &other);
-        friend vec3 operator-(vec3 lhs, vec3& rhs);
+        friend vec3 operator-(vec3 lhs, vec3 const &rhs);
 
         vec3 &operator*=(float scalar);
         friend vec3 operator*(vec3 lhs, float scalar);

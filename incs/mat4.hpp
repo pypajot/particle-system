@@ -15,7 +15,7 @@ class mat4
 
         mat4 &operator=(const mat4 &other);
 
-        friend mat4 operator*(mat4 &lhs, mat4 &rhs);
+        friend mat4 operator*(mat4 const &lhs, mat4 const &rhs);
         friend mat4 inverse(mat4 matrix);
 
 };

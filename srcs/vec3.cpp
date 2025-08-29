@@ -60,7 +60,7 @@ vec3 &vec3::operator+=(const vec3 &other)
     return *this;
 }
 
-vec3 operator+(vec3 lhs, vec3& rhs)
+vec3 operator+(vec3 lhs, const vec3 &rhs)
 {
     lhs += rhs;
     return lhs;
@@ -74,7 +74,7 @@ vec3 &vec3::operator-=(const vec3 &other)
     return *this;
 }
 
-vec3 operator-(vec3 lhs, vec3& rhs)
+vec3 operator-(vec3 lhs, vec3 const &rhs)
 {
     lhs -= rhs;
     return lhs;

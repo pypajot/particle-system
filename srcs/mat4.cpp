@@ -46,7 +46,7 @@ mat4 &mat4::operator=(const mat4 &other)
 }
 
 
-mat4 operator*(mat4 &lhs, mat4 &rhs)
+mat4 operator*(mat4 const &lhs, mat4 const &rhs)
 {
     mat4 result;
 
@@ -54,7 +54,7 @@ mat4 operator*(mat4 &lhs, mat4 &rhs)
         for (int i = 0; i < 4; i++)
             for (int k = 0; k < 4; k++)
             {
-                result.value[j][i] += lhs.value[j][k] * rhs.value[k][i];
+                result.value[i][j] += lhs.value[k][j] * rhs.value[i][k];
             }
 
     return result; 
