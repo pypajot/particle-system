@@ -11,16 +11,15 @@ float toRadians(float angle)
 
 mat4 perspective(float fov, float ratio, float near, float far)
 {
-    double height, width;
-    width = tan(fov / 2) * near;
-    height = width / ratio;
+    double t = tan(fov / 2);
+
     mat4 result;
     
-    result.value[0][0] = near / width;
-    result.value[1][1] = near / height;
-    result.value[2][2] = -far / (far - near);
-    result.value[2][3] = -far * near / (far - near);
-    result.value[3][2] = -1;
+    result.value[0][0] = 1 / (t * ratio);
+    result.value[1][1] = 1 / t;
+    result.value[2][2] = far / (far - near);
+    result.value[2][3] = -1;
+    result.value[3][2] = -far * near / (far - near);
 
     return result;
 }
