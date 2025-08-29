@@ -74,11 +74,14 @@ void AEngine::draw()
 
 void AEngine::setGravity(float cursorX, float cursorY)
 {
-    vec4 test = vec4(cursorX, cursorY, 0.9f, 1.0f);
+    int depth = 2;
+    float ndc = (camera.far + camera.near - (2.0 * camera.near * camera.far) / depth) / (camera.far - camera.near);
+    
+    vec4 test = vec4(cursorX, cursorY, ndc, 1.0f);
     mat4 screenToCam = inverse(camera.coordToScreenMatrix());
     vec4 testResult = screenToCam * test;
     testResult *= 1 / testResult.w;
-    std::cout << testResult.x << " " << testResult.y << " " << testResult.z << "\n";
+    std::cout << testResult.x << " " << testResult.y << " " << testResult.z << " " << testResult.w << "\n";
     gravityPos = testResult;
 }
 
