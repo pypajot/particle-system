@@ -1,6 +1,6 @@
 #pragma once
 
-#include "glad/gl.h"
+#include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
 #include "AEngine.hpp"
@@ -18,7 +18,6 @@ class Window
         double cursorX;
         double cursorY;
         AEngine *engine;
-
 
         Window();
         Window(Window &other);

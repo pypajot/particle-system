@@ -45,6 +45,8 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(OBJDIR)
 	$(CC) $(CPPFLAGS) -o $@ -c $< -I$(INCS)
 
+-include $(DEPS)
+
 clean:
 	rm -rfd $(OBJDIR)
 
