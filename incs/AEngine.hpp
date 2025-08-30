@@ -11,8 +11,10 @@
 class AEngine
 {
     public:
-        std::string vertexPath = "shaders/vertexShader.vs";
-        std::string fragmentPath = "shaders/fragmentShader.fs";
+        const std::string vertexPath = "shaders/vertexShader.vs";
+        const std::string fragmentPath = "shaders/fragmentShader.fs";
+
+        const float mouseDepth = 2.0f;
 
         unsigned int VAO;
         GLuint VBO;

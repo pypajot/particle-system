@@ -64,6 +64,7 @@ void AEngine::useShader(float frameTime, float cursorX, float cursorY, float hei
     shader.setFloatUniform("height", height);
     shader.setFloatUniform("near", camera.near);
     shader.setFloatUniform("far", camera.far);
+    shader.setFloatUniform("mouseDepth", mouseDepth);
     shader.use();
 }
 
@@ -74,14 +75,12 @@ void AEngine::draw()
 
 void AEngine::setGravity(float cursorX, float cursorY)
 {
-    int depth = 2;
-    float ndc = (camera.far + camera.near - (2.0 * camera.near * camera.far) / depth) / (camera.far - camera.near);
-    
-    vec4 test = vec4(cursorX, cursorY, ndc, 1.0f);
+    float depthNdc = (camera.far + camera.near - (2.0 * camera.near * camera.far) / mouseDepth) / (camera.far - camera.near);
+
+    vec4 test = vec4(cursorX, cursorY, depthNdc, 1.0f);
     mat4 screenToCam = inverse(camera.coordToScreenMatrix());
     vec4 testResult = screenToCam * test;
     testResult *= 1 / testResult.w;
-    std::cout << testResult.x << " " << testResult.y << " " << testResult.z << " " << testResult.w << "\n";
     gravityPos = testResult;
 }
 

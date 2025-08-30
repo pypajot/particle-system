@@ -2,4 +2,3 @@ cuda
 particle generator : low particle, kb commands and shader
 readme + setup
 comments / private / const
-mouse depth not hardcoded
