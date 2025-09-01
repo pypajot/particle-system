@@ -7,6 +7,7 @@
 
 #include "Shader.hpp"
 #include "Camera.hpp"
+#include "GravityWorker.hpp"
 
 class AEngine
 {
@@ -23,6 +24,7 @@ class AEngine
 
         bool simulationOn;
         bool gravityOn;
+        bool mousePressed;
         vec3 gravityPos;
 
         Shader shader;
@@ -30,11 +32,13 @@ class AEngine
 
         std::string initType;
 
+        GravityWorker gravity;
+
         AEngine(int particleQty);
-        AEngine(AEngine &other);
+        // AEngine(AEngine &other);
         virtual ~AEngine();
 
-        AEngine &operator=(AEngine &other);
+        // AEngine &operator=(AEngine &other);
 
         void deleteArrays();
 

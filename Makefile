@@ -1,7 +1,10 @@
 NAME := particle
 CC := c++
-GLFLAGS := -lGL -lGLU -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi
-CPPFLAGS := -Wall -Wextra -Werror -g -MMD --std=c++20
+GLFLAGS := -lGL -lGLU -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi -lcudart
+CPPFLAGS := -Wall -Wextra -Werror -g -MMD --std c++17
+
+CUDACC := nvcc
+CUDAFLAGS := -Werror all-warnings -g -MMD --std c++17 -gencode arch=compute_80,code=sm_80
 
 OBJDIR := objs
 SRCDIR := srcs
@@ -19,9 +22,14 @@ SRCS := main.cpp \
 		mat4.cpp \
 		gl.cpp
 
+CUDASRCS:= GravityWorker.cu
+
 
 OBJS := $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
 DEPS := $(patsubst %.cpp,$(OBJDIR)/%.d,$(SRCS))
+
+CUDAOBJS := $(patsubst %.cu,$(OBJDIR)/%.o,$(CUDASRCS))
+CUDADEPS := $(patsubst %.cu,$(OBJDIR)/%.d,$(CUDASRCS))
 
 INCS := ./incs/
 
@@ -38,12 +46,16 @@ _NO_COLOR	= \033[0m
 
 all : $(NAME)
 
-$(NAME): $(OBJS) Makefile
-	$(CC) $(CPPFLAGS) -o $@ $(OBJS) $(GLFLAGS) 
+$(NAME): $(OBJS) $(CUDAOBJS) Makefile
+	$(CC) $(CPPFLAGS) -o $@ $(OBJS) $(CUDAOBJS) $(GLFLAGS) 
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(OBJDIR)
 	$(CC) $(CPPFLAGS) -o $@ -c $< -I$(INCS)
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cu
+	@mkdir -p $(OBJDIR)
+	$(CUDACC) $(CUDAFLAGS) -o $@ -c $< -I$(INCS)
 
 -include $(DEPS)
 

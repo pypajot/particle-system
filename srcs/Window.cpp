@@ -103,9 +103,27 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
             2 * winInstance->cursorX / winInstance->currentWidth - 1,
             -(2 * winInstance->cursorY / winInstance->currentHeight - 1)
         );
+
     else if (key == GLFW_KEY_H && action == GLFW_PRESS)
         engine->gravityOn = false;
 
+}
+
+void mouseCallback(GLFWwindow* window, int key, int action, int mods)
+{
+    (void)mods;
+
+    Window *winInstance = reinterpret_cast<Window *>(glfwGetWindowUserPointer(window));
+    AEngine *engine = winInstance->engine;
+    
+
+    if (key == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
+        engine->mousePressed = true;
+    else if (key == GLFW_MOUSE_BUTTON_1 && action == GLFW_RELEASE)
+    {
+        engine->mousePressed = false;
+        engine->gravityOn = false;
+    }
 }
 
 int Window::Init()
@@ -121,6 +139,7 @@ int Window::Init()
     currentHeight = baseHeight;
     glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
     glfwSetKeyCallback(_window, keyCallback);
+    glfwSetMouseButtonCallback(_window, mouseCallback);
     return 0;
 }
 
@@ -144,7 +163,11 @@ void Window::RenderLoop()
             fps = 0;
         }
         engine->camera.move();
-
+        if (engine->mousePressed)
+        {
+            engine->setGravity(
+                2 * cursorX / currentWidth - 1, (2 * cursorY / currentHeight - 1));
+        }
         if (engine->simulationOn)
             engine->run();
 

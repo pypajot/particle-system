@@ -2,6 +2,8 @@
 
 #include "EngineStatic.hpp"
 
+#include <iostream>
+
 void EngineStatic::initCube()
 {
     float size = 0.7f;
@@ -107,8 +109,11 @@ EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity)
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    GravityWorker test(VBO, particleQty);
+    gravity = test;
 }
 
 void EngineStatic::run()
 {
+    gravity.call(gravityPos);
 }

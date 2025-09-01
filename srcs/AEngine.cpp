@@ -13,36 +13,37 @@ AEngine::AEngine(int particleQuantity)
     gravityPos = vec3(0.0f, 0.0f, 0.0f);
     particleQty = particleQuantity;
     simulationOn = false;
+    mousePressed = false;
 }
 
-AEngine::AEngine(AEngine &other)
-{
-    VBO = other.VBO;
-    VAO = other.VAO;
-    shader = other.shader;
-    camera = other.camera;
-    particleQty = other.particleQty;
-    simulationOn = other.simulationOn;
-    gravityOn = other.gravityOn;
-    gravityPos = other.gravityPos;
-}
+// AEngine::AEngine(AEngine &other)
+// {
+//     VBO = other.VBO;
+//     VAO = other.VAO;
+//     shader = other.shader;
+//     camera = other.camera;
+//     particleQty = other.particleQty;
+//     simulationOn = other.simulationOn;
+//     gravityOn = other.gravityOn;
+//     gravityPos = other.gravityPos;
+// }
 
 AEngine::~AEngine()
 {
 }
 
-AEngine &AEngine::operator=(AEngine &other)
-{
-    VBO = other.VBO;
-    VAO = other.VAO;
-    shader = other.shader;
-    camera = other.camera;
-    particleQty = other.particleQty;
-    simulationOn = other.simulationOn;
-    gravityOn = other.gravityOn;
-    gravityPos = other.gravityPos;
-    return *this;
-}
+// AEngine &AEngine::operator=(AEngine &other)
+// {
+//     VBO = other.VBO;
+//     VAO = other.VAO;
+//     shader = other.shader;
+//     camera = other.camera;
+//     particleQty = other.particleQty;
+//     simulationOn = other.simulationOn;
+//     gravityOn = other.gravityOn;
+//     gravityPos = other.gravityPos;
+//     return *this;
+// }
 
 void AEngine::deleteArrays()
 {
@@ -77,7 +78,7 @@ void AEngine::setGravity(float cursorX, float cursorY)
 {
     float depthNdc = (camera.far + camera.near - (2.0 * camera.near * camera.far) / mouseDepth) / (camera.far - camera.near);
 
-    vec4 test = vec4(cursorX, cursorY, depthNdc, 1.0f);
+    vec4 test = vec4(cursorX, -cursorY, depthNdc, 1.0f);
     mat4 screenToCam = inverse(camera.coordToScreenMatrix());
     vec4 testResult = screenToCam * test;
     testResult *= 1 / testResult.w;
