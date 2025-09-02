@@ -32,7 +32,7 @@ class vec4
         friend vec4 operator*(vec4 lhs, float scalar);
         friend vec4 operator*(float scalar, vec4 rhs);
 
-        friend vec4 operator*(mat4 &matrix, vec4 &vector);
+        friend vec4 operator*(const mat4 &matrix, const vec4 &vector);
 
         float length();
 

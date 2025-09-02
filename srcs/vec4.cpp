@@ -93,7 +93,7 @@ vec4 operator*(float scalar, vec4 rhs)
     return rhs;
 }
 
-vec4 operator*(mat4 &matrix, vec4 &vector)
+vec4 operator*(const mat4 &matrix, const vec4 &vector)
 {
     vec4 result(vector);
 

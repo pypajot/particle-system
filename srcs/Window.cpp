@@ -1,6 +1,7 @@
 #include "Window.hpp"
 
 #include <iostream>
+#include <chrono>
 
 Window::Window()
 {

@@ -22,7 +22,7 @@ SRCS := main.cpp \
 		mat4.cpp \
 		gl.cpp
 
-CUDASRCS:= GravityWorker.cu
+CUDASRCS:= CudaWorker.cu
 
 
 OBJS := $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
@@ -44,10 +44,10 @@ _WHITE		= \033[37m
 _NO_COLOR	= \033[0m
 
 
-all : $(NAME)
+all : cuda
 
-$(NAME): $(OBJS) $(CUDAOBJS) Makefile
-	$(CC) $(CPPFLAGS) -o $@ $(OBJS) $(CUDAOBJS) $(GLFLAGS) 
+cuda: $(OBJS) $(CUDAOBJS) Makefile
+	$(CC) $(CPPFLAGS) -o $(NAME) $(OBJS) $(CUDAOBJS) $(GLFLAGS) 
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(OBJDIR)
@@ -66,3 +66,5 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
+
+.PHONY: re fclean clean all cuda gl

@@ -75,13 +75,14 @@ mat4 Camera::coordToScreenMatrix()
 void Camera::move()
 {
     direction.y += rotateSpeed * rotateLeftRight;
-
-    vec4 movement(-moveLeftRight, moveUpDown, -moveFrontBack, 1.0f);
+    vec3 movement(-moveLeftRight, moveUpDown, -moveFrontBack);
     mat4 rotate(1.0f);
 
+    if (movement.length() == 0)
+        return;
     movement *= 1 / movement.length();
     rotate = rotation(rotate, direction.y, vec3(0.0f, 1.0f, 0.0f));
-    movement = rotate * movement;
+    movement = rotate * vec4(movement, 1.0f);
     position += movement * moveSpeed;
 }
 

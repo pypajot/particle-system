@@ -65,26 +65,7 @@ void EngineStatic::initCube()
 
 void EngineStatic::initSphere()
 {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<> disY(-M_PI_2, M_PI_2);
-    std::uniform_real_distribution<> disXZ(0, M_PI * 2);
-    std::uniform_real_distribution<> speedDis(0, 0.1f);
-    float *buffer = reinterpret_cast<float *>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
-    float angleY;
-    float angleXZ;
-    for (int i = 0; i < particleQty; i++)
-    {
-        angleY = disY(gen);
-        angleXZ = disXZ(gen);
-        buffer[i * 6] = cos(angleY) * cos(angleXZ);
-        buffer[i * 6 + 1] = sin(angleY);
-        buffer[i * 6 + 2] = cos(angleY) * sin(angleXZ);
-        buffer[i * 6 + 3] = speedDis(gen);
-        buffer[i * 6 + 4] = speedDis(gen);
-        buffer[i * 6 + 5] = speedDis(gen);
-    }
-    glUnmapBuffer(GL_ARRAY_BUFFER);
+    gravity.init();
 }
 
 void EngineStatic::reset()
@@ -94,8 +75,29 @@ void EngineStatic::reset()
     simulationOn = false;
 }
 
+void EngineStatic::useShader(float frameTime, float cursorX, float cursorY, float height)
+{
+    mat4 toScreen = camera.coordToScreenMatrix();
+    int camLoc = glGetUniformLocation(shader.program, "camera");
+    
+    glUniformMatrix4fv(camLoc, 1, GL_FALSE, &toScreen.value[0][0]);
+    shader.setFloatUniform("frameTimeX", (1 + sin(frameTime)) / 2);
+    shader.setFloatUniform("frameTimeY", (1 + sin(frameTime + 2 * M_PI / 3)) / 2);
+    shader.setFloatUniform("frameTimeZ", (1 + sin(frameTime - 2 * M_PI / 3)) / 2);
+    shader.setFloatUniform("cursorX", cursorX);
+    shader.setFloatUniform("cursorY", cursorY);
+    shader.setFloatUniform("height", height);
+    shader.setFloatUniform("near", camera.near);
+    shader.setFloatUniform("far", camera.far);
+    shader.setFloatUniform("mouseDepth", mouseDepth);
+    shader.use();
+}
+
 EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity)
 {
+    vertexPath = "shaders/vertexShader.vs";
+    Shader s(vertexPath.c_str(), fragmentPath.c_str());
+    shader = s;
     initType = "static";
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);  
@@ -103,17 +105,17 @@ EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity)
     glBindVertexArray(VAO);
     glBufferData(GL_ARRAY_BUFFER, particleQty * 6 * sizeof(float), 0, GL_STREAM_DRAW);
 
-    initSphere();
     
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    GravityWorker test(VBO, particleQty);
+    CudaWorker test(VBO, particleQty);
     gravity = test;
+    initSphere();
 }
 
 void EngineStatic::run()
 {
-    gravity.call(gravityPos);
+    gravity.call(gravityPos, gravityOn);
 }

@@ -7,8 +7,6 @@
 
 AEngine::AEngine(int particleQuantity)
 {
-    Shader s(vertexPath.c_str(), fragmentPath.c_str());
-    shader = s;
     gravityOn = false;
     gravityPos = vec3(0.0f, 0.0f, 0.0f);
     particleQty = particleQuantity;
@@ -83,5 +81,6 @@ void AEngine::setGravity(float cursorX, float cursorY)
     vec4 testResult = screenToCam * test;
     testResult *= 1 / testResult.w;
     gravityPos = testResult;
+    gravityOn = true;
 }
 

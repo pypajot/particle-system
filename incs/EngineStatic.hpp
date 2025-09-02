@@ -10,6 +10,7 @@ class EngineStatic : public AEngine
         void initCube();
         void initSphere();
 
+        void useShader(float frameTime, float cursorX, float cursorY, float currentHeight);
         void reset();
         void run();
 };

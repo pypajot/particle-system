@@ -7,12 +7,12 @@
 
 #include "Shader.hpp"
 #include "Camera.hpp"
-#include "GravityWorker.hpp"
+#include "CudaWorker.hpp"
 
 class AEngine
 {
     public:
-        const std::string vertexPath = "shaders/vertexShader.vs";
+        std::string vertexPath;
         const std::string fragmentPath = "shaders/fragmentShader.fs";
 
         const float mouseDepth = 2.0f;
@@ -32,7 +32,7 @@ class AEngine
 
         std::string initType;
 
-        GravityWorker gravity;
+        CudaWorker gravity;
 
         AEngine(int particleQty);
         // AEngine(AEngine &other);
@@ -42,7 +42,7 @@ class AEngine
 
         void deleteArrays();
 
-        void useShader(float frameTime, float cursorX, float cursorY, float currentHeight);
+        virtual void useShader(float frameTime, float cursorX, float cursorY, float currentHeight) = 0;
         void setGravity(float cursorX, float cursorY);
         void draw();
 

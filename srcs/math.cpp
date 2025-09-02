@@ -61,13 +61,13 @@ mat4 rotation(mat4 const &matrix, float angle, vec3 const &axis)
     mat4 rotate(1.0f);
 
     rotate.value[0][0] = cos(angle) + axis.x * axis.x * (1 - cos(angle));
-    rotate.value[1][0] = axis.x * axis.y * (1 - cos(angle)) + axis.z * sin(angle);
-    rotate.value[2][0] = axis.x * axis.z * (1 - cos(angle)) - axis.y * sin(angle);
-    rotate.value[0][1] = axis.x * axis.y * (1 - cos(angle)) - axis.z * sin(angle);
+    rotate.value[1][0] = axis.x * axis.y * (1 - cos(angle)) - axis.z * sin(angle);
+    rotate.value[2][0] = axis.x * axis.z * (1 - cos(angle)) + axis.y * sin(angle);
+    rotate.value[0][1] = axis.x * axis.y * (1 - cos(angle)) + axis.z * sin(angle);
     rotate.value[1][1] = cos(angle) + axis.y * axis.y * (1 - cos(angle));
-    rotate.value[2][1] = axis.y * axis.z * (1 - cos(angle)) + axis.x * sin(angle);
-    rotate.value[0][2] = axis.x * axis.z * (1 - cos(angle)) + axis.y * sin(angle);
-    rotate.value[1][2] = axis.y * axis.z * (1 - cos(angle)) - axis.x * sin(angle);
+    rotate.value[2][1] = axis.y * axis.z * (1 - cos(angle)) - axis.x * sin(angle);
+    rotate.value[0][2] = axis.x * axis.z * (1 - cos(angle)) - axis.y * sin(angle);
+    rotate.value[1][2] = axis.y * axis.z * (1 - cos(angle)) + axis.x * sin(angle);
     rotate.value[2][2] = cos(angle) + axis.z * axis.z * (1 - cos(angle));
 
     return matrix * rotate;
