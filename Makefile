@@ -6,32 +6,32 @@ CPPFLAGS := -Wall -Wextra -Werror -g -MMD --std c++17
 CUDACC := nvcc
 CUDAFLAGS := -Werror all-warnings -g -MMD --std c++17 -gencode arch=compute_80,code=sm_80
 
-OBJDIR := objs
-SRCDIR := srcs
+OBJDIR := obj
+SRCDIR := src
 
 SRCS := main.cpp \
 		Window.cpp \
-		AEngine.cpp \
-		EngineStatic.cpp \
-		EngineGen.cpp \
 		Shader.cpp \
 		Camera.cpp \
-		math.cpp \
-		vec3.cpp \
-		vec4.cpp \
-		mat4.cpp \
-		gl.cpp
+		Engine/AEngine.cpp \
+		Engine/EngineStatic.cpp \
+		Engine/EngineGen.cpp \
+		math/tranform.cpp \
+		math/vec3.cpp \
+		math/vec4.cpp \
+		math/mat4.cpp \
+		glad/gl.cpp
 
-CUDASRCS:= CudaWorker.cu
+CUDASRCS:= Worker/CudaWorker.cu
 
+SRCS_NODIR := $(notdir $(SRCS))
+OBJS := $(patsubst %.cpp,$(OBJDIR)/%.o, $(notdir $(SRCS)))
+DEPS := $(patsubst %.cpp,$(OBJDIR)/%.d, $(notdir $(SRCS)))
 
-OBJS := $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
-DEPS := $(patsubst %.cpp,$(OBJDIR)/%.d,$(SRCS))
+CUDAOBJS := $(patsubst %.cu,$(OBJDIR)/%.o, $(notdir $(CUDASRCS)))
+CUDADEPS := $(patsubst %.cu,$(OBJDIR)/%.d, $(notdir $(CUDASRCS)))
 
-CUDAOBJS := $(patsubst %.cu,$(OBJDIR)/%.o,$(CUDASRCS))
-CUDADEPS := $(patsubst %.cu,$(OBJDIR)/%.d,$(CUDASRCS))
-
-INCS := ./incs/
+INCS := ./include/
 
 _GREY		= \033[30m
 _RED		= \033[31m
@@ -67,4 +67,18 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: re fclean clean all cuda gl
+glad: glad.zip
+	wget "https://gen.glad.sh/generated/tmp0rc01w22glad/glad.zip"
+	mkdir incs/glad/
+	mkdir srcs/glad/
+	mv glad/include/glad/gl.h incs/glad/gl.h
+	mv glad/src/gl.c srcs/glad/gl.cpp
+
+cleanglad:
+	rm -f glad.zip
+	rm -rfd glad/
+	rm -rfd include/glad
+	rm -rfd src/glad
+
+
+.PHONY: re fclean clean all cleanglad
