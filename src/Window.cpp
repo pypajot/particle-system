@@ -3,6 +3,8 @@
 #include <iostream>
 #include <chrono>
 
+#include "Engine/AEngine.hpp"
+
 Window::Window()
 {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -31,7 +33,7 @@ void Window::bindEngine(AEngine *newEngine)
     engine->camera.computeProjectionMatrix(currentHeight, currentWidth);
 }
 
-bool Window::WasCreated()
+bool Window::WasCreated() const
 {
     return _window != NULL;
 }
@@ -100,10 +102,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         engine->reset();
 
     else if (key == GLFW_KEY_G && action == GLFW_PRESS)
-        engine->setGravity(
-            2 * winInstance->cursorX / winInstance->currentWidth - 1,
-            -(2 * winInstance->cursorY / winInstance->currentHeight - 1)
-        );
+        engine->setGravity(winInstance->cursorX, winInstance->cursorY, winInstance->currentWidth, winInstance->currentHeight);
+            
 
     else if (key == GLFW_KEY_H && action == GLFW_PRESS)
         engine->gravityOn = false;
@@ -149,7 +149,6 @@ void Window::RenderLoop()
     float currentFrame = 0.0f;
     float lastFrame = glfwGetTime();
     int fps = 0;
-    // std::string title;
 
     while(!glfwWindowShouldClose(_window))
     {
@@ -163,14 +162,10 @@ void Window::RenderLoop()
             lastFrame = currentFrame;
             fps = 0;
         }
-        engine->camera.move();
+
         if (engine->mousePressed)
-        {
-            engine->setGravity(
-                2 * cursorX / currentWidth - 1, (2 * cursorY / currentHeight - 1));
-        }
-        if (engine->simulationOn)
-            engine->run();
+            engine->setGravity(cursorX, cursorY, currentWidth, currentHeight);
+        engine->run();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         engine->useShader(currentFrame, cursorX, cursorY, currentHeight);

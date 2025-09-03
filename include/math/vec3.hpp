@@ -1,7 +1,5 @@
 #pragma once
 
-#include "vec4.hpp"
-
 class vec4;
 
 class vec3

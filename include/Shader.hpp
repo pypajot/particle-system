@@ -7,16 +7,13 @@ class Shader
 
         Shader();
         Shader(const char *vertexPath, const char *fragmentPath);
-        Shader(Shader &other);
+        Shader(const Shader &other);
         ~Shader();
 
-        Shader operator=(Shader &other);
+        Shader operator=(const Shader &other);
         
-        void use();
+        void use() const;
 
-        void setFloatUniform(const char *name, float value);
-        void setIntUniform(const char *name, int value);
+        void setFloatUniform(const char *name, float value) const;
+        void setIntUniform(const char *name, int value) const;
 };
-
-std::string loadShader(std::string shaderPath);
-int compileShader(std::string shaderSourceString, int shaderType);

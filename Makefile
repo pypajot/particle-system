@@ -72,8 +72,8 @@ glad:
 	unzip glad.zip -d glad
 	mkdir -p include/glad/
 	mkdir -p src/glad/
-	mv glad/include/glad/gl.h incs/glad/gl.h
-	mv glad/src/gl.c srcs/glad/gl.cpp
+	mv glad/include/glad/gl.h include/glad/gl.h
+	mv glad/src/gl.c src/glad/gl.cpp
 
 cleanglad:
 	rm -f glad.zip

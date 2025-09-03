@@ -4,9 +4,9 @@
 #include <iostream>
 
 #include "Window.hpp"
-#include "AEngine.hpp"
-#include "EngineStatic.hpp"
-#include "EngineGen.hpp"
+#include "Engine/AEngine.hpp"
+#include "Engine/EngineStatic.hpp"
+#include "Engine/EngineGen.hpp"
 
 
 int getParticleQty(int ac, char **av)

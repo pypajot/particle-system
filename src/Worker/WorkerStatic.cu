@@ -1,11 +1,12 @@
 #include <cuda_gl_interop.h>
 
-#include "CudaWorker.hpp"
 
 #include <iostream>
 #include <curand.h>
 #include <curand_kernel.h>
 #include <chrono>
+
+#include "Worker/WorkerStatic.hpp"
 
 #define GRAVITY_FACTOR 1
 #define TIME_FACTOR 1.0f / 60.0f
@@ -35,43 +36,19 @@ void checkCudaError(const char *function)
     std::cout << "In function " << function << "\nError " << name << " : " << string << "\n"; 
 }
 
-CudaWorker::CudaWorker()
+WorkerStatic::WorkerStatic() : AWorker()
 {
-    managesBuffer = false;
 }
 
-CudaWorker::CudaWorker(GLuint VBO, int particleQuantity)
+WorkerStatic::WorkerStatic(GLuint VBO, int particleQuantity) : AWorker(VBO, particleQuantity)
 {
-    particleQty = particleQuantity;
-
-    threadPerBlocks = 1024;
-    blocks = particleQty / threadPerBlocks + 1;
-    currentParticle = 0;
-    particlePerFrame = particleQty / 300;
-    cudaGraphicsGLRegisterBuffer(&cudaGL_ptr, VBO, cudaGraphicsRegisterFlagsNone);
-    checkCudaError("Register buffer");
-
-    cudaMalloc(&d_state, sizeof(curandState) * threadPerBlocks * blocks);
-    InitRand<<<blocks, threadPerBlocks>>>(d_state);
-
-    managesBuffer = true;
 }
 
-CudaWorker::CudaWorker(CudaWorker &other)
+WorkerStatic::WorkerStatic(WorkerStatic &other) : AWorker(other)
 {
-    other.managesBuffer = false;
-
-    particleQty = other.particleQty;
-    threadPerBlocks = other.threadPerBlocks;
-    blocks = other.blocks;
-    currentParticle = other.currentParticle;
-    particlePerFrame = other.particlePerFrame;
-    cudaGL_ptr = other.cudaGL_ptr;
-    d_state = other.d_state;
-    managesBuffer = true;
 }
 
-CudaWorker::~CudaWorker()
+WorkerStatic::~WorkerStatic()
 {
     if (managesBuffer)
     {
@@ -81,7 +58,7 @@ CudaWorker::~CudaWorker()
     }
 }
 
-CudaWorker &CudaWorker::operator=(CudaWorker &other)
+WorkerStatic &WorkerStatic::operator=(WorkerStatic &other)
 {
     if (this == &other)
         return *this;
@@ -136,7 +113,7 @@ void GravityAction(float *buffer, vec3 gravityPos, int bufferIndexMax, bool grav
     current[2] += current[5] * TIME_FACTOR;
 }
 
-void CudaWorker::call(vec3 &gravityPos, bool gravityOn)
+void WorkerStatic::call(vec3 &gravityPos, bool gravityOn)
 {
     size_t bufferSize = particleQty * 6 * sizeof(float);
     float *buffer;
@@ -204,7 +181,7 @@ void GravityActionGen(float *buffer, vec3 gravityPos, int bufferIndexMax, bool g
     current[6] += 1;
 }
 
-void CudaWorker::callGen(vec3 &gravityPos, bool gravityOn)
+void WorkerStatic::callGen(vec3 &gravityPos, bool gravityOn)
 {
     size_t bufferSize = particleQty * 7 * sizeof(float);
     float *buffer;
@@ -250,7 +227,7 @@ void Init(float *buffer, int bufferIndexMax, curandState *d_state)
     current[5] = uniformDisToBounds(curand_uniform(&d_state[index]), 0, 0.1f);
 }
 
-void CudaWorker::init()
+void WorkerStatic::init()
 {
     size_t bufferSize = particleQty * 6 * sizeof(float);
     float *buffer;
@@ -288,7 +265,7 @@ void InitGen(float *buffer, int bufferIndexMax, float maxTtl)
     current[6] = maxTtl;
 }
 
-void CudaWorker::initGen(float maxTtl)
+void WorkerStatic::initGen(float maxTtl)
 {
     size_t bufferSize = particleQty * 7 * sizeof(float);
     float *buffer;

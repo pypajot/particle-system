@@ -1,6 +1,6 @@
 #include <random>
 
-#include "EngineStatic.hpp"
+#include "Engine/EngineStatic.hpp"
 
 #include <iostream>
 
@@ -95,27 +95,26 @@ void EngineStatic::useShader(float frameTime, float cursorX, float cursorY, floa
 
 EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity)
 {
+    initType = ENGINE_INIT_STATIC;
+
     vertexPath = "shaders/vertexShader.vs";
-    Shader s(vertexPath.c_str(), fragmentPath.c_str());
-    shader = s;
-    initType = "static";
+    shader = Shader(vertexPath.c_str(), fragmentPath.c_str());;
+
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);  
+
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
+
     glBufferData(GL_ARRAY_BUFFER, particleQty * 6 * sizeof(float), 0, GL_STREAM_DRAW);
 
-    
+
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    CudaWorker test(VBO, particleQty);
-    gravity = test;
-    initSphere();
-}
 
-void EngineStatic::run()
-{
-    gravity.call(gravityPos, gravityOn);
+    gravity = WorkerStatic(VBO, particleQty);
+    initSphere();
 }

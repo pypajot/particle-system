@@ -7,46 +7,50 @@
 
 #include "Shader.hpp"
 #include "Camera.hpp"
-#include "CudaWorker.hpp"
+
+enum EngineInit
+{
+    ENGINE_INIT_STATIC,
+    ENGINE_INIT_GEN
+};
 
 class AEngine
 {
-    public:
+    protected:
+        EngineInit initType;
+
         std::string vertexPath;
         const std::string fragmentPath = "shaders/fragmentShader.fs";
-
-        const float mouseDepth = 2.0f;
-
-        unsigned int VAO;
-        GLuint VBO;
-
+        
         int particleQty;
+        const float mouseDepth = 2.0f;
+        vec3 gravityPos;
+        
+        Shader shader;
+
+    public:
+        GLuint VBO;
+        GLuint VAO;
 
         bool simulationOn;
         bool gravityOn;
         bool mousePressed;
-        vec3 gravityPos;
-
-        Shader shader;
+        
         Camera camera;
-
-        std::string initType;
-
-        CudaWorker gravity;
-
+    
         AEngine(int particleQty);
-        // AEngine(AEngine &other);
+        AEngine(const AEngine &other);
         virtual ~AEngine();
 
-        // AEngine &operator=(AEngine &other);
+        AEngine &operator=(const AEngine &other);
 
         void deleteArrays();
 
         virtual void useShader(float frameTime, float cursorX, float cursorY, float currentHeight) = 0;
-        void setGravity(float cursorX, float cursorY);
+        void setGravity(float cursorX, float cursorY, float width, float height);
         void draw();
 
         virtual void reset() = 0;
 
-        virtual void run() = 0;
+        void run();
 };

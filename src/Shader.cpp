@@ -14,6 +14,25 @@ Shader::Shader()
     program = 0;
 }
 
+std::string loadShader(std::string shaderPath)
+{
+    std::ifstream shaderFile(shaderPath);
+    std::stringstream shaderStream;
+    shaderStream << shaderFile.rdbuf();
+    shaderFile.close();
+    return shaderStream.str();
+}
+
+int compileShader(std::string shaderSourceString, int shaderType)
+{
+    const char *shaderSource = shaderSourceString.c_str();
+    unsigned int shader;
+    shader = glCreateShader(shaderType);
+    glShaderSource(shader, 1, &shaderSource, NULL);
+    glCompileShader(shader);
+    return shader;
+}
+
 Shader::Shader(const char *vertexPath, const char *fragmentPath)
 {
     std::string vertexShaderCode = loadShader(vertexPath);
@@ -56,12 +75,12 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
     program = shaderProgram;
 }
 
-Shader::Shader(Shader &other)
+Shader::Shader(const Shader &other)
 {
     program = other.program;
 }
 
-Shader Shader::operator=(Shader &other)
+Shader Shader::operator=(const Shader &other)
 {
     program = other.program;
     return *this;
@@ -71,26 +90,8 @@ Shader::~Shader()
 {
 }
 
-std::string loadShader(std::string shaderPath)
-{
-    std::ifstream shaderFile(shaderPath);
-    std::stringstream shaderStream;
-    shaderStream << shaderFile.rdbuf();
-    shaderFile.close();
-    return shaderStream.str();
-}
 
-int compileShader(std::string shaderSourceString, int shaderType)
-{
-    const char *shaderSource = shaderSourceString.c_str();
-    unsigned int shader;
-    shader = glCreateShader(shaderType);
-    glShaderSource(shader, 1, &shaderSource, NULL);
-    glCompileShader(shader);
-    return shader;
-}
-
-void Shader::setFloatUniform(const char *name, float value)
+void Shader::setFloatUniform(const char *name, float value) const
 {
     int loc = glGetUniformLocation(program, name);
     if (loc == -1)
@@ -98,7 +99,7 @@ void Shader::setFloatUniform(const char *name, float value)
     glUniform1f(loc, value);
 }
 
-void Shader::setIntUniform(const char *name, int value)
+void Shader::setIntUniform(const char *name, int value) const
 {
     int loc = glGetUniformLocation(program, name);
     if (loc == -1)
@@ -106,7 +107,7 @@ void Shader::setIntUniform(const char *name, int value)
     glUniform1i(loc, value);
 }
 
-void Shader::use()
+void Shader::use() const
 {
     glUseProgram(program);
 }

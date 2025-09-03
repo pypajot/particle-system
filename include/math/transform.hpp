@@ -1,7 +1,7 @@
 #pragma once
 
-#include "mat4.hpp"
-#include "vec3.hpp"
+class mat4;
+class vec3;
 
 float toRadians(float angle);
 

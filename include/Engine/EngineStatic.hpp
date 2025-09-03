@@ -1,9 +1,14 @@
 #pragma once
 
 #include "AEngine.hpp"
+#include "Worker/WorkerStatic.hpp"
+
 
 class EngineStatic : public AEngine
 {
+    private:
+        WorkerGen gravity;
+        
     public:
         EngineStatic(int particleQuantity);
 

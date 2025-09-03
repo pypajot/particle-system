@@ -1,7 +1,6 @@
 #pragma once
 
-#include "vec4.hpp"
-// #include <std::vector>
+class vec4;
 
 class mat4
 {
