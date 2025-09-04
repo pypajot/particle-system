@@ -67,7 +67,7 @@ void Camera::move()
     if (movement.length() == 0)
     return;
     movement *= 1 / movement.length();
-    rotate = rotation(rotate, direction.y, vec3(0.0f, 1.0f, 0.0f));
+    rotate = rotation(rotate, -direction.y, vec3(0.0f, 1.0f, 0.0f));
     movement = rotate * vec4(movement, 1.0f);
     position += movement * moveSpeed;
 }

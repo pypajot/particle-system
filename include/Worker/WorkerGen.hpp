@@ -4,9 +4,6 @@
 
 class vec3;
 
-#define BASE_TTL 300
-#define BASE_PPF 10000
-
 class WorkerGen : AWorker
 {
     private:
