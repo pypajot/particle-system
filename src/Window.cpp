@@ -126,7 +126,12 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     {
         EngineGen *engineG = reinterpret_cast<EngineGen *>(engine);
         if (key == GLFW_KEY_T && action == GLFW_PRESS)
-            engineG->generatorOn = !engineG->generatorOn ;
+            engineG->generatorOn = !engineG->generatorOn;
+            
+        else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
+            engineG->ppfUp();
+        else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
+            engineG->ppfDown();
     }
 
 }

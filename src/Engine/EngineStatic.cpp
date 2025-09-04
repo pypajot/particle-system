@@ -31,6 +31,25 @@ EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity), wo
     initSphere();
 }
 
+EngineStatic::EngineStatic(const EngineStatic &other) : AEngine(other)
+{
+    worker = other.worker;
+}
+
+EngineStatic::~EngineStatic()
+{
+}
+
+EngineStatic &EngineStatic::operator=(const EngineStatic &other)
+{
+    if (this == &other)
+        return *this;
+        
+    AEngine::operator=(other);
+    worker = other.worker;
+    return *this;
+}
+
 void EngineStatic::resetCube()
 {
     worker->initCube();
@@ -69,6 +88,6 @@ void EngineStatic::run()
     
     if (!simulationOn)
         return;
-        
+
     worker->call(gravityPos, gravityOn, gravityStrength);
 }

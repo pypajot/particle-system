@@ -10,10 +10,7 @@ class vec3;
 class WorkerGen : AWorker
 {
     private:
-        float maxTtl;
         int currentParticle;
-        int particlePerFrame;
-
         
     public:
         WorkerGen();

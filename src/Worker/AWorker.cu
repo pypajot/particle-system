@@ -59,8 +59,6 @@ AWorker::AWorker(const AWorker &other)
     particleQty = other.particleQty;
     threadPerBlocks = other.threadPerBlocks;
     blocks = other.blocks;
-    currentParticle = other.currentParticle;
-    particlePerFrame = other.particlePerFrame;
     cudaGL_ptr = other.cudaGL_ptr;
     d_state = other.d_state;
 
@@ -74,8 +72,6 @@ AWorker::AWorker(AWorker &&other)
     particleQty = other.particleQty;
     threadPerBlocks = other.threadPerBlocks;
     blocks = other.blocks;
-    currentParticle = other.currentParticle;
-    particlePerFrame = other.particlePerFrame;
     cudaGL_ptr = other.cudaGL_ptr;
     d_state = other.d_state;
 
@@ -100,8 +96,6 @@ AWorker &AWorker::operator=(const AWorker &other)
     particleQty = other.particleQty;
     threadPerBlocks = other.threadPerBlocks;
     blocks = other.blocks;
-    currentParticle = other.currentParticle;
-    particlePerFrame = other.particlePerFrame;
     cudaGL_ptr = other.cudaGL_ptr;
     d_state = other.d_state;
 
@@ -120,8 +114,6 @@ AWorker &AWorker::operator=(AWorker &&other)
     particleQty = other.particleQty;
     threadPerBlocks = other.threadPerBlocks;
     blocks = other.blocks;
-    currentParticle = other.currentParticle;
-    particlePerFrame = other.particlePerFrame;
     cudaGL_ptr = other.cudaGL_ptr;
     d_state = other.d_state;
 

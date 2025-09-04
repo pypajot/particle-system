@@ -19,23 +19,17 @@ WorkerGen::WorkerGen() : AWorker()
 
 WorkerGen::WorkerGen(GLuint VBO, int particleQuantity, float maxTtl, int particlePerFrame, bool &generatorOn) : AWorker(VBO, particleQuantity)
 {
-    maxTtl = BASE_TTL;
     currentParticle = 0;
-    particlePerFrame = BASE_PPF;
 }
 
 WorkerGen::WorkerGen(const WorkerGen &other) : AWorker(other)
 {
-    maxTtl = other.maxTtl;
     currentParticle = other.currentParticle;
-    particlePerFrame = other.particlePerFrame;
 }
 
 WorkerGen::WorkerGen(WorkerGen &&other) : AWorker(other)
 {
-    maxTtl = other.maxTtl;
     currentParticle = other.currentParticle;
-    particlePerFrame = other.particlePerFrame;
 }
 
 WorkerGen::~WorkerGen()
@@ -54,9 +48,7 @@ WorkerGen &WorkerGen::operator=(const WorkerGen &other)
         return *this;
 
     this->AWorker::operator=(other);
-    maxTtl = other.maxTtl;
     currentParticle = other.currentParticle;
-    particlePerFrame = other.particlePerFrame;
     return *this;
 }
 
@@ -66,9 +58,7 @@ WorkerGen &WorkerGen::operator=(WorkerGen &&other)
         return *this;
 
     this->AWorker::operator=(other);
-    maxTtl = other.maxTtl;
     currentParticle = other.currentParticle;
-    particlePerFrame = other.particlePerFrame;
     return *this;
 }
 

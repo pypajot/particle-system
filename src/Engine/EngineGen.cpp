@@ -13,6 +13,7 @@ EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity), worker(V
     initType = ENGINE_INIT_GEN;    
     vertexPath = "shaders/vertexShaderGen.vs";
     shader = Shader(vertexPath.c_str(), fragmentPath.c_str());
+    particlePerFrame = BASE_PPF;
 
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -36,9 +37,25 @@ EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity), worker(V
 
 EngineGen::EngineGen(const EngineGen &other) : AEngine(other)
 {
-    currentParticle = other.currentParticle;
+    particlePerFrame = other.particlePerFrame;
     generatorOn = other.generatorOn;
     worker = other.worker;
+}
+
+EngineGen::~EngineGen()
+{
+}
+
+EngineGen &EngineGen::operator=(const EngineGen &other)
+{
+    if (this == &other)
+        return *this;
+        
+    AEngine::operator=(other);
+    particlePerFrame = other.particlePerFrame;
+    generatorOn = other.generatorOn;
+    worker = other.worker;
+    return *this;
 }
 
 void EngineGen::reset()
@@ -74,9 +91,23 @@ void EngineGen::run()
     
     if (!simulationOn)
         return;
-        
+
     if (generatorOn)
         worker->generate(particlePerFrame);
 
     worker->call(gravityPos, gravityOn, gravityStrength);
+}
+
+void EngineGen::ppfUp()
+{
+    if (particlePerFrame >= MAX_PPF)
+        return;
+    particlePerFrame += 500;
+}
+
+void EngineGen::ppfDown()
+{
+    if (particlePerFrame <= MIN_PPF)
+        return;
+    particlePerFrame -= 500;
 }
