@@ -6,21 +6,25 @@
 
 class vec3;
 
+#define THREAD_PER_BLOCK 1024
+
 class AWorker
 {
     protected:
         bool managesBuffer;
         cudaGraphicsResource *cudaGL_ptr;
-
-        int particleQty;
-        int threadPerBlocks;
-        int blocks;
+        float *buffer;
+        
+        const int elemSize;
+        const int particleQty;
+        const int threadPerBlocks;
+        const int blocks;
         
         curandState *d_state;
         
     public:
         AWorker();
-        AWorker(GLuint VBO, int particleQuantity);
+        AWorker(GLuint VBO, int particleQuantity, int elemSz);
         AWorker(const AWorker &other);
         AWorker(AWorker &&other);
 
@@ -29,9 +33,10 @@ class AWorker
         AWorker &operator=(const AWorker &other);
         AWorker &operator=(AWorker &&other);
 
+        void Map();
+        void Unmap();
+
         virtual void call(vec3 &gravityPos, bool gravityOn, float gravityStrength) = 0;
         virtual void init() = 0;
 
 };
-
-void checkCudaError(const char *function);

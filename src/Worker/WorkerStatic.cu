@@ -40,7 +40,7 @@ WorkerStatic::WorkerStatic() : AWorker()
 {
 }
 
-WorkerStatic::WorkerStatic(GLuint VBO, int particleQuantity) : AWorker(VBO, particleQuantity)
+WorkerStatic::WorkerStatic(GLuint VBO, int particleQuantity) : AWorker(VBO, particleQuantity, 6)
 {
 }
 
@@ -111,17 +111,19 @@ void LoopAction(float *buffer, vec3 gravityPos, float gravityStrength, int buffe
 
 void WorkerStatic::call(vec3 &gravityPos, bool gravityOn)
 {
-    size_t bufferSize = particleQty * 6 * sizeof(float);
-    float *buffer;
+    // size_t bufferSize = particleQty * 6 * sizeof(float);
+    // float *buffer;
     
-    cudaGraphicsMapResources(1, &cudaGL_ptr);
-    checkCudaError("Map resource");
+    // cudaGraphicsMapResources(1, &cudaGL_ptr);
+    // checkCudaError("Map resource");
 
-    cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
-    checkCudaError("Get Mapped pointer");
+    // cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
+    // checkCudaError("Get Mapped pointer");
+    AWorker::Map();
     LoopAction<<<blocks, threadPerBlocks>>>(buffer, gravityPos, gravityStrength, particleQty, gravityOn);
-    cudaGraphicsUnmapResources(1, &cudaGL_ptr);
-    checkCudaError("Unmap resource");
+    AWorker::Unmap();
+    // cudaGraphicsUnmapResources(1, &cudaGL_ptr);
+    // checkCudaError("Unmap resource");
 }
 
 __global__
@@ -150,17 +152,19 @@ void InitSphere(float *buffer, int bufferIndexMax, curandState *d_state)
 
 void WorkerStatic::init()
 {
-    size_t bufferSize = particleQty * 6 * sizeof(float);
-    float *buffer;
+    // size_t bufferSize = particleQty * 6 * sizeof(float);
+    // float *buffer;
 
-    cudaGraphicsMapResources(1, &cudaGL_ptr);
-    checkCudaError("Map resource");
+    // cudaGraphicsMapResources(1, &cudaGL_ptr);
+    // checkCudaError("Map resource");
 
-    cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
-    checkCudaError("Get Mapped pointer");
+    // cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
+    // checkCudaError("Get Mapped pointer");
+    AWorker::Map();
     InitSphere<<<blocks, threadPerBlocks>>>(buffer, particleQty, d_state);
-    cudaGraphicsUnmapResources(1, &cudaGL_ptr);
-    checkCudaError("Unmap resource");
+    AWorker::Unmap();
+    // cudaGraphicsUnmapResources(1, &cudaGL_ptr);
+    // checkCudaError("Unmap resource");
 }
 
 __global__
@@ -218,15 +222,17 @@ void InitCube(float *buffer, int bufferIndexMax, curandState *d_state)
 
 void WorkerStatic::initCube()
 {
-    size_t bufferSize = particleQty * 6 * sizeof(float);
-    float *buffer;
+    // size_t bufferSize = particleQty * 6 * sizeof(float);
+    // float *buffer;
 
-    cudaGraphicsMapResources(1, &cudaGL_ptr);
-    checkCudaError("Map resource");
+    // cudaGraphicsMapResources(1, &cudaGL_ptr);
+    // checkCudaError("Map resource");
 
-    cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
-    checkCudaError("Get Mapped pointer");
+    // cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
+    // checkCudaError("Get Mapped pointer");
+    AWorker::Map();
     InitCube<<<blocks, threadPerBlocks>>>(buffer, particleQty, d_state);
-    cudaGraphicsUnmapResources(1, &cudaGL_ptr);
-    checkCudaError("Unmap resource");
+    AWorker::Unmap();
+    // cudaGraphicsUnmapResources(1, &cudaGL_ptr);
+    // checkCudaError("Unmap resource");
 }

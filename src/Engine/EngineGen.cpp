@@ -92,10 +92,11 @@ void EngineGen::run()
     if (!simulationOn)
         return;
 
+    worker.Map();
     if (generatorOn)
         worker->generate(particlePerFrame);
-
     worker->call(gravityPos, gravityOn, gravityStrength);
+    worker.Unmap();
 }
 
 void EngineGen::ppfUp()
