@@ -6,31 +6,41 @@
 
 class vec3;
 
+#define BASE_GRAVITY 1.0f
+#define MAX_GRAVITY 2.0f
+#define MIN_GRAVITY 0.3f
+
 class AWorker
 {
-    private:
+    protected:
         bool managesBuffer;
         cudaGraphicsResource *cudaGL_ptr;
 
         int particleQty;
         int threadPerBlocks;
         int blocks;
+        
 
         curandState *d_state;
         
+        float gravityStrength;
+
     public:
-        Worker();
-        Worker(GLuint VBO, int particleQuantity);
-        Worker(const Worker &other);
-        Worker(Worker &&other);
+        AWorker();
+        AWorker(GLuint VBO, int particleQuantity);
+        AWorker(const AWorker &other);
+        AWorker(AWorker &&other);
 
-        ~Worker();
+        ~AWorker();
 
-        Worker &operator=(const Worker &other);
-        Worker &operator=(Worker &&other);
+        AWorker &operator=(const AWorker &other);
+        AWorker &operator=(AWorker &&other);
 
         virtual void call(vec3 &gravityPos, bool gravityOn) = 0;
         virtual void init() = 0;
+
+        void GravityUp();
+        void GravityDown();
         // void callGen(vec3 &gravityPos, bool gravityOn);
         // void initGen(float maxTtl);
 

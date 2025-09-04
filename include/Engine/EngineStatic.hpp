@@ -12,8 +12,7 @@ class EngineStatic : public AEngine
     public:
         EngineStatic(int particleQuantity);
 
-        void initCube();
-        void initSphere();
+        void resetCube();
 
         void useShader(float frameTime, float cursorX, float cursorY, float currentHeight);
         void reset();

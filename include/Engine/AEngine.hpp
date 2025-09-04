@@ -4,9 +4,11 @@
 #include <GLFW/glfw3.h>
 
 #include <string>
+#include <memory>
 
 #include "Shader.hpp"
 #include "Camera.hpp"
+#include "Worker/AWorker.hpp"
 
 enum EngineInit
 {
@@ -27,6 +29,7 @@ class AEngine
         vec3 gravityPos;
         
         Shader shader;
+        std::unique_ptr<AWorker> worker;
 
     public:
         GLuint VBO;

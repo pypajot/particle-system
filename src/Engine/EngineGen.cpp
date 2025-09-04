@@ -31,7 +31,7 @@ EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity)
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-    gravity = WorkerGen(VBO, particleQty, timeToLive, particlePerFrame);
+    worker = std::unique_ptr<AWorker>(new WorkerGen(VBO, particleQty, timeToLive, particlePerFrame));
     reset();
 }
 
@@ -46,7 +46,7 @@ void EngineGen::reset()
 {
     camera.resetPosition();
     generatorOn = true;
-    gravity.initGen(timeToLive);
+    worker->initGen(timeToLive);
     simulationOn = false;
 }
 

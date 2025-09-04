@@ -4,6 +4,9 @@
 #include <chrono>
 
 #include "Engine/AEngine.hpp"
+#include "Engine/EngineGen.hpp"
+#include "Engine/EngineStatic.hpp"
+#include "FPSCounter.hpp"
 
 Window::Window()
 {
@@ -104,9 +107,26 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     else if (key == GLFW_KEY_G && action == GLFW_PRESS)
         engine->setGravity(winInstance->cursorX, winInstance->cursorY, winInstance->currentWidth, winInstance->currentHeight);
             
-
     else if (key == GLFW_KEY_H && action == GLFW_PRESS)
         engine->gravityOn = false;
+
+    else if (engine->initType == ENGINE_INIT_STATIC)
+    {
+        EngineStatic *engineS = reinterpret_cast<EngineGen *>(engine);
+        if (key == GLFW_KEY_T && action == GLFW_PRESS)
+            engineS->resetCube();
+    }
+
+    else if (engine->initType == ENGINE_INIT_GEN)
+    {
+        EngineGen *engineG = reinterpret_cast<EngineGen *>(engine);
+        if (key == GLFW_KEY_T && action == GLFW_PRESS)
+            engineG->generatorOn = !engineG->generatorOn ;
+        else if (key == GLFW_KEY_UP && action == GLFW_PRESS)
+            engineG->worker->GravityUp();
+        else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
+            engineG->worker->GravityDown();
+    }
 
 }
 
@@ -147,21 +167,16 @@ int Window::Init()
 void Window::RenderLoop()
 {
     float currentFrame = 0.0f;
-    float lastFrame = glfwGetTime();
-    int fps = 0;
+    FPSCounter counter(60, glfwGetTime());
 
     while(!glfwWindowShouldClose(_window))
     {
         currentFrame = glfwGetTime();
         glfwGetCursorPos(_window, &cursorX, &cursorY);
-        fps++;
-        if (currentFrame - lastFrame > 0.5)
-        {
-            fps = fps / (currentFrame - lastFrame);
-            glfwSetWindowTitle(_window, std::to_string(fps).c_str());
-            lastFrame = currentFrame;
-            fps = 0;
-        }
+        counter.addFrame(currentFrame);
+        
+        if (counter.getFrame() % 30)
+            glfwSetWindowTitle(_window, std::to_string(counter.getFPS()).c_str());
 
         if (engine->mousePressed)
             engine->setGravity(cursorX, cursorY, currentWidth, currentHeight);

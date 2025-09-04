@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "math/transform.hpp"
+#include "transform.hpp"
 #include "math/vec4.hpp"
 #include "Camera.hpp"
 

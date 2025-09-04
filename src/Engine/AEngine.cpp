@@ -76,5 +76,5 @@ void AEngine::run()
     engine->camera.move();
     
     if (simulationOn)
-        gravity.call(gravityPos, gravityOn);
+        worker->call(gravityPos, gravityOn);
 }
