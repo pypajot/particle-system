@@ -6,10 +6,6 @@
 
 class vec3;
 
-#define BASE_GRAVITY 1.0f
-#define MAX_GRAVITY 2.0f
-#define MIN_GRAVITY 0.3f
-
 class AWorker
 {
     protected:
@@ -20,11 +16,8 @@ class AWorker
         int threadPerBlocks;
         int blocks;
         
-
         curandState *d_state;
         
-        float gravityStrength;
-
     public:
         AWorker();
         AWorker(GLuint VBO, int particleQuantity);
@@ -36,11 +29,8 @@ class AWorker
         AWorker &operator=(const AWorker &other);
         AWorker &operator=(AWorker &&other);
 
-        virtual void call(vec3 &gravityPos, bool gravityOn) = 0;
+        virtual void call(vec3 &gravityPos, bool gravityOn, float gravityStrength) = 0;
         virtual void init() = 0;
-
-        void GravityUp();
-        void GravityDown();
 
 };
 

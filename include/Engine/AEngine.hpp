@@ -10,6 +10,10 @@
 #include "Camera.hpp"
 #include "Worker/AWorker.hpp"
 
+#define BASE_GRAVITY 1.0f
+#define MAX_GRAVITY 2.0f
+#define MIN_GRAVITY 0.3f
+
 enum EngineInit
 {
     ENGINE_INIT_STATIC,
@@ -29,7 +33,6 @@ class AEngine
         vec3 gravityPos;
         
         Shader shader;
-        // std::unique_ptr<AWorker> worker;
 
     public:
         GLuint VBO;
@@ -39,6 +42,8 @@ class AEngine
         bool gravityOn;
         bool mousePressed;
         
+        float gravityStrength;
+
         Camera camera;
     
         AEngine(int particleQty);
@@ -56,4 +61,7 @@ class AEngine
         virtual void reset() = 0;
 
         void run() = 0;
+
+        void GravityUp();
+        void GravityDown();
 };

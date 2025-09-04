@@ -110,6 +110,11 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     else if (key == GLFW_KEY_H && action == GLFW_PRESS)
         engine->gravityOn = false;
 
+    else if (key == GLFW_KEY_UP && action == GLFW_PRESS)
+        engine->GravityUp();
+    else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
+        engine->GravityDown();
+
     else if (engine->initType == ENGINE_INIT_STATIC)
     {
         EngineStatic *engineS = reinterpret_cast<EngineGen *>(engine);
@@ -122,10 +127,6 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         EngineGen *engineG = reinterpret_cast<EngineGen *>(engine);
         if (key == GLFW_KEY_T && action == GLFW_PRESS)
             engineG->generatorOn = !engineG->generatorOn ;
-        else if (key == GLFW_KEY_UP && action == GLFW_PRESS)
-            engineG->worker->GravityUp();
-        else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
-            engineG->worker->GravityDown();
     }
 
 }
@@ -174,7 +175,7 @@ void Window::RenderLoop()
         currentFrame = glfwGetTime();
         glfwGetCursorPos(_window, &cursorX, &cursorY);
         counter.addFrame(currentFrame);
-        
+
         if (counter.getFrame() % 30)
             glfwSetWindowTitle(_window, std::to_string(counter.getFPS()).c_str());
 

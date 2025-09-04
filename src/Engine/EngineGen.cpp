@@ -45,7 +45,7 @@ void EngineGen::reset()
 {
     camera.resetPosition();
     generatorOn = true;
-    worker->initGen(timeToLive);
+    worker->initGen();
     simulationOn = false;
 }
 
@@ -72,6 +72,11 @@ void EngineGen::run()
 {
     engine->camera.move();
     
-    if (simulationOn)
-        worker->call(gravityPos, gravityOn, generatorOn);
+    if (!simulationOn)
+        return;
+        
+    if (generatorOn)
+        worker->generate(particlePerFrame);
+
+    worker->call(gravityPos, gravityOn, gravityStrength);
 }

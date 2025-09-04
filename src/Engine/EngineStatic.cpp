@@ -67,6 +67,8 @@ void EngineStatic::run()
 {
     engine->camera.move();
     
-    if (simulationOn)
-        worker->call(gravityPos, gravityOn);
+    if (!simulationOn)
+        return;
+        
+    worker->call(gravityPos, gravityOn, gravityStrength);
 }

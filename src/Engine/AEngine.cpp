@@ -12,6 +12,8 @@ AEngine::AEngine(int particleQuantity)
     particleQty = particleQuantity;
     simulationOn = false;
     mousePressed = false;
+    gravityStrength = BASE_GRAVITY;
+
 }
 
 AEngine::AEngine(const AEngine &other)
@@ -69,4 +71,18 @@ void AEngine::setGravity(float cursorX, float cursorY, float width, float height
     vec4 mouseWorld = inverse(camera.coordToScreenMatrix()) * mouseNdc;
     gravityPos = mouseWorld / mouseWorld.w;
     gravityOn = true;
+}
+
+void AEngine::GravityUp()
+{
+    if (gravityStrength >= MAX_GRAVITY)
+        return;
+    gravityStrength += 0.1f;
+}
+
+void AEngine::GravityDown()
+{
+    if (gravityStrength <= MIN_GRAVITY)
+        return;
+    gravityStrength -= 0.1f;
 }

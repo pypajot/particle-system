@@ -82,7 +82,7 @@ bool ParticleIsGenerated(int index, int currentParticle, int particlePerframe, i
 }
 
 __global__ 
-void LoopActionGenerator(float *buffer, int bufferIndexMax, curandState *d_state, int particlePerFrame, int currentParticle, bool generatorOn)
+void LoopActionGenerator(float *buffer, int bufferIndexMax, curandState *d_state, int particlePerFrame, int currentParticle)
 {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -92,7 +92,7 @@ void LoopActionGenerator(float *buffer, int bufferIndexMax, curandState *d_state
     float *current = buffer + index * 7;
 
     
-    if (generatorOn && ParticleIsGenerated(index, currentParticle, particlePerFrame, bufferIndexMax))
+    if (ParticleIsGenerated(index, currentParticle, particlePerFrame, bufferIndexMax))
     {
         float angleY = M_PI_2 - uniformDisToBounds(curand_uniform(&d_state[index]), 0, 0.2f);
         float angleXZ = uniformDisToBounds(curand_uniform(&d_state[index]), 0, M_PI * 2);
@@ -141,7 +141,7 @@ void LoopActionGravity(float *buffer, vec3 gravityPos, float gravityStrength, in
 }
 
 
-void WorkerGen::call(vec3 &gravityPos, bool gravityOn, bool generatorOn)
+void WorkerGen::call(vec3 &gravityPos, bool gravityOn, float gravityStrength)
 {
     size_t bufferSize = particleQty * 7 * sizeof(float);
     float *buffer;
@@ -151,12 +151,27 @@ void WorkerGen::call(vec3 &gravityPos, bool gravityOn, bool generatorOn)
 
     cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
     checkCudaError("Get Mapped pointer");
-    LoopActionGenerator<<<blocks, threadPerBlocks>>>(buffer, particleQty, d_state, particlePerFrame, currentParticle, generatorOn);
     LoopActionGravity<<<blocks, threadPerBlocks>>>(buffer, gravityPos, gravityStrength, particleQty, gravityOn);
     cudaGraphicsUnmapResources(1, &cudaGL_ptr);
     checkCudaError("Unmap resource");
     if (generatorOn)
         currentParticle = (currentParticle + particlePerFrame) % particleQty;
+}
+
+void WorkerGen::generate(int particlePerFrame)
+{
+    size_t bufferSize = particleQty * 7 * sizeof(float);
+    float *buffer;
+    
+    cudaGraphicsMapResources(1, &cudaGL_ptr);
+    checkCudaError("Map resource");
+
+    cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
+    checkCudaError("Get Mapped pointer");
+    LoopActionGenerator<<<blocks, threadPerBlocks>>>(buffer, particleQty, d_state, particlePerFrame, currentParticle);
+    cudaGraphicsUnmapResources(1, &cudaGL_ptr);
+    checkCudaError("Unmap resource");
+    currentParticle = (currentParticle + particlePerFrame) % particleQty;
 }
 
 __global__
@@ -175,7 +190,7 @@ void InitGenerator(float *buffer, int bufferIndexMax, float maxTtl)
     current[3] = 0.0f;
     current[4] = 0.0f;
     current[5] = 0.0f;
-    current[6] = maxTtl;
+    current[6] = __INT32_MAX__;
 }
 
 void WorkerGen::init()

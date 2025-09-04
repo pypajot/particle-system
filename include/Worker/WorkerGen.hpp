@@ -16,8 +16,6 @@ class WorkerGen : AWorker
 
         
     public:
-        bool &generatorOn;
-
         WorkerGen();
         WorkerGen(GLuint VBO, int particleQuantity, bool &generatorOn);
         WorkerGen(const WorkerGen &other);
@@ -25,7 +23,8 @@ class WorkerGen : AWorker
 
         WorkerGen &operator=(const WorkerGen &other);
 
-        void call(vec3 &gravityPos, bool gravityOn);
+        void call(vec3 &gravityPos, bool gravityOn, float gravityStrength);
+        void generate(bool generatorOn);
         void init();
 
 };

@@ -44,7 +44,6 @@ AWorker::AWorker(GLuint VBO, int particleQuantity)
 
     threadPerBlocks = 1024;
     blocks = particleQty / threadPerBlocks + 1;
-    gravityStrength = BASE_GRAVITY;
 
     cudaGraphicsGLRegisterBuffer(&cudaGL_ptr, VBO, cudaGraphicsRegisterFlagsNone);
     checkCudaError("Register buffer");
@@ -64,7 +63,6 @@ AWorker::AWorker(const AWorker &other)
     particlePerFrame = other.particlePerFrame;
     cudaGL_ptr = other.cudaGL_ptr;
     d_state = other.d_state;
-    gravityStrength = other.gravityStrength;
 
     managesBuffer = false;
 }
@@ -80,8 +78,8 @@ AWorker::AWorker(AWorker &&other)
     particlePerFrame = other.particlePerFrame;
     cudaGL_ptr = other.cudaGL_ptr;
     d_state = other.d_state;
-    gravityStrength = other.gravityStrength;
-        managesBuffer = true;
+
+    managesBuffer = true;
 }
 
 AWorker::~AWorker()
@@ -106,7 +104,6 @@ AWorker &AWorker::operator=(const AWorker &other)
     particlePerFrame = other.particlePerFrame;
     cudaGL_ptr = other.cudaGL_ptr;
     d_state = other.d_state;
-    gravityStrength = other.gravityStrength;
 
     managesBuffer = false;
 
@@ -127,23 +124,8 @@ AWorker &AWorker::operator=(AWorker &&other)
     particlePerFrame = other.particlePerFrame;
     cudaGL_ptr = other.cudaGL_ptr;
     d_state = other.d_state;
-    gravityStrength = other.gravityStrength;
 
     managesBuffer = true;
 
     return *this;
-}
-
-void GravityUp()
-{
-    if (gravityStrength >= MAX_GRAVITY)
-        return;
-    gravityStrength += 0.1f;
-}
-
-void GravityDown()
-{
-    if (gravityStrength <= MIN_GRAVITY)
-        return;
-    gravityStrength -= 0.1f;
 }

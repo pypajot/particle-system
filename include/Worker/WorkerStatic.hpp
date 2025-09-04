@@ -17,7 +17,7 @@ class WorkerStatic : AWorker
         WorkerStatic &operator=(const WorkerStatic &other);
         WorkerStatic &operator=(WorkerStatic &&other);
 
-        void call(vec3 &gravityPos, bool gravityOn);
+        void call(vec3 &gravityPos, bool gravityOn, float gravityStrength);
         void init();
 
 };
