@@ -9,33 +9,40 @@
 #include "Engine/EngineGen.hpp"
 
 
-int getParticleQty(int ac, char **av)
+uint getParticleQty(int ac, char **av)
 {
-    if (ac == 1 || ac > 3)
+    if (ac < 2)
         return 0;
 
     return atoi(av[1]);
 }
 
-bool getGeneratorOption(int ac, char **av)
+uint getGeneratorOption(int ac, char **av)
 {
-    if (ac == 2)
-        return false;
+    if (ac < 3)
+        return 0;
 
     std::string option(av[2]);
-    if (option == "-g")
-        return true;
+    if (option != "-g")
+        return 0;
 
-    return false;
+    if (ac < 4)
+        return BASE_TTL;
+
+    uint ttl = atoi(av[3]);
+    return ttl < BASE_TTL ? BASE_TTL : ttl;
 }
 
 int main(int ac, char **av)
 {
-    int particleQty = getParticleQty(ac, av);
-    bool hasGenerator = getGeneratorOption(ac, av);
+    uint particleQty = getParticleQty(ac, av);
+    unit ttl = getGeneratorOption(ac, av);
 
     if (particleQty == 0)
+    {
+        std::cerr << "valid argument needed: format './particle <number>'\n";
         return 1;
+    }
 
     glfwInit();
 
@@ -54,8 +61,9 @@ int main(int ac, char **av)
         glfwTerminate();
         return -1;
     }
+
     AEngine *particle;
-    if (hasGenerator)
+    if (ttl > 0)
         particle = new EngineGen(particleQty);
     else
         particle = new EngineStatic(particleQty);
