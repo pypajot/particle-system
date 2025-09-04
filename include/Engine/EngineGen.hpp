@@ -7,11 +7,7 @@ class EngineGen : public AEngine
 {
     private:
         WorkerGen worker;
-
-        const float timeToLive = 300.0f;
-        const int particlePerFrame = 10000;
-        int currentParticle;
-
+        
     public:
         bool generatorOn;
 

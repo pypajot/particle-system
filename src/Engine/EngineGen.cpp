@@ -8,7 +8,7 @@ EngineGen::EngineGen() : AEngine()
 {
 }
 
-EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity)
+EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity), worker(VBO, particleQty)
 {
     initType = ENGINE_INIT_GEN;    
     vertexPath = "shaders/vertexShaderGen.vs";
@@ -31,7 +31,6 @@ EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity)
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-    worker = std::unique_ptr<AWorker>(new WorkerGen(VBO, particleQty, timeToLive, particlePerFrame));
     reset();
 }
 
@@ -67,4 +66,12 @@ void EngineGen::useShader(float frameTime, float cursorX, float cursorY, float h
     shader.setFloatUniform("far", camera.far);
     shader.setFloatUniform("mouseDepth", mouseDepth);
     shader.use();
+}
+
+void EngineGen::run()
+{
+    engine->camera.move();
+    
+    if (simulationOn)
+        worker->call(gravityPos, gravityOn, generatorOn);
 }

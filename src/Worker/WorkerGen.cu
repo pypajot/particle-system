@@ -1,10 +1,6 @@
 #include <cuda_gl_interop.h>
-
-
-#include <iostream>
 #include <curand.h>
 #include <curand_kernel.h>
-#include <chrono>
 
 #include "Worker/WorkerGen.hpp"
 
@@ -17,23 +13,11 @@ float uniformDisToBounds(float input, float min, float max)
     return input * (max - min) + min;
 }
 
-void checkCudaError(const char *function)
-{
-    cudaError_t error = cudaGetLastError();
-
-    if (error == cudaSuccess)
-        return;
-
-    const char *name = cudaGetErrorName(error);
-    const char *string = cudaGetErrorString(error);
-    std::cout << "In function " << function << "\nError " << name << " : " << string << "\n"; 
-}
-
 WorkerGen::WorkerGen() : AWorker()
 {
 }
 
-WorkerGen::WorkerGen(GLuint VBO, int particleQuantity) : AWorker(VBO, particleQuantity)
+WorkerGen::WorkerGen(GLuint VBO, int particleQuantity, float maxTtl, int particlePerFrame, bool &generatorOn) : AWorker(VBO, particleQuantity)
 {
     maxTtl = BASE_TTL;
     currentParticle = 0;
@@ -88,8 +72,17 @@ WorkerGen &WorkerGen::operator=(WorkerGen &&other)
     return *this;
 }
 
+__device__
+bool ParticleIsGenerated(int index, int currentParticle, int particlePerframe, int bufferIndexMax)
+{
+    if (currentParticle + particlePerFrame < bufferIndexMax)
+        return index >= currentParticle && index < currentParticle + particlePerFrame;
+    else
+        return index >= currentParticle || index < currentParticle + particlePerFrame % bufferIndexMax;
+}
+
 __global__ 
-void LoopActionGenerator(float *buffer, vec3 gravityPos, float gravityStrength, int bufferIndexMax, bool gravityOn, curandState *d_state, int particlePerFrame, int currentParticle)
+void LoopActionGenerator(float *buffer, int bufferIndexMax, curandState *d_state, int particlePerFrame, int currentParticle, bool generatorOn)
 {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -99,7 +92,7 @@ void LoopActionGenerator(float *buffer, vec3 gravityPos, float gravityStrength, 
     float *current = buffer + index * 7;
 
     
-    if (index >= currentParticle && index < currentParticle + particlePerFrame % bufferIndexMax)
+    if (generatorOn && ParticleIsGenerated(index, currentParticle, particlePerFrame, bufferIndexMax))
     {
         float angleY = M_PI_2 - uniformDisToBounds(curand_uniform(&d_state[index]), 0, 0.2f);
         float angleXZ = uniformDisToBounds(curand_uniform(&d_state[index]), 0, M_PI * 2);
@@ -112,8 +105,18 @@ void LoopActionGenerator(float *buffer, vec3 gravityPos, float gravityStrength, 
         current[4] = sin(angleY) * speed;
         current[5] = cos(angleY) * sin(angleXZ) * speed;
         current[6] = 0.0f;
-
     }
+}
+
+__global__ 
+void LoopActionGravity(float *buffer, vec3 gravityPos, float gravityStrength, int bufferIndexMax, bool gravityOn)
+{
+    int index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= bufferIndexMax)
+        return;
+
+    float *current = buffer + index * 7;
 
     if (gravityOn)
     {
@@ -123,7 +126,7 @@ void LoopActionGenerator(float *buffer, vec3 gravityPos, float gravityStrength, 
     
         float distance = powf(distanceX, 2) + powf(distanceY, 2) + powf(distanceZ, 2);
     
-        float speedFactor = TIME_FACTOR * GRAVITY_FACTOR / distance;
+        float speedFactor = TIME_FACTOR * gravityStrength / distance;
     
         current[3] -= distanceX * speedFactor;
         current[4] -= distanceY * speedFactor;
@@ -137,7 +140,8 @@ void LoopActionGenerator(float *buffer, vec3 gravityPos, float gravityStrength, 
     current[6] += 1;
 }
 
-void WorkerGen::call(vec3 &gravityPos, bool gravityOn)
+
+void WorkerGen::call(vec3 &gravityPos, bool gravityOn, bool generatorOn)
 {
     size_t bufferSize = particleQty * 7 * sizeof(float);
     float *buffer;
@@ -147,10 +151,12 @@ void WorkerGen::call(vec3 &gravityPos, bool gravityOn)
 
     cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
     checkCudaError("Get Mapped pointer");
-    LoopActionGenerator<<<blocks, threadPerBlocks>>>(buffer, gravityPos, gravityStrength, particleQty, gravityOn, d_state, particlePerFrame, currentParticle);
+    LoopActionGenerator<<<blocks, threadPerBlocks>>>(buffer, particleQty, d_state, particlePerFrame, currentParticle, generatorOn);
+    LoopActionGravity<<<blocks, threadPerBlocks>>>(buffer, gravityPos, gravityStrength, particleQty, gravityOn);
     cudaGraphicsUnmapResources(1, &cudaGL_ptr);
     checkCudaError("Unmap resource");
-    currentParticle = (currentParticle + particlePerFrame) % particleQty;
+    if (generatorOn)
+        currentParticle = (currentParticle + particlePerFrame) % particleQty;
 }
 
 __global__

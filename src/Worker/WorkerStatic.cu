@@ -8,7 +8,6 @@
 
 #include "Worker/WorkerStatic.hpp"
 
-#define GRAVITY_FACTOR 1
 #define TIME_FACTOR 1.0f / 60.0f
 #define INIT_SIZE 1.0f
 
@@ -98,7 +97,7 @@ void LoopAction(float *buffer, vec3 gravityPos, float gravityStrength, int buffe
     
         float distance = powf(distanceX, 2) + powf(distanceY, 2) + powf(distanceZ, 2);
     
-        float speedFactor = TIME_FACTOR * GRAVITY_FACTOR / distance;
+        float speedFactor = TIME_FACTOR * gravityStrength / distance;
     
         current[3] -= distanceX * speedFactor;
         current[4] -= distanceY * speedFactor;

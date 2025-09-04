@@ -138,12 +138,12 @@ void GravityUp()
 {
     if (gravityStrength >= MAX_GRAVITY)
         return;
-    gracityStrength += 0.1f;
+    gravityStrength += 0.1f;
 }
 
 void GravityDown()
 {
     if (gravityStrength <= MIN_GRAVITY)
         return;
-    gracityStrength -= 0.1f;
+    gravityStrength -= 0.1f;
 }

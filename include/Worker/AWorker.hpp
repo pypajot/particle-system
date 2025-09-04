@@ -41,7 +41,7 @@ class AWorker
 
         void GravityUp();
         void GravityDown();
-        // void callGen(vec3 &gravityPos, bool gravityOn);
-        // void initGen(float maxTtl);
 
 };
+
+void checkCudaError(const char *function);

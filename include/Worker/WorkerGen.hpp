@@ -14,9 +14,12 @@ class WorkerGen : AWorker
         int currentParticle;
         int particlePerFrame;
 
+        
     public:
+        bool &generatorOn;
+
         WorkerGen();
-        WorkerGen(GLuint VBO, int particleQuantity, float maxTtl, int particlePerFrame);
+        WorkerGen(GLuint VBO, int particleQuantity, bool &generatorOn);
         WorkerGen(const WorkerGen &other);
         ~WorkerGen();
 

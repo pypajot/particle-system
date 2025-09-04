@@ -5,7 +5,7 @@
 #include <iostream>
 
 
-EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity)
+EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity), worker(VBO, particleQty)
 {
     initType = ENGINE_INIT_STATIC;
 
@@ -61,4 +61,12 @@ void EngineStatic::useShader(float frameTime, float cursorX, float cursorY, floa
     shader.setFloatUniform("far", camera.far);
     shader.setFloatUniform("mouseDepth", mouseDepth);
     shader.use();
+}
+
+void EngineStatic::run()
+{
+    engine->camera.move();
+    
+    if (simulationOn)
+        worker->call(gravityPos, gravityOn);
 }

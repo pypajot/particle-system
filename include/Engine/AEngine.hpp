@@ -29,7 +29,7 @@ class AEngine
         vec3 gravityPos;
         
         Shader shader;
-        std::unique_ptr<AWorker> worker;
+        // std::unique_ptr<AWorker> worker;
 
     public:
         GLuint VBO;
@@ -55,5 +55,5 @@ class AEngine
 
         virtual void reset() = 0;
 
-        void run();
+        void run() = 0;
 };

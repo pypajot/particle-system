@@ -70,11 +70,3 @@ void AEngine::setGravity(float cursorX, float cursorY, float width, float height
     gravityPos = mouseWorld / mouseWorld.w;
     gravityOn = true;
 }
-
-void AEngine::run()
-{
-    engine->camera.move();
-    
-    if (simulationOn)
-        worker->call(gravityPos, gravityOn);
-}
