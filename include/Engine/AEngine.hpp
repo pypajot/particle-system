@@ -38,11 +38,8 @@ class AEngine
         EngineInit initType;
 
         bool simulationOn;
-        // bool gravityOn;
         bool mousePressed;
         
-        // float gravityStrength;
-
         Camera camera;
     
         AEngine(int particleQty);
