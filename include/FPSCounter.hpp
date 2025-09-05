@@ -1,12 +1,15 @@
 #include <vector>
 
-/// @brief Class that can calculate the mean fps over a period of time passed as argument of the constructor.
+/// @brief Class that can calculate the mean frame per seconds over a number of frame passed as argument of the constructor.
 /// @note Can use system time if no time argument is passed with the constructor.
 class FPSCounter
 {
     private:
+        /// @brief The array storing the frame times
         std::vector<double> _frameTimes;
+        /// @brief The current frame modulo the frame period + 1
         int _currentFrame;
+        /// @brief The frame period over which the mean fps will be calculated
         int _calculatePeriod;
 
     public:

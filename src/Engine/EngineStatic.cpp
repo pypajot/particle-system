@@ -2,14 +2,13 @@
 
 #include "Engine/EngineStatic.hpp"
 
-#include <iostream>
-
+#define 
 
 EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity), _worker(VBO, _particleQty)
 {
     initType = ENGINE_INIT_STATIC;
 
-    _vertexPath = "shaders/vertexShader.vs";
+    _vertexPath = STATIC_VERTEX_PATH;
     _shader = Shader(_vertexPath.c_str(), _fragmentPath.c_str());;
 
     glGenBuffers(1, &VBO);
@@ -27,8 +26,7 @@ EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity), _w
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    _worker = std::unique_ptr<AWorker>(new WorkerStatic(VBO, _particleQty));
-    initSphere();
+    reset();
 }
 
 EngineStatic::EngineStatic(const EngineStatic &other) : AEngine(other)

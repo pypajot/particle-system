@@ -8,6 +8,7 @@
 #define MIN_PPF 1000
 #define BASE_TTL 300
 
+#define GEN_VERTEX_PATH "shaders/vertexShaderGen.vs"
 
 class EngineGen : public AEngine
 {

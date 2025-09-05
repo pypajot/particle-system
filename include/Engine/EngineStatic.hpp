@@ -3,6 +3,7 @@
 #include "AEngine.hpp"
 #include "Worker/WorkerStatic.hpp"
 
+#define STATIC_VERTEX_PATH "shaders/vertexShader.vs"
 
 class EngineStatic : public AEngine
 {

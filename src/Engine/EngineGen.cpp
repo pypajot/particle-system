@@ -3,7 +3,6 @@
 
 #include "Engine/EngineGen.hpp"
 
-
 EngineGen::EngineGen() : AEngine()
 {
 }
@@ -11,7 +10,8 @@ EngineGen::EngineGen() : AEngine()
 EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity), _worker(VBO, _particleQty)
 {
     initType = ENGINE_INIT_GEN;    
-    _vertexPath = "shaders/vertexShaderGen.vs";
+
+    _vertexPath = GEN_VERTEX_PATH;
     _shader = Shader(_vertexPath.c_str(), _fragmentPath.c_str());
     _particlePerFrame = BASE_PPF;
 
