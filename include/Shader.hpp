@@ -4,6 +4,7 @@
 class Shader
 {
     public:
+        /// @brief The shader program
         int program;
 
         Shader();

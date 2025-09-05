@@ -8,6 +8,7 @@
 #include "Engine/EngineStatic.hpp"
 #include "FPSCounter.hpp"
 
+/// @brief The constructor for the window class, using opengl 4.6 core
 Window::Window()
 {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -39,6 +40,8 @@ Window &Window::operator=(const Window &other)
     return *this;
 }
 
+/// @brief Bind the engine to the window
+/// @param newEngine The engien to bind
 void Window::bindEngine(AEngine *newEngine)
 {
     glfwGetFramebufferSize(_window, &_currentWidth, &_currentHeight);
@@ -46,11 +49,14 @@ void Window::bindEngine(AEngine *newEngine)
     _engine->camera.computeProjectionMatrix(_currentHeight, _currentWidth);
 }
 
+/// @brief Check if the window was succesfully created 
+/// @return True if the window was sucessfully created, false if not
 bool Window::WasCreated() const
 {
     return _window != NULL;
 }
 
+/// @brief Callback for the window size change events
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
     (void)window;
@@ -61,6 +67,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
     winInstance->_engine->camera.computeProjectionMatrix(height, width);
 }  
 
+/// @brief Callback for the keyboard events
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     (void)scancode;
@@ -146,6 +153,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 }
 
+/// @brief Callback for the nouse events
 void mouseCallback(GLFWwindow* window, int key, int action, int mods)
 {
     (void)mods;
@@ -163,6 +171,9 @@ void mouseCallback(GLFWwindow* window, int key, int action, int mods)
     }
 }
 
+/// @brief Initialize the glfw window and glad
+/// @note Glad is initilsez here because it needs a context, in this case the window, to be initilazed
+/// @return 0 in case of success, -1 if an error occurred
 int Window::Init()
 {
     glfwMakeContextCurrent(_window);
@@ -171,15 +182,17 @@ int Window::Init()
         return -1;
 
     glEnable(GL_DEPTH_TEST);
-    glViewport(0, 0, _baseWidth, _baseHeight);
-    _currentWidth = _baseWidth;
-    _currentHeight = _baseHeight;
+    _currentWidth = BASE_WIN_WDITH;
+    _currentHeight = BASE_WIN_HEIGHT;
+    glViewport(0, 0, _currentWidth, _currentHeight);
+    glfwGetCursorPos(_window, &_cursorX, &_cursorY);
     glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
     glfwSetKeyCallback(_window, keyCallback);
     glfwSetMouseButtonCallback(_window, mouseCallback);
     return 0;
 }
 
+/// @brief Main render loop for the window 
 void Window::RenderLoop()
 {
     float currentFrame = 0.0f;
