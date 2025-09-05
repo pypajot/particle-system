@@ -60,7 +60,7 @@ void AEngine::draw() const
     glDrawArrays(GL_POINTS, 0, _particleQty);
 }
 
-void AEngine::setGravity(float cursorX, float cursorY, float width, float height)
+vec3 AEngine::_cursorToWorld(float cursorX, float cursorY, float width, float height) const
 {
     float cursorXNdc = 2 * cursorX / width - 1;
     float cursorYNdc = 2 * cursorY / height - 1;
@@ -70,28 +70,21 @@ void AEngine::setGravity(float cursorX, float cursorY, float width, float height
 
     vec4 mouseNdc = vec4(cursorXNdc, -cursorYNdc, depthNdc, 1.0f);
     vec4 mouseWorld = inverse(camera.coordToScreenMatrix()) * mouseNdc;
-    _gravityPos = mouseWorld * (1 / mouseWorld.w);
-    gravityOn = true;
+    return mouseWorld * (1 / mouseWorld.w);
 }
 
-void AEngine::GravityUp()
+void AEngine::addGravity(float cursorX, float cursorY, float width, float height)
 {
-    if (gravityStrength >= MAX_GRAVITY)
-    {
-        std::cout << "Gravity strength at max value : " << gravityStrength << "\n";
-        return;
-    }
-    gravityStrength += 0.1f;
-    std::cout << "Gravity strength increased, new value : " << gravityStrength << "\n";
+    _gravity.push_back(Gravity(_cursorToWorld(cursorX, cursorY, width, height)));
 }
 
-void AEngine::GravityDown()
+void AEngine::setMouseGravity(float cursorX, float cursorY, float width, float height)
 {
-    if (gravityStrength <= MIN_GRAVITY)
-    {
-        std::cout << "Gravity strength at min value : " << gravityStrength << "\n";
-        return;
-    }
-    gravityStrength -= 0.1f;
-    std::cout << "Gravity strength decreased, new value : " << gravityStrength << "\n";
+    _gravity[0].SetPos(_cursorToWorld(cursorX, cursorY, width, height));
+    _gravity[0].active = true;
+}
+
+void AEngine::clearGravity()
+{
+    _gravity.erase(++_gravity.begin(), _gravity.end());
 }

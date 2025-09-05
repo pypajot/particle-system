@@ -4,14 +4,11 @@
 #include <GLFW/glfw3.h>
 
 #include <string>
-#include <memory>
+#include <vector>
 
 #include "Shader.hpp"
 #include "Camera.hpp"
-
-#define BASE_GRAVITY 1.0f
-#define MAX_GRAVITY 2.0f
-#define MIN_GRAVITY 0.3f
+#include "Gravity.hpp"
 
 enum EngineInit
 {
@@ -27,10 +24,13 @@ class AEngine
         
         const float _mouseDepth = 2.0f;
         int _particleQty;
-        vec3 _gravityPos;
+
+        std::vector<Gravity> _gravity;
         
         Shader _shader;
     
+        vec3 AEngine::_cursorToWorld(float cursorX, float cursorY, float width, float height) const;
+
     public:
         GLuint VBO;
         GLuint VAO;
@@ -38,10 +38,10 @@ class AEngine
         EngineInit initType;
 
         bool simulationOn;
-        bool gravityOn;
+        // bool gravityOn;
         bool mousePressed;
         
-        float gravityStrength;
+        // float gravityStrength;
 
         Camera camera;
     
@@ -54,13 +54,14 @@ class AEngine
         void deleteArrays();
 
         virtual void useShader(float frameTime, float cursorX, float cursorY, float currentHeight) = 0;
-        void setGravity(float cursorX, float cursorY, float width, float height);
         void draw() const;
-
+        
         virtual void reset() = 0;
-
+        
         virtual void run() = 0;
+        
+        void setMouseGravity(float cursorX, float cursorY, float width, float height);
+        void addGravity(float cursorX, float cursorY, float width, float height);
+        void clearGravity();
 
-        void GravityUp();
-        void GravityDown();
 };
