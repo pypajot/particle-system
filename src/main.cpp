@@ -40,7 +40,7 @@ int main(int ac, char **av)
 
     if (particleQty == 0)
     {
-        std::cerr << "valid argument needed: format './particle <number>'\n";
+        std::cerr << "Valid argument needed: format './particle <number>'\n";
         return 1;
     }
 
@@ -50,14 +50,14 @@ int main(int ac, char **av)
     
     if (!window.WasCreated())
     {
-        std::cout << "Failed to create GLFW window" << std::endl;
+        std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
 
     if (window.Init())
     {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+        std::cerr << "Failed to initialize GLAD" << std::endl;
         glfwTerminate();
         return -1;
     }

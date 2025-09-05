@@ -8,7 +8,6 @@
 
 #include "Shader.hpp"
 #include "Camera.hpp"
-#include "Worker/AWorker.hpp"
 
 #define BASE_GRAVITY 1.0f
 #define MAX_GRAVITY 2.0f
@@ -23,20 +22,20 @@ enum EngineInit
 class AEngine
 {
     protected:
-        EngineInit initType;
-
-        std::string vertexPath;
-        const std::string fragmentPath = "shaders/fragmentShader.fs";
+        std::string _vertexPath;
+        const std::string _fragmentPath = "shaders/fragmentShader.fs";
         
-        int particleQty;
-        const float mouseDepth = 2.0f;
-        vec3 gravityPos;
+        const float _mouseDepth = 2.0f;
+        int _particleQty;
+        vec3 _gravityPos;
         
-        Shader shader;
-
+        Shader _shader;
+    
     public:
         GLuint VBO;
         GLuint VAO;
+        
+        EngineInit initType;
 
         bool simulationOn;
         bool gravityOn;
@@ -60,7 +59,7 @@ class AEngine
 
         virtual void reset() = 0;
 
-        void run() = 0;
+        virtual void run() = 0;
 
         void GravityUp();
         void GravityDown();

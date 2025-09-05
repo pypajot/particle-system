@@ -11,8 +11,8 @@ class vec3;
 class AWorker
 {
     protected:
-        bool managesBuffer;
-        cudaGraphicsResource *cudaGL_ptr;
+        bool _managesBuffer;
+        cudaGraphicsResource *_cudaGL_ptr;
         float *buffer;
         
         const int elemSize;

@@ -10,13 +10,13 @@ class Window
     private:
         GLFWwindow *_window;
 
-        const int baseHeight = 768;
-        const int baseWidth = 1024;
-        int currentHeight;
-        int currentWidth;
-        double cursorX;
-        double cursorY;
-        AEngine *engine;
+        const int _baseHeight = 768;
+        const int _baseWidth = 1024;
+        int _currentHeight;
+        int _currentWidth;
+        double _cursorX;
+        double _cursorY;
+        AEngine *_engine;
 
     public:
         Window();

@@ -14,15 +14,15 @@ Window::Window()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    _window = glfwCreateWindow(baseWidth, baseHeight, "Particle System", NULL, NULL);
+    _window = glfwCreateWindow(_baseWidth, _baseHeight, "Particle System", NULL, NULL);
     glfwSetWindowUserPointer(_window, this);
-    engine = 0;
+    _engine = 0;
 }
 
 Window::Window(Window& other)
 {
     _window = other._window;
-    engine = other.engine;
+    _engine = other._engine;
 }
 
 Window::~Window()
@@ -31,9 +31,9 @@ Window::~Window()
 
 void Window::bindEngine(AEngine *newEngine)
 {
-    glfwGetFramebufferSize(_window, &currentWidth, &currentHeight);
-    engine = newEngine;
-    engine->camera.computeProjectionMatrix(currentHeight, currentWidth);
+    glfwGetFramebufferSize(_window, &_currentWidth, &_currentHeight);
+    _engine = newEngine;
+    _engine->camera.computeProjectionMatrix(_currentHeight, _currentWidth);
 }
 
 bool Window::WasCreated() const
@@ -46,9 +46,9 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
     (void)window;
     glViewport(0, 0, width, height);
     Window *winInstance = reinterpret_cast<Window *>(glfwGetWindowUserPointer(window));
-    winInstance->currentHeight = height;
-    winInstance->currentWidth = width;
-    winInstance->engine->camera.computeProjectionMatrix(height, width);
+    winInstance->_currentHeight = height;
+    winInstance->_currentWidth = width;
+    winInstance->_engine->camera.computeProjectionMatrix(height, width);
 }  
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -57,7 +57,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     (void)mods;
 
     Window *winInstance = reinterpret_cast<Window *>(glfwGetWindowUserPointer(window));
-    AEngine *engine = winInstance->engine;
+    AEngine *engine = winInstance->_engine;
     
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
@@ -105,7 +105,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         engine->reset();
 
     else if (key == GLFW_KEY_G && action == GLFW_PRESS)
-        engine->setGravity(winInstance->cursorX, winInstance->cursorY, winInstance->currentWidth, winInstance->currentHeight);
+        engine->setGravity(winInstance->_cursorX, winInstance->_cursorY, winInstance->_currentWidth, winInstance->_currentHeight);
             
     else if (key == GLFW_KEY_H && action == GLFW_PRESS)
         engine->gravityOn = false;
@@ -141,7 +141,7 @@ void mouseCallback(GLFWwindow* window, int key, int action, int mods)
     (void)mods;
 
     Window *winInstance = reinterpret_cast<Window *>(glfwGetWindowUserPointer(window));
-    AEngine *engine = winInstance->engine;
+    AEngine *engine = winInstance->_engine;
     
 
     if (key == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
@@ -161,9 +161,9 @@ int Window::Init()
         return -1;
 
     glEnable(GL_DEPTH_TEST);
-    glViewport(0, 0, baseWidth, baseHeight);
-    currentWidth = baseWidth;
-    currentHeight = baseHeight;
+    glViewport(0, 0, _baseWidth, _baseHeight);
+    _currentWidth = _baseWidth;
+    _currentHeight = _baseHeight;
     glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
     glfwSetKeyCallback(_window, keyCallback);
     glfwSetMouseButtonCallback(_window, mouseCallback);
@@ -178,20 +178,20 @@ void Window::RenderLoop()
     while(!glfwWindowShouldClose(_window))
     {
         currentFrame = glfwGetTime();
-        glfwGetCursorPos(_window, &cursorX, &cursorY);
+        glfwGetCursorPos(_window, &_cursorX, &_cursorY);
         counter.addFrame(currentFrame);
 
         if (counter.getFrame() % 30)
             glfwSetWindowTitle(_window, std::to_string(counter.getFPS()).c_str());
 
-        if (engine->mousePressed)
-            engine->setGravity(cursorX, cursorY, currentWidth, currentHeight);
-        engine->run();
+        if (_engine->mousePressed)
+            _engine->setGravity(_cursorX, _cursorY, _currentWidth, _currentHeight);
+        _engine->run();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        engine->useShader(currentFrame, cursorX, cursorY, currentHeight);
-        glBindVertexArray(engine->VAO);
-        engine->draw();
+        _engine->useShader(currentFrame, _cursorX, _cursorY, _currentHeight);
+        glBindVertexArray(_engine->VAO);
+        _engine->draw();
         glfwSwapBuffers(_window);
         glfwPollEvents();
     }

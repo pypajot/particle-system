@@ -34,9 +34,9 @@ WorkerGen::WorkerGen(WorkerGen &&other) : AWorker(other)
 
 WorkerGen::~WorkerGen()
 {
-    if (managesBuffer)
+    if (_managesBuffer)
     {
-        cudaGraphicsUnregisterResource(cudaGL_ptr);
+        cudaGraphicsUnregisterResource(_cudaGL_ptr);
         checkCudaError("Unregister resource");
         cudaFree(d_state);
     }

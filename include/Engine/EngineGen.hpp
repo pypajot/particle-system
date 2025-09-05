@@ -12,8 +12,8 @@
 class EngineGen : public AEngine
 {
     private:
-        WorkerGen worker;
-        int particlePerFrame;
+        WorkerGen _worker;
+        int _particlePerFrame;
 
      public:
         bool generatorOn;

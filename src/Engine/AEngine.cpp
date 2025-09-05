@@ -2,14 +2,15 @@
 #include <random>
 
 #include "math/transform.hpp"
+#include "math/vec4.hpp"
 #include "Engine/AEngine.hpp"
 
 
 AEngine::AEngine(int particleQuantity)
 {
     gravityOn = false;
-    gravityPos = vec3(0.0f, 0.0f, 0.0f);
-    particleQty = particleQuantity;
+    _gravityPos = vec3(0.0f, 0.0f, 0.0f);
+    _particleQty = particleQuantity;
     simulationOn = false;
     mousePressed = false;
     gravityStrength = BASE_GRAVITY;
@@ -20,12 +21,12 @@ AEngine::AEngine(const AEngine &other)
 {
     VBO = other.VBO;
     VAO = other.VAO;
-    shader = other.shader;
+    _shader = other._shader;
     camera = other.camera;
-    particleQty = other.particleQty;
+    _particleQty = other._particleQty;
     simulationOn = other.simulationOn;
     gravityOn = other.gravityOn;
-    gravityPos = other.gravityPos;
+    _gravityPos = other._gravityPos;
 }
 
 AEngine::~AEngine()
@@ -39,12 +40,12 @@ AEngine &AEngine::operator=(const AEngine &other)
         
     VBO = other.VBO;
     VAO = other.VAO;
-    shader = other.shader;
+    _shader = other._shader;
     camera = other.camera;
-    particleQty = other.particleQty;
+    _particleQty = other._particleQty;
     simulationOn = other.simulationOn;
     gravityOn = other.gravityOn;
-    gravityPos = other.gravityPos;
+    _gravityPos = other._gravityPos;
     return *this;
 }
 
@@ -56,20 +57,20 @@ void AEngine::deleteArrays()
 
 void AEngine::draw() const
 {
-    glDrawArrays(GL_POINTS, 0, particleQty);
+    glDrawArrays(GL_POINTS, 0, _particleQty);
 }
 
 void AEngine::setGravity(float cursorX, float cursorY, float width, float height)
 {
-    float cursorXNdc = 2 * cursorX / currentWidth - 1
-    float cursorYNdc = 2 * cursorY / currentHeight - 1
+    float cursorXNdc = 2 * cursorX / width - 1;
+    float cursorYNdc = 2 * cursorY / height - 1;
     float depthNdc =
-        (camera.far + camera.near - (2.0 * camera.near * camera.far) / mouseDepth) 
+        (camera.far + camera.near - (2.0 * camera.near * camera.far) / _mouseDepth) 
         / (camera.far - camera.near);
 
     vec4 mouseNdc = vec4(cursorXNdc, -cursorYNdc, depthNdc, 1.0f);
     vec4 mouseWorld = inverse(camera.coordToScreenMatrix()) * mouseNdc;
-    gravityPos = mouseWorld / mouseWorld.w;
+    _gravityPos = mouseWorld * (1 / mouseWorld.w);
     gravityOn = true;
 }
 

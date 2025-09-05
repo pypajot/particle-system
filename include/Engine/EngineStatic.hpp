@@ -7,7 +7,7 @@
 class EngineStatic : public AEngine
 {
     private:
-        WorkerStatic worker;
+        WorkerStatic _worker;
 
     public:
         EngineStatic(int particleQuantity);

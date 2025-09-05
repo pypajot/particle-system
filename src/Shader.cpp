@@ -45,7 +45,7 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
     if(!success)
     {
         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cerr << "Error during vertex shader conpilation\n" << infoLog << std::endl;
     }
 
     int fragmentShader = compileShader(fragmentShaderCode, GL_FRAGMENT_SHADER);
@@ -53,7 +53,7 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
     if(!success)
     {
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cerr << "Error during fragment shader compilation\n" << infoLog << std::endl;
     }
 
     unsigned int shaderProgram;
@@ -67,7 +67,7 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
     if(!success)
     {
         glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+        std::cerr << "Error during shader program linking\n" << infoLog << std::endl;
     }
 
     glDeleteShader(vertexShader);
@@ -95,7 +95,7 @@ void Shader::setFloatUniform(const char *name, float value) const
 {
     int loc = glGetUniformLocation(program, name);
     if (loc == -1)
-        std::cout << "Error setting uniform: " << name << "\n";
+        std::cerr << "Error setting uniform: " << name << "\n";
     glUniform1f(loc, value);
 }
 
@@ -103,7 +103,7 @@ void Shader::setIntUniform(const char *name, int value) const
 {
     int loc = glGetUniformLocation(program, name);
     if (loc == -1)
-        std::cout << "Error setting uniform: " << name << "\n";
+        std::cerr << "Error setting uniform: " << name << "\n";
     glUniform1i(loc, value);
 }
 

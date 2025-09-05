@@ -8,12 +8,12 @@ EngineGen::EngineGen() : AEngine()
 {
 }
 
-EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity), worker(VBO, particleQty)
+EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity), _worker(VBO, _particleQty)
 {
     initType = ENGINE_INIT_GEN;    
-    vertexPath = "shaders/vertexShaderGen.vs";
-    shader = Shader(vertexPath.c_str(), fragmentPath.c_str());
-    particlePerFrame = BASE_PPF;
+    _vertexPath = "shaders/vertexShaderGen.vs";
+    _shader = Shader(_vertexPath.c_str(), _fragmentPath.c_str());
+    _particlePerFrame = BASE_PPF;
 
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -21,7 +21,7 @@ EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity), worker(V
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
-    glBufferData(GL_ARRAY_BUFFER, particleQty * 7 * sizeof(float), 0, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, _particleQty * 7 * sizeof(float), 0, GL_STREAM_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -87,8 +87,8 @@ void EngineGen::useShader(float frameTime, float cursorX, float cursorY, float h
 
 void EngineGen::run()
 {
-    engine->camera.move();
-    
+    camera.move();
+
     if (!simulationOn)
         return;
 
