@@ -7,10 +7,10 @@
 class Gravity
 {
     private:
-        vec3 _pos;
-        float _strength;
-
+    float _strength;
+    
     public:
+        vec3 _pos;
         bool active;
         
         Gravity();
@@ -23,5 +23,7 @@ class Gravity
         void SetPos(vec3 vewPos);
         
         void GravityUp();
-        void GravityDown(); 
+        void GravityDown();
 };
+
+bool checkActive(const Gravity &gravity);

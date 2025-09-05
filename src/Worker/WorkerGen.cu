@@ -2,6 +2,8 @@
 #include <curand.h>
 #include <curand_kernel.h>
 
+#include <algorithm>
+
 #include "Worker/WorkerGen.hpp"
 
 #define GRAVITY_FACTOR 1
@@ -72,7 +74,7 @@ bool ParticleIsGenerated(int index, int currentParticle, int particlePerframe, i
 }
 
 __global__ 
-void LoopActionGenerator(float *buffer, int bufferIndexMax, curandState *d_state, int particlePerFrame, int currentParticle)
+void GeneratorAction(float *buffer, int bufferIndexMax, curandState *d_state, int particlePerFrame, int currentParticle)
 {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -99,20 +101,21 @@ void LoopActionGenerator(float *buffer, int bufferIndexMax, curandState *d_state
 }
 
 __global__ 
-void LoopActionGravity(float *buffer, vec3 gravityPos, float gravityStrength, int bufferIndexMax, bool gravityOn)
+void GravityAction(float *buffer, int bufferIndexMax, std::vector<Gravity> gravity)
 {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
-
+    int gravityIndex = blockIdx.y;
+    
     if (index >= bufferIndexMax)
         return;
 
     float *current = buffer + index * 7;
 
-    if (gravityOn)
+    if (gravity[gravityIndex].active)
     {
-        float distanceX = current[0] - gravityPos.x;
-        float distanceY = current[1] - gravityPos.y;
-        float distanceZ = current[2] - gravityPos.z;
+        float distanceX = current[0] - gravity[gravityIndex]._pos.x;
+        float distanceY = current[1] - gravity[gravityIndex]._pos.y;
+        float distanceZ = current[2] - gravity[gravityIndex]._pos.z;
     
         float distance = powf(distanceX, 2) + powf(distanceY, 2) + powf(distanceZ, 2);
     
@@ -122,6 +125,17 @@ void LoopActionGravity(float *buffer, vec3 gravityPos, float gravityStrength, in
         current[4] -= distanceY * speedFactor;
         current[5] -= distanceZ * speedFactor;
     }
+}
+
+__global__
+void LoopAction(float *buffer, int bufferIndexMax)
+{
+    int index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= bufferIndexMax)
+        return;
+
+    float *current = buffer + index * 7;
 
     current[0] += current[3] * TIME_FACTOR;
     current[1] += current[4] * TIME_FACTOR;
@@ -130,8 +144,7 @@ void LoopActionGravity(float *buffer, vec3 gravityPos, float gravityStrength, in
     current[6] += 1;
 }
 
-
-void WorkerGen::call(vec3 &gravityPos, bool gravityOn, float gravityStrength) const
+void WorkerGen::call(std::vector<Gravity> &gravity) const
 {
     // size_t bufferSize = particleQty * 7 * sizeof(float);
     // float *buffer;
@@ -141,7 +154,9 @@ void WorkerGen::call(vec3 &gravityPos, bool gravityOn, float gravityStrength) co
 
     // cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
     // checkCudaError("Get Mapped pointer");
-    LoopActionGravity<<<blocks, threadPerBlocks>>>(buffer, gravityPos, gravityStrength, particleQty, gravityOn);
+    if (std::any_of(gravity.begin(), gravity.end(), checkActive) && gravity.length() != 0)
+        GravityAction<<<dim2(blocks, gravity.length()), threadPerBlocks>>>(buffer, particleQty, gravity);
+    LoopAction<<<blocks, threadPerBlocks>>>(buffer, particleQty);
     // cudaGraphicsUnmapResources(1, &cudaGL_ptr);
     // checkCudaError("Unmap resource");
     // if (generatorOn)
@@ -158,7 +173,7 @@ void WorkerGen::generate(int particlePerFrame)
 
     // cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
     // checkCudaError("Get Mapped pointer");
-    LoopActionGenerator<<<blocks, threadPerBlocks>>>(buffer, particleQty, d_state, particlePerFrame, currentParticle);
+    GeneratorAction<<<blocks, threadPerBlocks>>>(buffer, particleQty, d_state, particlePerFrame, currentParticle);
     // cudaGraphicsUnmapResources(1, &cudaGL_ptr);
     // checkCudaError("Unmap resource");
     currentParticle = (currentParticle + particlePerFrame) % particleQty;

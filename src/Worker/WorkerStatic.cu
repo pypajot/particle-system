@@ -33,7 +33,7 @@ void checkCudaError(const char *function)
 
     const char *name = cudaGetErrorName(error);
     const char *string = cudaGetErrorString(error);
-    std::cout << "In function " << function << "\nError " << name << " : " << string << "\n"; 
+    std::cerr << "In function " << function << "\nError " << name << " : " << string << "\n"; 
 }
 
 WorkerStatic::WorkerStatic() : AWorker()
@@ -81,19 +81,21 @@ WorkerStatic &WorkerStatic::operator=(WorkerStatic &&other)
 }
 
 __global__ 
-void LoopAction(float *buffer, vec3 gravityPos, float gravityStrength, int bufferIndexMax, bool gravityOn)
+void GravityAction(float *buffer, int bufferIndexMax, std::vector<Gravity> gravity)
 {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
-
+    int gravityIndex = blockIdx.y;
+    
     if (index >= bufferIndexMax)
         return;
 
     float *current = buffer + index * 6;
-    if (gravityOn)
+
+    if (gravity[gravityIndex].active)
     {
-        float distanceX = current[0] - gravityPos.x;
-        float distanceY = current[1] - gravityPos.y;
-        float distanceZ = current[2] - gravityPos.z;
+        float distanceX = current[0] - gravity[gravityIndex]._pos.x;
+        float distanceY = current[1] - gravity[gravityIndex]._pos.y;
+        float distanceZ = current[2] - gravity[gravityIndex]._pos.z;
     
         float distance = powf(distanceX, 2) + powf(distanceY, 2) + powf(distanceZ, 2);
     
@@ -103,6 +105,17 @@ void LoopAction(float *buffer, vec3 gravityPos, float gravityStrength, int buffe
         current[4] -= distanceY * speedFactor;
         current[5] -= distanceZ * speedFactor;
     }
+}
+
+__global__
+void LoopAction(float *buffer, int bufferIndexMax)
+{
+    int index = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (index >= bufferIndexMax)
+        return;
+
+    float *current = buffer + index * 6;
 
     current[0] += current[3] * TIME_FACTOR;
     current[1] += current[4] * TIME_FACTOR;
@@ -120,7 +133,9 @@ void WorkerStatic::call(vec3 &gravityPos, bool gravityOn)
     // cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
     // checkCudaError("Get Mapped pointer");
     AWorker::Map();
-    LoopAction<<<blocks, threadPerBlocks>>>(buffer, gravityPos, gravityStrength, particleQty, gravityOn);
+    if (std::any_of(gravity.begin(), gravity.end(), checkActive) && gravity.length() != 0)
+        GravityAction<<<dim2(blocks, gravity.length()), threadPerBlocks>>>(buffer, particleQty, gravity);
+    LoopAction<<<blocks, threadPerBlocks>>>(buffer, particleQty);
     AWorker::Unmap();
     // cudaGraphicsUnmapResources(1, &cudaGL_ptr);
     // checkCudaError("Unmap resource");

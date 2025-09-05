@@ -57,3 +57,8 @@ void Gravity::GravityDown()
         return;
     _strength -= 0.1f;
 }
+
+bool checkActive(const Gravity &gravity)
+{
+    return gravity.active;
+}

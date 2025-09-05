@@ -122,15 +122,15 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         engine->reset();
 
     else if (key == GLFW_KEY_G && action == GLFW_PRESS)
-        engine->setGravity(winInstance->_cursorX, winInstance->_cursorY, winInstance->_currentWidth, winInstance->_currentHeight);
+        engine->addGravity(winInstance->_cursorX, winInstance->_cursorY, winInstance->_currentWidth, winInstance->_currentHeight);
             
     else if (key == GLFW_KEY_H && action == GLFW_PRESS)
-        engine->gravityOn = false;
+        engine->clearGravity();
 
     else if (key == GLFW_KEY_UP && action == GLFW_PRESS)
-        engine->GravityUp();
+        engine->allGravityUp();
     else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
-        engine->GravityDown();
+        engine->allGravityDown();
 
     else if (engine->initType == ENGINE_INIT_STATIC)
     {
@@ -167,7 +167,7 @@ void mouseCallback(GLFWwindow* window, int key, int action, int mods)
     else if (key == GLFW_MOUSE_BUTTON_1 && action == GLFW_RELEASE)
     {
         engine->mousePressed = false;
-        engine->gravityOn = false;
+        engine->_gravity[0].active = false;
     }
 }
 
@@ -208,7 +208,7 @@ void Window::RenderLoop()
             glfwSetWindowTitle(_window, std::to_string(counter.getFPS()).c_str());
 
         if (_engine->mousePressed)
-            _engine->setGravity(_cursorX, _cursorY, _currentWidth, _currentHeight);
+            _engine->setMouseGravity(_cursorX, _cursorY, _currentWidth, _currentHeight);
         _engine->run();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

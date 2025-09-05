@@ -8,12 +8,10 @@
 
 AEngine::AEngine(int particleQuantity)
 {
-    gravityOn = false;
-    _gravityPos = vec3(0.0f, 0.0f, 0.0f);
+    _gravity = std::vector<Gravity>(1);
     _particleQty = particleQuantity;
     simulationOn = false;
     mousePressed = false;
-    gravityStrength = BASE_GRAVITY;
 
 }
 
@@ -25,8 +23,7 @@ AEngine::AEngine(const AEngine &other)
     camera = other.camera;
     _particleQty = other._particleQty;
     simulationOn = other.simulationOn;
-    gravityOn = other.gravityOn;
-    _gravityPos = other._gravityPos;
+    _gravity = other._gravity;
 }
 
 AEngine::~AEngine()
@@ -44,8 +41,7 @@ AEngine &AEngine::operator=(const AEngine &other)
     camera = other.camera;
     _particleQty = other._particleQty;
     simulationOn = other.simulationOn;
-    gravityOn = other.gravityOn;
-    _gravityPos = other._gravityPos;
+    _gravity = other._gravity;
     return *this;
 }
 
@@ -86,5 +82,18 @@ void AEngine::setMouseGravity(float cursorX, float cursorY, float width, float h
 
 void AEngine::clearGravity()
 {
-    _gravity.erase(++_gravity.begin(), _gravity.end());
+    _gravity.erase(_gravity.begin() + 1, _gravity.end());
+    _gravity[0].active = false;
+}
+
+void AEngine::allGravityUp()
+{
+    for (auto it = _gravity.begin(); it < _gravity.end(); it++)
+        it->GravityUp();
+}
+
+void AEngine::allGravityDown()
+{
+    for (auto it = _gravity.begin(); it < _gravity.end(); it++)
+        it->GravityDown();
 }

@@ -63,5 +63,6 @@ class AEngine
         void setMouseGravity(float cursorX, float cursorY, float width, float height);
         void addGravity(float cursorX, float cursorY, float width, float height);
         void clearGravity();
-
+        void allGravityUp();
+        void allGravityDown();
 };
