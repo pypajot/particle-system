@@ -14,6 +14,9 @@ Shader::Shader()
     program = 0;
 }
 
+/// @brief Load a shader given its path
+/// @param shaderPath THe path to the shader
+/// @return The shader code
 std::string loadShader(std::string shaderPath)
 {
     std::ifstream shaderFile(shaderPath);
@@ -23,6 +26,10 @@ std::string loadShader(std::string shaderPath)
     return shaderStream.str();
 }
 
+/// @brief Compile the shader passed as argument
+/// @param shaderSourceString  The code of the shader to compile
+/// @param shaderType The type of shader to compile 
+/// @return The int representing the shader 
 int compileShader(std::string shaderSourceString, int shaderType)
 {
     const char *shaderSource = shaderSourceString.c_str();
@@ -33,6 +40,9 @@ int compileShader(std::string shaderSourceString, int shaderType)
     return shader;
 }
 
+/// @brief Constructs a shader program using the vertex and fragment shaders passed as arguments
+/// @param vertexPath The path to the vertex shader
+/// @param fragmentPath The path to the fragment shader
 Shader::Shader(const char *vertexPath, const char *fragmentPath)
 {
     std::string vertexShaderCode = loadShader(vertexPath);
@@ -90,7 +100,9 @@ Shader::~Shader()
 {
 }
 
-
+/// @brief Set a floating point value to be used by the shader program
+/// @param name The name a the value
+/// @param value The value
 void Shader::setFloatUniform(const char *name, float value) const
 {
     int loc = glGetUniformLocation(program, name);
@@ -99,6 +111,9 @@ void Shader::setFloatUniform(const char *name, float value) const
     glUniform1f(loc, value);
 }
 
+/// @brief Set a integer value to be used by the shader program
+/// @param name The name a the value
+/// @param value The value
 void Shader::setIntUniform(const char *name, int value) const
 {
     int loc = glGetUniformLocation(program, name);
@@ -107,6 +122,7 @@ void Shader::setIntUniform(const char *name, int value) const
     glUniform1i(loc, value);
 }
 
+/// @brief Wrapper around the glUseProgram function for the current shader program
 void Shader::use() const
 {
     glUseProgram(program);

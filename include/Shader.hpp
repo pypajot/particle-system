@@ -1,5 +1,6 @@
 #pragma once
 
+/// @brief Class used to construct a shader program
 class Shader
 {
     public:
