@@ -56,7 +56,7 @@ class AEngine
 
         virtual void useShader(float frameTime, float cursorX, float cursorY, float currentHeight) = 0;
         void setGravity(float cursorX, float cursorY, float width, float height);
-        void draw();
+        void draw() const;
 
         virtual void reset() = 0;
 

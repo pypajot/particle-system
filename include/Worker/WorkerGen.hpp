@@ -17,8 +17,8 @@ class WorkerGen : AWorker
 
         WorkerGen &operator=(const WorkerGen &other);
 
-        void call(vec3 &gravityPos, bool gravityOn, float gravityStrength);
-        void generate(bool generatorOn);
+        void call(vec3 &gravityPos, bool gravityOn, float gravityStrength) const;
+        void generate(int particlePerFrame);
         void init();
 
 };

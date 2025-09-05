@@ -31,7 +31,7 @@ class vec4
 
         friend vec4 operator*(const mat4 &matrix, const vec4 &vector);
 
-        float length();
+        float length() const;
 
         float *getValue();
 };

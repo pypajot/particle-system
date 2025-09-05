@@ -131,7 +131,7 @@ void LoopActionGravity(float *buffer, vec3 gravityPos, float gravityStrength, in
 }
 
 
-void WorkerGen::call(vec3 &gravityPos, bool gravityOn, float gravityStrength)
+void WorkerGen::call(vec3 &gravityPos, bool gravityOn, float gravityStrength) const
 {
     // size_t bufferSize = particleQty * 7 * sizeof(float);
     // float *buffer;
@@ -144,8 +144,8 @@ void WorkerGen::call(vec3 &gravityPos, bool gravityOn, float gravityStrength)
     LoopActionGravity<<<blocks, threadPerBlocks>>>(buffer, gravityPos, gravityStrength, particleQty, gravityOn);
     // cudaGraphicsUnmapResources(1, &cudaGL_ptr);
     // checkCudaError("Unmap resource");
-    if (generatorOn)
-        currentParticle = (currentParticle + particlePerFrame) % particleQty;
+    // if (generatorOn)
+    //     currentParticle = (currentParticle + particlePerFrame) % particleQty;
 }
 
 void WorkerGen::generate(int particlePerFrame)

@@ -102,13 +102,21 @@ void EngineGen::run()
 void EngineGen::ppfUp()
 {
     if (particlePerFrame >= MAX_PPF)
+    {
+        std::cout << "Particle per frame at max value : " << particlePerFrame << "\n";
         return;
+    }
     particlePerFrame += 500;
+    std::cout << "Particle per frame increased, new value : " << particlePerFrame << "\n";
 }
 
 void EngineGen::ppfDown()
 {
     if (particlePerFrame <= MIN_PPF)
+    {
+        std::cout << "Particle per frame at min value : " << particlePerFrame << "\n";
         return;
+    }   
     particlePerFrame -= 500;
+    std::cout << "Particle per frame decreased, new value : " << particlePerFrame << "\n";
 }

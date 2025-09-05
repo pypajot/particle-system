@@ -44,7 +44,7 @@ _WHITE		= \033[37m
 _NO_COLOR	= \033[0m
 
 
-all : $(NAME)
+all : glad $(NAME)
 
 $(NAME): $(OBJS) $(CUDAOBJS) Makefile
 	$(CC) $(CPPFLAGS) -o $(NAME) $(OBJS) $(CUDAOBJS) $(GLFLAGS) 

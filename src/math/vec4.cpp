@@ -1,6 +1,8 @@
 #include <cmath>
 
-#include "vec4.hpp"
+#include "math/vec4.hpp"
+#include "math/vec3.hpp"
+#include "math/mat4.hpp"
 
 vec4::vec4()
 {
@@ -105,7 +107,7 @@ vec4 operator*(const mat4 &matrix, const vec4 &vector)
 }
 
 
-float vec4::length()
+float vec4::length() const
 {
     return sqrt(x * x + y * y + z * z + w * w);
 }

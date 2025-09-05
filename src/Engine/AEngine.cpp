@@ -54,7 +54,7 @@ void AEngine::deleteArrays()
     glDeleteBuffers(1, &VBO);
 }
 
-void AEngine::draw()
+void AEngine::draw() const
 {
     glDrawArrays(GL_POINTS, 0, particleQty);
 }
@@ -76,13 +76,21 @@ void AEngine::setGravity(float cursorX, float cursorY, float width, float height
 void AEngine::GravityUp()
 {
     if (gravityStrength >= MAX_GRAVITY)
+    {
+        std::cout << "Gravity strength at max value : " << gravityStrength << "\n";
         return;
+    }
     gravityStrength += 0.1f;
+    std::cout << "Gravity strength increased, new value : " << gravityStrength << "\n";
 }
 
 void AEngine::GravityDown()
 {
     if (gravityStrength <= MIN_GRAVITY)
+    {
+        std::cout << "Gravity strength at min value : " << gravityStrength << "\n";
         return;
+    }
     gravityStrength -= 0.1f;
+    std::cout << "Gravity strength decreased, new value : " << gravityStrength << "\n";
 }

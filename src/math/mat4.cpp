@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include "mat4.hpp"
+#include "math/mat4.hpp"
 
 mat4::mat4()
 {

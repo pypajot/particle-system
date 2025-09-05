@@ -33,7 +33,7 @@ class vec3
         friend float dot(vec3 lhs, vec3 rhs);
         friend vec3 cross(vec3 lhs, vec3 rhs);
 
-        float length();
+        float length() const;
         vec3 normalize();
 
 

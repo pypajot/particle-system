@@ -1,8 +1,9 @@
 #include <cmath>
 
-#include "math.hpp"
-
-#include <iostream>
+#include "math/transform.hpp"
+#include "math/vec3.hpp"
+#include "math/vec4.hpp"
+#include "math/mat4.hpp"
 
 float toRadians(float angle)
 {

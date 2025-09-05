@@ -1,6 +1,7 @@
 #include <cmath>
 
-#include "vec3.hpp"
+#include "math/vec4.hpp"
+#include "math/vec3.hpp"
 
 vec3::vec3()
 {
@@ -115,7 +116,7 @@ vec3 cross(vec3 lhs, vec3 rhs)
 }
 
 
-float vec3::length()
+float vec3::length() const
 {
     return sqrt(x * x + y * y + z * z);
 }
