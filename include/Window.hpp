@@ -20,8 +20,10 @@ class Window
 
     public:
         Window();
-        Window(Window &other);
+        Window(const Window &other);
         ~Window();
+
+        Window &operator=(cosnt Window &other);
 
         bool WasCreated() const;
         void bindEngine(AEngine *engine);

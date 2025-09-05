@@ -19,7 +19,7 @@ Window::Window()
     _engine = 0;
 }
 
-Window::Window(Window& other)
+Window::Window(const Window& other)
 {
     _window = other._window;
     _engine = other._engine;
@@ -27,6 +27,16 @@ Window::Window(Window& other)
 
 Window::~Window()
 {
+}
+
+Window &Window::operator=(const Window &other)
+{
+    if (this ==  &other)
+        return *this;
+
+    _window = other._window;
+    _engine = other._engine;
+    return *this;
 }
 
 void Window::bindEngine(AEngine *newEngine)
