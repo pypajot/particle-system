@@ -19,29 +19,23 @@ WorkerGen::WorkerGen() : AWorker()
 {
 }
 
-WorkerGen::WorkerGen(GLuint VBO, int particleQuantity, float maxTtl, int particlePerFrame, bool &generatorOn) : AWorker(VBO, particleQuantity, 7)
+WorkerGen::WorkerGen(GLuint VBO, int particleQuantity) : AWorker(VBO, particleQuantity, 7)
 {
-    currentParticle = 0;
+    _currentParticle = 0;
 }
 
 WorkerGen::WorkerGen(const WorkerGen &other) : AWorker(other)
 {
-    currentParticle = other.currentParticle;
+    _currentParticle = other._currentParticle;
 }
 
 WorkerGen::WorkerGen(WorkerGen &&other) : AWorker(other)
 {
-    currentParticle = other.currentParticle;
+    _currentParticle = other._currentParticle;
 }
 
 WorkerGen::~WorkerGen()
 {
-    if (_managesBuffer)
-    {
-        cudaGraphicsUnregisterResource(_cudaGL_ptr);
-        checkCudaError("Unregister resource");
-        cudaFree(d_state);
-    }
 }
 
 WorkerGen &WorkerGen::operator=(const WorkerGen &other)
@@ -50,7 +44,7 @@ WorkerGen &WorkerGen::operator=(const WorkerGen &other)
         return *this;
 
     this->AWorker::operator=(other);
-    currentParticle = other.currentParticle;
+    _currentParticle = other._currentParticle;
     return *this;
 }
 
@@ -60,7 +54,7 @@ WorkerGen &WorkerGen::operator=(WorkerGen &&other)
         return *this;
 
     this->AWorker::operator=(other);
-    currentParticle = other.currentParticle;
+    _currentParticle = other._currentParticle;
     return *this;
 }
 
@@ -173,7 +167,7 @@ void WorkerGen::generate(int particlePerFrame)
 
     // cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
     // checkCudaError("Get Mapped pointer");
-    GeneratorAction<<<blocks, threadPerBlocks>>>(buffer, particleQty, d_state, particlePerFrame, currentParticle);
+    GeneratorAction<<<blocks, threadPerBlocks>>>(buffer, particleQty, _d_state, particlePerFrame, currentParticle);
     // cudaGraphicsUnmapResources(1, &cudaGL_ptr);
     // checkCudaError("Unmap resource");
     currentParticle = (currentParticle + particlePerFrame) % particleQty;

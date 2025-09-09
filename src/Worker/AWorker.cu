@@ -15,10 +15,10 @@ float uniformDisToBounds(float input, float min, float max)
 }
 
 __global__
-void InitRand(curandState *d_state)
+void InitRand(curandState *_d_state)
 {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
-    curand_init(0, index, 0, &d_state[index]);
+    curand_init(0, index, 0, &_d_state[index]);
 }
 
 void checkCudaError(const char *function)
@@ -35,58 +35,45 @@ void checkCudaError(const char *function)
 
 AWorker::AWorker()
 {
-    managesBuffer = false;
+    _managesBuffer = false;
 }
 
-AWorker::AWorker(GLuint VBO, int particleQuantity, int elemSz)
+AWorker::AWorker(GLuint VBO, int particleQty, int elemSize) : _particleQty(particleQty), _threadPerBlocks(THREAD_PER_BLOCK), _blocks(_particleQty / _threadPerBlocks + 1), _elemSize(elemSize)
 {
-    particleQty = particleQuantity;
-    threadPerBlocks = THREAD_PER_BLOCK;
-    blocks = particleQty / threadPerBlocks + 1;
-    elemSize = elemSz;
-
-    cudaGraphicsGLRegisterBuffer(&cudaGL_ptr, VBO, cudaGraphicsRegisterFlagsNone);
+    cudaGraphicsGLRegisterBuffer(&_cudaGL_ptr, VBO, cudaGraphicsRegisterFlagsNone);
     checkCudaError("Register buffer");
 
-    cudaMalloc(&d_state, sizeof(curandState) * threadPerBlocks * blocks);
-    InitRand<<<blocks, threadPerBlocks>>>(d_state);
+    cudaMalloc(&_d_state, sizeof(curandState) * _threadPerBlocks * blocks);
+    InitRand<<<_blocks, _threadPerBlocks>>>(_d_state);
 
-    managesBuffer = true;
+    _managesBuffer = true;
 }
 
-AWorker::AWorker(const AWorker &other)
+AWorker::AWorker(const AWorker &other) : _particleQty(other._particleQty), _elemSize(other._elemSize), _threadPerBlocks(other._threadPerBlocks), _blocks(other._blocks)
 {
-    particleQty = other.particleQty;
-    elemSize = other.elemSize;
-    threadPerBlocks = other.threadPerBlocks;
-    blocks = other.blocks;
-    cudaGL_ptr = other.cudaGL_ptr;
-    d_state = other.d_state;
+    _cudaGL_ptr = other._cudaGL_ptr;
+    _d_state = other._d_state;
 
-    managesBuffer = false;
+    _managesBuffer = false;
 }
 
-AWorker::AWorker(AWorker &&other)
+AWorker::AWorker(AWorker &&other) : _particleQty(other._particleQty), _elemSize(other._elemSize), _threadPerBlocks(other._threadPerBlocks), _blocks(other._blocks)
 {
-    other.managesBuffer = false;
+    other._managesBuffer = false;
 
-    particleQty = other.particleQty;
-    elemSize = other.elemSize;
-    threadPerBlocks = other.threadPerBlocks;
-    blocks = other.blocks;
-    cudaGL_ptr = other.cudaGL_ptr;
-    d_state = other.d_state;
+    _cudaGL_ptr = other._cudaGL_ptr;
+    _d_state = other._d_state;
 
-    managesBuffer = true;
+    _managesBuffer = true;
 }
 
 AWorker::~AWorker()
 {
-    if (managesBuffer)
+    if (_managesBuffer)
     {
-        cudaGraphicsUnregisterResource(cudaGL_ptr);
+        cudaGraphicsUnregisterResource(_cudaGL_ptr);
         checkCudaError("Unregister resource");
-        cudaFree(d_state);
+        cudaFree(_d_state);
     }
 }
 
@@ -95,14 +82,10 @@ AWorker &AWorker::operator=(const AWorker &other)
     if (this == &other)
         return *this;
 
-    particleQty = other.particleQty;
-    elemSize = other.elemSize;
-    threadPerBlocks = other.threadPerBlocks;
-    blocks = other.blocks;
-    cudaGL_ptr = other.cudaGL_ptr;
-    d_state = other.d_state;
+    _cudaGL_ptr = other._cudaGL_ptr;
+    _d_state = other._d_state;
 
-    managesBuffer = false;
+    _managesBuffer = false;
 
     return *this;
 }
@@ -112,33 +95,29 @@ AWorker &AWorker::operator=(AWorker &&other)
     if (this == &other)
         return *this;
 
-    other.managesBuffer = false;
+    other._managesBuffer = false;
 
-    particleQty = other.particleQty;
-    elemSize = other.elemSize;
-    threadPerBlocks = other.threadPerBlocks;
-    blocks = other.blocks;
-    cudaGL_ptr = other.cudaGL_ptr;
-    d_state = other.d_state;
+    _cudaGL_ptr = other._cudaGL_ptr;
+    _d_state = other._d_state;
 
-    managesBuffer = true;
+    _managesBuffer = true;
 
     return *this;
 }
 
 void AWorker::Map()
 {
-    size_t bufferSize = particleQty * elemSize * sizeof(float);
+    size_t bufferSize = _particleQty * _elemSize * sizeof(float);
     
-    cudaGraphicsMapResources(1, &cudaGL_ptr);
+    cudaGraphicsMapResources(1, &_cudaGL_ptr);
     checkCudaError("Map resource");
-    cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
+    cudaGraphicsResourceGetMappedPointer((void **)&_buffer, &bufferSize, _cudaGL_ptr);
     checkCudaError("Get Mapped pointer");
 }
 
 void AWorker::Unmap()
 {
-    cudaGraphicsUnmapResources(1, &cudaGL_ptr);
+    cudaGraphicsUnmapResources(1, &_cudaGL_ptr);
     checkCudaError("Unmap resource");
 }
 

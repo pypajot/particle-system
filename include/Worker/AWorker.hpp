@@ -13,14 +13,14 @@ class AWorker
     protected:
         bool _managesBuffer;
         cudaGraphicsResource *_cudaGL_ptr;
-        float *buffer;
+        float *_buffer;
         
-        const int elemSize;
-        const int particleQty;
-        const int threadPerBlocks;
-        const int blocks;
+        const int _elemSize;
+        const int _particleQty;
+        const int _threadPerBlocks;
+        const int _blocks;
         
-        curandState *d_state;
+        curandState *_d_state;
         
     public:
         AWorker();
@@ -36,7 +36,7 @@ class AWorker
         void Map();
         void Unmap();
 
-        virtual void call(vec3 &gravityPos, bool gravityOn, float gravityStrength) = 0;
+        virtual void call(std::vector<Gravity> &gravity) = 0;
         virtual void init() = 0;
 
 };

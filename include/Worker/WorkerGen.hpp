@@ -7,7 +7,7 @@ class vec3;
 class WorkerGen : AWorker
 {
     private:
-        int currentParticle;
+        int _currentParticle;
         
     public:
         WorkerGen();
@@ -17,7 +17,7 @@ class WorkerGen : AWorker
 
         WorkerGen &operator=(const WorkerGen &other);
 
-        void call(vec3 &gravityPos, bool gravityOn, float gravityStrength) const;
+        void call(std::vector<Gravity> &gravity) const;
         void generate(int particlePerFrame);
         void init();
 
