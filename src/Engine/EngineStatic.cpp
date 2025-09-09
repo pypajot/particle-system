@@ -2,6 +2,10 @@
 
 #include "Engine/EngineStatic.hpp"
 
+EngineStatic::EngineStatic() : AEngine()
+{
+}
+
 EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity), _worker(VBO, _particleQty)
 {
     initType = ENGINE_INIT_STATIC;
@@ -96,5 +100,5 @@ void EngineStatic::run()
     if (!simulationOn)
         return;
 
-    _worker.call(_gravityPos, gravityOn, gravityStrength);
+    _worker.call(_gravity);
 }

@@ -6,6 +6,10 @@
 #include "Engine/AEngine.hpp"
 
 
+AEngine::AEngine()
+{
+}
+
 AEngine::AEngine(int particleQuantity)
 {
     _gravity = std::vector<Gravity>(1);

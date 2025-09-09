@@ -1,3 +1,5 @@
+#pragma once
+
 #include "math/vec3.hpp"
 
 #define BASE_GRAVITY 1.0f
@@ -6,15 +8,13 @@
 
 class Gravity
 {
-    private:
-    float _strength;
-    
     public:
-        vec3 _pos;
+        vec3 pos;
+        float strength;
         bool active;
         
         Gravity();
-        Gravity(vec3 pos);
+        Gravity(const vec3 &pos);
         Gravity(const Gravity &other);
         ~Gravity();
 

@@ -61,6 +61,7 @@ class AEngine
         /// @brief The camera object used for the display
         Camera camera;
     
+        AEngine();
         AEngine(int particleQty);
         AEngine(const AEngine &other);
         virtual ~AEngine();

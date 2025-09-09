@@ -1,5 +1,5 @@
-#include <random>
 #include <cmath>
+#include <iostream>
 
 #include "Engine/EngineGen.hpp"
 
@@ -7,7 +7,7 @@ EngineGen::EngineGen() : AEngine()
 {
 }
 
-EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity), _worker(VBO, _particleQty)
+EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity), _worker(VBO, _particleQty), _timeToLive(BASE_TTL)
 {
     initType = ENGINE_INIT_GEN;    
 
@@ -39,9 +39,9 @@ EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity), _worker(
 
 EngineGen::EngineGen(const EngineGen &other) : AEngine(other)
 {
-    particlePerFrame = other.particlePerFrame;
+    _particlePerFrame = other._particlePerFrame;
     generatorOn = other.generatorOn;
-    worker = other.worker;
+    _worker = other._worker;
 }
 
 EngineGen::~EngineGen()
@@ -54,9 +54,9 @@ EngineGen &EngineGen::operator=(const EngineGen &other)
         return *this;
         
     AEngine::operator=(other);
-    particlePerFrame = other.particlePerFrame;
+    _particlePerFrame = other._particlePerFrame;
     generatorOn = other.generatorOn;
-    worker = other.worker;
+    _worker = other._worker;
     return *this;
 }
 
@@ -66,7 +66,7 @@ void EngineGen::reset()
     camera.resetPosition();
     generatorOn = true;
     clearGravity();
-    worker.initGen();
+    _worker.init();
     simulationOn = false;
 }
 
@@ -78,20 +78,20 @@ void EngineGen::reset()
 void EngineGen::useShader(float frameTime, float cursorX, float cursorY, float height)
 {
     mat4 toScreen = camera.coordToScreenMatrix();
-    int camLoc = glGetUniformLocation(shader.program, "camera");
+    int camLoc = glGetUniformLocation(_shader.program, "camera");
     
     glUniformMatrix4fv(camLoc, 1, GL_FALSE, &toScreen.value[0][0]);
-    shader.setFloatUniform("maxTtl", timeToLive);
-    shader.setFloatUniform("frameTimeX", (1 + sin(frameTime)) / 2);
-    shader.setFloatUniform("frameTimeY", (1 + sin(frameTime + 2 * M_PI / 3)) / 2);
-    shader.setFloatUniform("frameTimeZ", (1 + sin(frameTime - 2 * M_PI / 3)) / 2);
-    shader.setFloatUniform("cursorX", cursorX);
-    shader.setFloatUniform("cursorY", cursorY);
-    shader.setFloatUniform("height", height);
-    shader.setFloatUniform("near", camera.near);
-    shader.setFloatUniform("far", camera.far);
-    shader.setFloatUniform("mouseDepth", mouseDepth);
-    shader.use();
+    _shader.setFloatUniform("maxTtl", _timeToLive);
+    _shader.setFloatUniform("frameTimeX", (1 + sin(frameTime)) / 2);
+    _shader.setFloatUniform("frameTimeY", (1 + sin(frameTime + 2 * M_PI / 3)) / 2);
+    _shader.setFloatUniform("frameTimeZ", (1 + sin(frameTime - 2 * M_PI / 3)) / 2);
+    _shader.setFloatUniform("cursorX", cursorX);
+    _shader.setFloatUniform("cursorY", cursorY);
+    _shader.setFloatUniform("height", height);
+    _shader.setFloatUniform("near", camera.near);
+    _shader.setFloatUniform("far", camera.far);
+    _shader.setFloatUniform("mouseDepth", _mouseDepth);
+    _shader.use();
 }
 
 /// @brief Run the simulation for a frame 
@@ -102,33 +102,33 @@ void EngineGen::run()
     if (!simulationOn)
         return;
 
-    worker.Map();
+    _worker.Map();
     if (generatorOn)
-        worker.generate(particlePerFrame);
-    worker.call(gravityPos, gravityOn, gravityStrength);
-    worker.Unmap();
+        _worker.generate(_particlePerFrame);
+    _worker.call(_gravity);
+    _worker.Unmap();
 }
 
 /// @brief Increment the number of particle generated per frame 
 void EngineGen::ppfUp()
 {
-    if (particlePerFrame >= MAX_PPF)
+    if (_particlePerFrame >= MAX_PPF)
     {
-        std::cout << "Particle per frame at max value : " << particlePerFrame << "\n";
+        std::cout << "Particle per frame at max value : " << _particlePerFrame << "\n";
         return;
     }
-    particlePerFrame += 500;
-    std::cout << "Particle per frame increased, new value : " << particlePerFrame << "\n";
+    _particlePerFrame += 500;
+    std::cout << "Particle per frame increased, new value : " << _particlePerFrame << "\n";
 }
 
 /// @brief Decrement the number of particle generated per frame 
 void EngineGen::ppfDown()
 {
-    if (particlePerFrame <= MIN_PPF)
+    if (_particlePerFrame <= MIN_PPF)
     {
-        std::cout << "Particle per frame at min value : " << particlePerFrame << "\n";
+        std::cout << "Particle per frame at min value : " << _particlePerFrame << "\n";
         return;
     }   
-    particlePerFrame -= 500;
-    std::cout << "Particle per frame decreased, new value : " << particlePerFrame << "\n";
+    _particlePerFrame -= 500;
+    std::cout << "Particle per frame decreased, new value : " << _particlePerFrame << "\n";
 }

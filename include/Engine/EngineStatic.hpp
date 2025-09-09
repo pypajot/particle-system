@@ -13,6 +13,7 @@ class EngineStatic : public AEngine
         WorkerStatic _worker;
 
     public:
+        EngineStatic();
         EngineStatic(int particleQuantity);
         EngineStatic(const EngineStatic &other);
         virtual ~EngineStatic();

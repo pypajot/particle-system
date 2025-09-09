@@ -36,7 +36,7 @@ uint getGeneratorOption(int ac, char **av)
 int main(int ac, char **av)
 {
     uint particleQty = getParticleQty(ac, av);
-    unit ttl = getGeneratorOption(ac, av);
+    uint ttl = getGeneratorOption(ac, av);
 
     if (particleQty == 0)
     {

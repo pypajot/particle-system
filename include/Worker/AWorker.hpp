@@ -3,8 +3,9 @@
 #include <driver_types.h>
 #include <curand.h>
 #include <curand_kernel.h>
+#include <vector>
 
-class vec3;
+#include "Gravity.hpp"
 
 #define THREAD_PER_BLOCK 1024
 
@@ -26,12 +27,12 @@ class AWorker
         AWorker();
         AWorker(GLuint VBO, int particleQuantity, int elemSz);
         AWorker(const AWorker &other);
-        AWorker(AWorker &&other);
+        // AWorker(AWorker &&other);
 
         virtual ~AWorker();
 
         AWorker &operator=(const AWorker &other);
-        AWorker &operator=(AWorker &&other);
+        // AWorker &operator=(AWorker &&other);
 
         void Map();
         void Unmap();
@@ -40,3 +41,7 @@ class AWorker
         virtual void init() = 0;
 
 };
+
+void checkCudaError(const char *function);
+
+__global__ void GravityAction(float *buffer, int bufferIndexMax, Gravity *gravity, int stride);

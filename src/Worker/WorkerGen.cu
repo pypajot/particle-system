@@ -29,10 +29,10 @@ WorkerGen::WorkerGen(const WorkerGen &other) : AWorker(other)
     _currentParticle = other._currentParticle;
 }
 
-WorkerGen::WorkerGen(WorkerGen &&other) : AWorker(other)
-{
-    _currentParticle = other._currentParticle;
-}
+// WorkerGen::WorkerGen(WorkerGen &&other) : AWorker(other)
+// {
+//     _currentParticle = other._currentParticle;
+// }
 
 WorkerGen::~WorkerGen()
 {
@@ -48,18 +48,18 @@ WorkerGen &WorkerGen::operator=(const WorkerGen &other)
     return *this;
 }
 
-WorkerGen &WorkerGen::operator=(WorkerGen &&other)
-{
-    if (this == &other)
-        return *this;
+// WorkerGen &WorkerGen::operator=(WorkerGen &&other)
+// {
+//     if (this == &other)
+//         return *this;
 
-    this->AWorker::operator=(other);
-    _currentParticle = other._currentParticle;
-    return *this;
-}
+//     this->AWorker::operator=(other);
+//     _currentParticle = other._currentParticle;
+//     return *this;
+// }
 
 __device__
-bool ParticleIsGenerated(int index, int currentParticle, int particlePerframe, int bufferIndexMax)
+bool ParticleIsGenerated(int index, int currentParticle, int particlePerFrame, int bufferIndexMax)
 {
     if (currentParticle + particlePerFrame < bufferIndexMax)
         return index >= currentParticle && index < currentParticle + particlePerFrame;
@@ -94,35 +94,8 @@ void GeneratorAction(float *buffer, int bufferIndexMax, curandState *d_state, in
     }
 }
 
-__global__ 
-void GravityAction(float *buffer, int bufferIndexMax, std::vector<Gravity> gravity)
-{
-    int index = blockIdx.x * blockDim.x + threadIdx.x;
-    int gravityIndex = blockIdx.y;
-    
-    if (index >= bufferIndexMax)
-        return;
-
-    float *current = buffer + index * 7;
-
-    if (gravity[gravityIndex].active)
-    {
-        float distanceX = current[0] - gravity[gravityIndex]._pos.x;
-        float distanceY = current[1] - gravity[gravityIndex]._pos.y;
-        float distanceZ = current[2] - gravity[gravityIndex]._pos.z;
-    
-        float distance = powf(distanceX, 2) + powf(distanceY, 2) + powf(distanceZ, 2);
-    
-        float speedFactor = TIME_FACTOR * gravityStrength / distance;
-    
-        current[3] -= distanceX * speedFactor;
-        current[4] -= distanceY * speedFactor;
-        current[5] -= distanceZ * speedFactor;
-    }
-}
-
 __global__
-void LoopAction(float *buffer, int bufferIndexMax)
+void LoopActionGen(float *buffer, int bufferIndexMax)
 {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -138,21 +111,21 @@ void LoopAction(float *buffer, int bufferIndexMax)
     current[6] += 1;
 }
 
-void WorkerGen::call(std::vector<Gravity> &gravity) const
+void WorkerGen::call(std::vector<Gravity> &gravity)
 {
-    if (std::any_of(gravity.begin(), gravity.end(), checkActive) && gravity.length() != 0)
-        GravityAction<<<dim2(blocks, gravity.length()), threadPerBlocks>>>(buffer, particleQty, gravity);
-    LoopAction<<<blocks, threadPerBlocks>>>(buffer, particleQty);
+    if (std::any_of(gravity.begin(), gravity.end(), checkActive) && gravity.size() != 0)
+        GravityAction<<<dim3(_blocks, gravity.size()), _threadPerBlocks>>>(_buffer, _particleQty, gravity.data(), _elemSize);
+    LoopActionGen<<<_blocks, _threadPerBlocks>>>(_buffer, _particleQty);
 }
 
 void WorkerGen::generate(int particlePerFrame)
 {
-    GeneratorAction<<<blocks, threadPerBlocks>>>(buffer, particleQty, _d_state, particlePerFrame, currentParticle);
-    currentParticle = (currentParticle + particlePerFrame) % particleQty;
+    GeneratorAction<<<_blocks, _threadPerBlocks>>>(_buffer, _particleQty, _d_state, particlePerFrame, _currentParticle);
+    _currentParticle = (_currentParticle + particlePerFrame) % _particleQty;
 }
 
 __global__
-void InitGenerator(float *buffer, int bufferIndexMax, float maxTtl)
+void InitGenerator(float *buffer, int bufferIndexMax)
 {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -172,7 +145,7 @@ void InitGenerator(float *buffer, int bufferIndexMax, float maxTtl)
 
 void WorkerGen::init()
 {
-    AWorker::Map();
-    InitGen<<<blocks, threadPerBlocks>>>(buffer, particleQty, maxTtl);
-    AWorker::Unmap();
+    Map();
+    InitGenerator<<<_blocks, _threadPerBlocks>>>(_buffer, _particleQty);
+    Unmap();
 }

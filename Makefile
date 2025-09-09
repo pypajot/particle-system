@@ -1,10 +1,10 @@
 NAME := particle
 CC := c++
 GLFLAGS := -lGL -lGLU -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi -lcudart
-CPPFLAGS := -Wall -Wextra -Werror -g -MMD --std c++17
+CPPFLAGS := -Wall -Wextra -Werror -g -MMD --std c++11
 
 CUDACC := nvcc
-CUDAFLAGS := -Werror all-warnings -g -MMD --std c++17 -gencode arch=compute_80,code=sm_80
+CUDAFLAGS := -Werror all-warnings -g -MMD --std c++11 -gencode arch=compute_80,code=sm_80
 
 OBJDIR := obj
 SRCDIR := src
@@ -13,23 +13,27 @@ SRCS := main.cpp \
 		Window.cpp \
 		Shader.cpp \
 		Camera.cpp \
+		Gravity.cpp \
+		FPSCounter.cpp \
 		Engine/AEngine.cpp \
 		Engine/EngineStatic.cpp \
 		Engine/EngineGen.cpp \
-		math/tranform.cpp \
+		math/transform.cpp \
 		math/vec3.cpp \
 		math/vec4.cpp \
 		math/mat4.cpp \
 		glad/gl.cpp
 
-CUDASRCS:= Worker/CudaWorker.cu
+CUDASRCS:=  Worker/AWorker.cu \
+			Worker/WorkerStatic.cu \
+			Worker/WorkerGen.cu \
 
-SRCS_NODIR := $(notdir $(SRCS))
-OBJS := $(patsubst %.cpp,$(OBJDIR)/%.o, $(notdir $(SRCS)))
-DEPS := $(patsubst %.cpp,$(OBJDIR)/%.d, $(notdir $(SRCS)))
+SRCS_NODIR := $(strip $(SRCS))
+OBJS := $(patsubst %.cpp,$(OBJDIR)/%.o, $(strip $(SRCS)))
+DEPS := $(patsubst %.cpp,$(OBJDIR)/%.d, $(strip $(SRCS)))
 
-CUDAOBJS := $(patsubst %.cu,$(OBJDIR)/%.o, $(notdir $(CUDASRCS)))
-CUDADEPS := $(patsubst %.cu,$(OBJDIR)/%.d, $(notdir $(CUDASRCS)))
+CUDAOBJS := $(patsubst %.cu,$(OBJDIR)/%.o, $(strip $(CUDASRCS)))
+CUDADEPS := $(patsubst %.cu,$(OBJDIR)/%.d, $(strip $(CUDASRCS)))
 
 INCS := ./include/
 
@@ -50,11 +54,15 @@ $(NAME): $(OBJS) $(CUDAOBJS) Makefile
 	$(CC) $(CPPFLAGS) -o $(NAME) $(OBJS) $(CUDAOBJS) $(GLFLAGS) 
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	@mkdir -p $(OBJDIR)
+	@if [ ! -d $(dir $@) ]; then \
+		mkdir -p $(dir $@); \
+	fi
 	$(CC) $(CPPFLAGS) -o $@ -c $< -I$(INCS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cu
-	@mkdir -p $(OBJDIR)
+	@if [ ! -d $(dir $@) ]; then \
+		mkdir -p $(dir $@); \
+	fi
 	$(CUDACC) $(CUDAFLAGS) -o $@ -c $< -I$(INCS)
 
 -include $(DEPS)

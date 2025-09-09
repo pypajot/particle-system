@@ -18,11 +18,14 @@ class EngineGen : public AEngine
         WorkerGen _worker;
         /// @brief The number of  particle generated per frame
         int _particlePerFrame;
+        /// @brief The number of frame generated particle will live
+        int _timeToLive;
 
      public:
         /// @brief The status of the generator
         bool generatorOn;
 
+        EngineGen();
         EngineGen(const EngineGen &other);
         EngineGen(int particleQuantity);
         virtual ~EngineGen();
