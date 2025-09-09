@@ -21,6 +21,8 @@ EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity), _worker(
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
+    // With a generator initialization, we need the particle position (dim 3), its speed (dim 3), and how long it has been alive (dim 1) 
+
     glBufferData(GL_ARRAY_BUFFER, _particleQty * 7 * sizeof(float), 0, GL_STREAM_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
@@ -58,14 +60,21 @@ EngineGen &EngineGen::operator=(const EngineGen &other)
     return *this;
 }
 
+/// @brief Reset the engine to its initial state
 void EngineGen::reset()
 {
     camera.resetPosition();
     generatorOn = true;
+    clearGravity();
     worker->initGen();
     simulationOn = false;
 }
 
+/// @brief Set the uniform for the shader program and set it to be used
+/// @param frameTime The current time for the frame
+/// @param cursorX The mouse X coordinate
+/// @param cursorY The mouse Y coordinate
+/// @param height The window height
 void EngineGen::useShader(float frameTime, float cursorX, float cursorY, float height)
 {
     mat4 toScreen = camera.coordToScreenMatrix();
@@ -85,6 +94,7 @@ void EngineGen::useShader(float frameTime, float cursorX, float cursorY, float h
     shader.use();
 }
 
+/// @brief Run the simulation for a frame 
 void EngineGen::run()
 {
     camera.move();
@@ -99,6 +109,7 @@ void EngineGen::run()
     worker.Unmap();
 }
 
+/// @brief Increment the number of particle generated per frame 
 void EngineGen::ppfUp()
 {
     if (particlePerFrame >= MAX_PPF)
@@ -110,6 +121,7 @@ void EngineGen::ppfUp()
     std::cout << "Particle per frame increased, new value : " << particlePerFrame << "\n";
 }
 
+/// @brief Decrement the number of particle generated per frame 
 void EngineGen::ppfDown()
 {
     if (particlePerFrame <= MIN_PPF)

@@ -2,8 +2,6 @@
 
 #include "Engine/EngineStatic.hpp"
 
-#define 
-
 EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity), _worker(VBO, _particleQty)
 {
     initType = ENGINE_INIT_STATIC;
@@ -17,8 +15,9 @@ EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity), _w
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
-    glBufferData(GL_ARRAY_BUFFER, _particleQty * 6 * sizeof(float), 0, GL_STREAM_DRAW);
+    // With a generator initialization, we need the particle position (dim 3) and its speed (dim 3)
 
+    glBufferData(GL_ARRAY_BUFFER, _particleQty * 6 * sizeof(float), 0, GL_STREAM_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -48,20 +47,29 @@ EngineStatic &EngineStatic::operator=(const EngineStatic &other)
     return *this;
 }
 
+/// @brief Reset the engine to a its initial state, but with a cube instead of a sphere
 void EngineStatic::resetCube()
 {
     _worker->initCube();
+    clearGravity();
     camera.resetPosition();
     simulationOn = false;
 }
 
+/// @brief Reset the engine to its initial state
 void EngineStatic::reset()
 {
     _worker->init();
+    clearGravity();
     camera.resetPosition();
     simulationOn = false;
 }
 
+/// @brief Set the uniform for the shader program and set it to be used
+/// @param frameTime The current time for the frame
+/// @param cursorX The mouse X coordinate
+/// @param cursorY The mouse Y coordinate
+/// @param height The window height
 void EngineStatic::useShader(float frameTime, float cursorX, float cursorY, float height)
 {
     mat4 toScreen = camera.coordToScreenMatrix();
@@ -80,6 +88,7 @@ void EngineStatic::useShader(float frameTime, float cursorX, float cursorY, floa
     _shader.use();
 }
 
+/// @brief Run the simulation for a frame 
 void EngineStatic::run()
 {
     camera.move();

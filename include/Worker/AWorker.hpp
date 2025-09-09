@@ -28,7 +28,7 @@ class AWorker
         AWorker(const AWorker &other);
         AWorker(AWorker &&other);
 
-        ~AWorker();
+        virtual ~AWorker();
 
         AWorker &operator=(const AWorker &other);
         AWorker &operator=(AWorker &&other);

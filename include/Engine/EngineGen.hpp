@@ -10,13 +10,17 @@
 
 #define GEN_VERTEX_PATH "shaders/vertexShaderGen.vs"
 
+/// @brief Engine class in which particle are initialized from a generator
 class EngineGen : public AEngine
 {
     private:
+        /// @brief The cuda worker that will perform the calculation
         WorkerGen _worker;
+        /// @brief The number of  particle generated per frame
         int _particlePerFrame;
 
      public:
+        /// @brief The status of the generator
         bool generatorOn;
 
         EngineGen(const EngineGen &other);
