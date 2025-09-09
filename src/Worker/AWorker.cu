@@ -38,7 +38,11 @@ AWorker::AWorker()
     _managesBuffer = false;
 }
 
-AWorker::AWorker(GLuint VBO, int particleQty, int elemSize) : _particleQty(particleQty), _threadPerBlocks(THREAD_PER_BLOCK), _blocks(_particleQty / _threadPerBlocks + 1), _elemSize(elemSize)
+AWorker::AWorker(GLuint VBO, int particleQty, int elemSize) :
+    _particleQty(particleQty),
+    _threadPerBlocks(THREAD_PER_BLOCK),
+    _blocks(_particleQty / _threadPerBlocks + 1),
+    _elemSize(elemSize)
 {
     cudaGraphicsGLRegisterBuffer(&_cudaGL_ptr, VBO, cudaGraphicsRegisterFlagsNone);
     checkCudaError("Register buffer");
@@ -49,7 +53,11 @@ AWorker::AWorker(GLuint VBO, int particleQty, int elemSize) : _particleQty(parti
     _managesBuffer = true;
 }
 
-AWorker::AWorker(const AWorker &other) : _particleQty(other._particleQty), _elemSize(other._elemSize), _threadPerBlocks(other._threadPerBlocks), _blocks(other._blocks)
+AWorker::AWorker(const AWorker &other) :
+    _particleQty(other._particleQty),
+    _elemSize(other._elemSize),
+    _threadPerBlocks(other._threadPerBlocks),
+    _blocks(other._blocks)
 {
     _cudaGL_ptr = other._cudaGL_ptr;
     _d_state = other._d_state;
@@ -57,7 +65,11 @@ AWorker::AWorker(const AWorker &other) : _particleQty(other._particleQty), _elem
     _managesBuffer = false;
 }
 
-AWorker::AWorker(AWorker &&other) : _particleQty(other._particleQty), _elemSize(other._elemSize), _threadPerBlocks(other._threadPerBlocks), _blocks(other._blocks)
+AWorker::AWorker(AWorker &&other) :
+    _particleQty(other._particleQty),
+    _elemSize(other._elemSize),
+    _threadPerBlocks(other._threadPerBlocks),
+    _blocks(other._blocks)
 {
     other._managesBuffer = false;
 

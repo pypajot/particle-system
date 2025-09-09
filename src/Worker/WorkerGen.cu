@@ -140,36 +140,14 @@ void LoopAction(float *buffer, int bufferIndexMax)
 
 void WorkerGen::call(std::vector<Gravity> &gravity) const
 {
-    // size_t bufferSize = particleQty * 7 * sizeof(float);
-    // float *buffer;
-    
-    // cudaGraphicsMapResources(1, &cudaGL_ptr);
-    // checkCudaError("Map resource");
-
-    // cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
-    // checkCudaError("Get Mapped pointer");
     if (std::any_of(gravity.begin(), gravity.end(), checkActive) && gravity.length() != 0)
         GravityAction<<<dim2(blocks, gravity.length()), threadPerBlocks>>>(buffer, particleQty, gravity);
     LoopAction<<<blocks, threadPerBlocks>>>(buffer, particleQty);
-    // cudaGraphicsUnmapResources(1, &cudaGL_ptr);
-    // checkCudaError("Unmap resource");
-    // if (generatorOn)
-    //     currentParticle = (currentParticle + particlePerFrame) % particleQty;
 }
 
 void WorkerGen::generate(int particlePerFrame)
 {
-    // size_t bufferSize = particleQty * 7 * sizeof(float);
-    // float *buffer;
-    
-    // cudaGraphicsMapResources(1, &cudaGL_ptr);
-    // checkCudaError("Map resource");
-
-    // cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
-    // checkCudaError("Get Mapped pointer");
     GeneratorAction<<<blocks, threadPerBlocks>>>(buffer, particleQty, _d_state, particlePerFrame, currentParticle);
-    // cudaGraphicsUnmapResources(1, &cudaGL_ptr);
-    // checkCudaError("Unmap resource");
     currentParticle = (currentParticle + particlePerFrame) % particleQty;
 }
 
@@ -194,15 +172,7 @@ void InitGenerator(float *buffer, int bufferIndexMax, float maxTtl)
 
 void WorkerGen::init()
 {
-    // size_t bufferSize = particleQty * 7 * sizeof(float);
-    // float *buffer;
     AWorker::Map();
-    // cudaGraphicsMapResources(1, &cudaGL_ptr);
-    // checkCudaError("Map resource");
-
-    // cudaGraphicsResourceGetMappedPointer((void **)&buffer, &bufferSize, cudaGL_ptr);
-    // checkCudaError("Get Mapped pointer");
-
     InitGen<<<blocks, threadPerBlocks>>>(buffer, particleQty, maxTtl);
     AWorker::Unmap();
 }
