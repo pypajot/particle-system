@@ -1,5 +1,5 @@
 .vscode
-objs/*
+obj/*
 particle
 glad
 glad.zip
