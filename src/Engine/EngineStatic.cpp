@@ -6,7 +6,7 @@ EngineStatic::EngineStatic() : AEngine()
 {
 }
 
-EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity), _worker(VBO, _particleQty)
+EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity)
 {
     initType = ENGINE_INIT_STATIC;
 
@@ -28,6 +28,8 @@ EngineStatic::EngineStatic(int particleQuantity) : AEngine(particleQuantity), _w
 
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+
+    _worker = WorkerStatic(VBO, _particleQty);
 
     reset();
 }
@@ -96,6 +98,7 @@ void EngineStatic::useShader(float frameTime, float cursorX, float cursorY, floa
 void EngineStatic::run()
 {
     camera.move();
+    _gravity[0].active = mousePressed;
     
     if (!simulationOn)
         return;

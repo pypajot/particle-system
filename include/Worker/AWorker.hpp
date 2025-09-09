@@ -16,10 +16,10 @@ class AWorker
         cudaGraphicsResource *_cudaGL_ptr;
         float *_buffer;
         
-        const int _elemSize;
-        const int _particleQty;
-        const int _threadPerBlocks;
-        const int _blocks;
+        int _elemSize;
+        int _particleQty;
+        int _threadPerBlocks;
+        int _blocks;
         
         curandState *_d_state;
         
@@ -27,12 +27,14 @@ class AWorker
         AWorker();
         AWorker(GLuint VBO, int particleQuantity, int elemSz);
         AWorker(const AWorker &other);
-        // AWorker(AWorker &&other);
+        AWorker(AWorker &&other);
 
         virtual ~AWorker();
 
+        void Unregister();
+
         AWorker &operator=(const AWorker &other);
-        // AWorker &operator=(AWorker &&other);
+        AWorker &operator=(AWorker &&other);
 
         void Map();
         void Unmap();
@@ -44,4 +46,4 @@ class AWorker
 
 void checkCudaError(const char *function);
 
-__global__ void GravityAction(float *buffer, int bufferIndexMax, Gravity *gravity, int stride);
+// __global__ void GravityAction(float *buffer, int bufferIndexMax, Gravity *gravity, int stride);

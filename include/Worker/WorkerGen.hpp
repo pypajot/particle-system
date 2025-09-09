@@ -12,11 +12,11 @@ class WorkerGen : public AWorker
         WorkerGen();
         WorkerGen(GLuint VBO, int particleQuantity);
         WorkerGen(const WorkerGen &other);
-        // WorkerGen(WorkerGen &&other);
+        WorkerGen(WorkerGen &&other);
         ~WorkerGen();
 
         WorkerGen &operator=(const WorkerGen &other);
-        // WorkerGen &operator=(WorkerGen &&other);
+        WorkerGen &operator=(WorkerGen &&other);
 
         void call(std::vector<Gravity> &gravity);
         void generate(int particlePerFrame);

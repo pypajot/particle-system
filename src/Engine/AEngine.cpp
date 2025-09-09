@@ -28,6 +28,7 @@ AEngine::AEngine(const AEngine &other)
     _particleQty = other._particleQty;
     simulationOn = other.simulationOn;
     _gravity = other._gravity;
+    // _worker = other._worker;
 }
 
 AEngine::~AEngine()
@@ -46,8 +47,14 @@ AEngine &AEngine::operator=(const AEngine &other)
     _particleQty = other._particleQty;
     simulationOn = other.simulationOn;
     _gravity = other._gravity;
+    // _worker = other._worker;
     return *this;
 }
+
+// void AEngine::bindWorker(AWorker *worker)
+// {
+//     // _worker = worker;
+// }
 
 /// @brief Delete the vertex and buffer arrays initialized with the init() method
 void AEngine::deleteArrays()

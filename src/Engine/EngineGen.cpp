@@ -7,7 +7,7 @@ EngineGen::EngineGen() : AEngine()
 {
 }
 
-EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity), _worker(VBO, _particleQty), _timeToLive(BASE_TTL)
+EngineGen::EngineGen(int particleQuantity, int ttl) : AEngine(particleQuantity), _timeToLive(ttl)
 {
     initType = ENGINE_INIT_GEN;    
 
@@ -33,6 +33,8 @@ EngineGen::EngineGen(int particleQuantity) : AEngine(particleQuantity), _worker(
 
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
+
+    _worker = WorkerGen(VBO, _particleQty);
 
     reset();
 }
@@ -63,10 +65,10 @@ EngineGen &EngineGen::operator=(const EngineGen &other)
 /// @brief Reset the engine to its initial state
 void EngineGen::reset()
 {
+    _worker.init();
+    clearGravity();
     camera.resetPosition();
     generatorOn = true;
-    clearGravity();
-    _worker.init();
     simulationOn = false;
 }
 
@@ -98,7 +100,7 @@ void EngineGen::useShader(float frameTime, float cursorX, float cursorY, float h
 void EngineGen::run()
 {
     camera.move();
-
+    _gravity[0].active = mousePressed;
     if (!simulationOn)
         return;
 

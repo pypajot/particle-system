@@ -61,7 +61,7 @@ void FPSCounter::addFrame()
 {
     auto time = std::chrono::steady_clock::now();
     _frameTimes[_currentFrame] = getSecondsFromTimepoint(time);
-    _currentFrame = _currentFrame + 1 % (_calculatePeriod + 1);
+    _currentFrame = (_currentFrame + 1) % (_calculatePeriod + 1);
 }
 
 /// @brief Add a frame to time using a custom time system
@@ -69,14 +69,14 @@ void FPSCounter::addFrame()
 void FPSCounter::addFrame(double time)
 {
     _frameTimes[_currentFrame] = time;
-    _currentFrame = _currentFrame + 1 % (_calculatePeriod + 1);
+    _currentFrame = (_currentFrame + 1) % (_calculatePeriod + 1);
 }
 
 /// @brief Calculate the mean fps over the fps period
 /// @return The frame per second over the last period
 int FPSCounter::getFPS() const
 {
-    return _calculatePeriod / (_frameTimes[_currentFrame + 1 % (_calculatePeriod + 1)] - _frameTimes[_currentFrame] + __FLT_EPSILON__);
+    return 1 / (_frameTimes[(_currentFrame + 1) % (_calculatePeriod + 1)] - _frameTimes[_currentFrame] + __FLT_EPSILON__);
 }
 
 /// @brief Get the current frame in the frame period time frame

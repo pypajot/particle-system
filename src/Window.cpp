@@ -146,9 +146,9 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
             engineG->generatorOn = !engineG->generatorOn;
             
         else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
-            engineG->ppfUp();
-        else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
             engineG->ppfDown();
+        else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
+            engineG->ppfUp();
     }
 
 }
@@ -201,11 +201,12 @@ void Window::RenderLoop()
         glfwGetCursorPos(window, &cursorX, &cursorY);
         counter.addFrame(currentFrame);
 
-        if (counter.getFrame() % 30)
+        if (counter.getFrame() == 0)
             glfwSetWindowTitle(window, std::to_string(counter.getFPS()).c_str());
 
         if (engine->mousePressed)
             engine->setMouseGravity(cursorX, cursorY, currentWidth, currentHeight);
+            
         engine->run();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

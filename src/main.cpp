@@ -64,7 +64,7 @@ int main(int ac, char **av)
 
     AEngine *particle;
     if (ttl > 0)
-        particle = new EngineGen(particleQty);
+        particle = new EngineGen(particleQty, ttl);
     else
         particle = new EngineStatic(particleQty);
 

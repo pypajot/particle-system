@@ -3,9 +3,9 @@
 #include "AEngine.hpp"
 #include "Worker/WorkerGen.hpp"
 
-#define BASE_PPF 10000
-#define MAX_PPF 20000
-#define MIN_PPF 1000
+#define BASE_PPF 5000
+#define MAX_PPF 10000
+#define MIN_PPF 500
 #define BASE_TTL 300
 
 #define GEN_VERTEX_PATH "shaders/vertexShaderGen.vs"
@@ -27,7 +27,7 @@ class EngineGen : public AEngine
 
         EngineGen();
         EngineGen(const EngineGen &other);
-        EngineGen(int particleQuantity);
+        EngineGen(int particleQuantity, int ttl);
         virtual ~EngineGen();
 
         EngineGen &operator=(const EngineGen &other);

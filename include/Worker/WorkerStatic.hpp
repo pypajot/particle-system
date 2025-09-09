@@ -9,11 +9,11 @@ class WorkerStatic : public AWorker
         WorkerStatic();
         WorkerStatic(GLuint VBO, int particleQuantity);
         WorkerStatic(const WorkerStatic &other);
-        // WorkerStatic(WorkerStatic &&other);
+        WorkerStatic(WorkerStatic &&other);
         ~WorkerStatic();
 
         WorkerStatic &operator=(const WorkerStatic &other);
-        // WorkerStatic &operator=(WorkerStatic &&other);
+        WorkerStatic &operator=(WorkerStatic &&other);
 
         void call(std::vector<Gravity> &gravity);
         void init();
