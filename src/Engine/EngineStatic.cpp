@@ -50,7 +50,7 @@ EngineStatic &EngineStatic::operator=(const EngineStatic &other)
 /// @brief Reset the engine to a its initial state, but with a cube instead of a sphere
 void EngineStatic::resetCube()
 {
-    _worker->initCube();
+    _worker.initCube();
     clearGravity();
     camera.resetPosition();
     simulationOn = false;
@@ -59,7 +59,7 @@ void EngineStatic::resetCube()
 /// @brief Reset the engine to its initial state
 void EngineStatic::reset()
 {
-    _worker->init();
+    _worker.init();
     clearGravity();
     camera.resetPosition();
     simulationOn = false;
@@ -96,5 +96,5 @@ void EngineStatic::run()
     if (!simulationOn)
         return;
 
-    _worker->call(_gravityPos, gravityOn, gravityStrength);
+    _worker.call(_gravityPos, gravityOn, gravityStrength);
 }

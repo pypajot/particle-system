@@ -11,7 +11,7 @@ class WorkerGen : AWorker
         
     public:
         WorkerGen();
-        WorkerGen(GLuint VBO, int particleQuantity, bool &generatorOn);
+        WorkerGen(GLuint VBO, int particleQuantity);
         WorkerGen(const WorkerGen &other);
         ~WorkerGen();
 

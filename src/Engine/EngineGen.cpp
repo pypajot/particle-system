@@ -66,7 +66,7 @@ void EngineGen::reset()
     camera.resetPosition();
     generatorOn = true;
     clearGravity();
-    worker->initGen();
+    worker.initGen();
     simulationOn = false;
 }
 
@@ -104,8 +104,8 @@ void EngineGen::run()
 
     worker.Map();
     if (generatorOn)
-        worker->generate(particlePerFrame);
-    worker->call(gravityPos, gravityOn, gravityStrength);
+        worker.generate(particlePerFrame);
+    worker.call(gravityPos, gravityOn, gravityStrength);
     worker.Unmap();
 }
 
