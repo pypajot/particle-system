@@ -74,20 +74,20 @@ int main(int ac, char **av)
     std::cout << "Particle system started !\n\n";
     std::cout << "Controls:\n";
     std::cout << "WASD: move the camera\n";
-    std::cout << "Space and X: move the camera uop and down\n";
+    std::cout << "Space and X: move the camera up and down\n";
     std::cout << "A and E : rotate the camera\n";
     std::cout << "Enter: start the simulation\n";
-    std::cout << "R: reset the siumulation to its starting position";
+    std::cout << "R: reset the simulation to its starting position\n";
     if (ttl > 0)
-        std::cout << "T: Start/stop the generator";
+        std::cout << "T: Start/stop the generator\n";
     else
-        std::cout << "T: Reset the simulation to a cubic position";
+        std::cout << "T: Reset the simulation to a cubic position\n";
     std::cout << "G: add a gravity point at the cursor\n";
-    std::cout << "H: clear the gravity points";
+    std::cout << "H: clear the gravity points\n";
+    std::cout << "You can also use the mouse to add a temporary gravity point\n";
     std::cout << "Up and down arrows: increase or decrease the strength of the active gravity points\n";
     if (ttl > 0)
         std::cout << "Right and left arrows: increase or decrease the number of particle generated per frame\n";
-
 
     window.RenderLoop();
     particle->deleteArrays();
