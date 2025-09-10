@@ -90,5 +90,4 @@ cleanglad:
 	rm -rfd include/glad
 	rm -rfd src/glad
 
-
 .PHONY: re fclean clean all cleanglad
