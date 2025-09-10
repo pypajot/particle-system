@@ -88,7 +88,8 @@ int main(int ac, char **av)
     std::cout << "Up and down arrows: increase or decrease the strength of the active gravity points\n";
     if (ttl > 0)
         std::cout << "Right and left arrows: increase or decrease the number of particle generated per frame\n";
-
+    std::cout << "\n";
+    
     window.RenderLoop();
     particle->deleteArrays();
     delete(particle);

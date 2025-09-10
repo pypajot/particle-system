@@ -116,10 +116,17 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         engine->camera.moveUpDown += 1;
 
     else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
+    {
         engine->simulationOn = !engine->simulationOn;
+        std::cout << "Simulation ";
+        engine->simulationOn ? std::cout << "on\n" : std::cout << "off\n";
+    }
 
     else if (key == GLFW_KEY_R && action == GLFW_PRESS)
+    {
         engine->reset();
+        std::cout << "Reset\n";
+    }
 
     else if (key == GLFW_KEY_G && action == GLFW_PRESS)
         engine->addGravity(winInstance->cursorX, winInstance->cursorY, winInstance->currentWidth, winInstance->currentHeight);
@@ -136,14 +143,22 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     {
         EngineStatic *engineS = reinterpret_cast<EngineStatic *>(engine);
         if (key == GLFW_KEY_T && action == GLFW_PRESS)
+        {
             engineS->resetCube();
+            std::cout << "Reset cube\n";
+        }
+        
     }
 
     else if (engine->initType == ENGINE_INIT_GEN)
     {
         EngineGen *engineG = reinterpret_cast<EngineGen *>(engine);
         if (key == GLFW_KEY_T && action == GLFW_PRESS)
+        {
             engineG->generatorOn = !engineG->generatorOn;
+            std::cout << "Generator ";
+            engineG->generatorOn ? std::cout << "on\n" : std::cout << "off\n";
+        }
             
         else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
             engineG->ppfDown();
