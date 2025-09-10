@@ -17,19 +17,19 @@ uint getParticleQty(int ac, char **av)
     return atoi(av[1]);
 }
 
-uint getGeneratorOption(int ac, char **av)
+int getGeneratorOption(int ac, char **av)
 {
     if (ac < 3)
         return 0;
 
     std::string option(av[2]);
     if (option != "-g")
-        return 0;
+        return -1;
 
     if (ac < 4)
         return BASE_TTL;
 
-    uint ttl = atoi(av[3]);
+    int ttl = atoi(av[3]);
     return ttl < BASE_TTL ? BASE_TTL : ttl;
 }
 
@@ -38,9 +38,9 @@ int main(int ac, char **av)
     uint particleQty = getParticleQty(ac, av);
     uint ttl = getGeneratorOption(ac, av);
 
-    if (particleQty == 0)
+    if (particleQty == 0 || ttl < 0)
     {
-        std::cerr << "Valid argument needed: format './particle <number>'\n";
+        std::cerr << "Valid argument needed: format './particle <number of particle> [-g <time to live>]'\n";
         return 1;
     }
 
@@ -68,7 +68,27 @@ int main(int ac, char **av)
     else
         particle = new EngineStatic(particleQty);
 
+        
     window.bindEngine(particle);
+
+    std::cout << "Particle system started !\n\n";
+    std::cout << "Controls:\n";
+    std::cout << "WASD: move the camera\n";
+    std::cout << "Space and X: move the camera uop and down\n";
+    std::cout << "A and E : rotate the camera\n";
+    std::cout << "Enter: start the simulation\n";
+    std::cout << "R: reset the siumulation to its starting position";
+    if (ttl > 0)
+        std::cout << "T: Start/stop the generator";
+    else
+        std::cout << "T: Reset the simulation to a cubic position";
+    std::cout << "G: add a gravity point at the cursor\n";
+    std::cout << "H: clear the gravity points";
+    std::cout << "Up and down arrows: increase or decrease the strength of the active gravity points\n";
+    if (ttl > 0)
+        std::cout << "Right and left arrows: increase or decrease the number of particle generated per frame\n";
+
+
     window.RenderLoop();
     particle->deleteArrays();
     delete(particle);

@@ -76,7 +76,7 @@ fclean: clean
 re: fclean all
 
 glad:
-	wget "https://gen.glad.sh/generated/tmp0rc01w22glad/glad.zip" -O glad.zip
+	wget "https://gen.glad.sh/generated/tmph71wsf4tglad/glad.zip" -O glad.zip
 	unzip glad.zip -d glad
 	mkdir -p include/glad/
 	mkdir -p src/glad/
