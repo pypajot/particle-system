@@ -183,7 +183,7 @@ void InitGenerator(float *buffer, int bufferIndexMax)
     current[3] = 0.0f;
     current[4] = 0.0f;
     current[5] = 0.0f;
-    current[6] = 301.0f;
+    current[6] = INT32_MAX;
 }
 
 /// @brief Initialize the simulation to a generator
