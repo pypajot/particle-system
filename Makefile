@@ -28,7 +28,6 @@ CUDASRCS:=  Worker/AWorker.cu \
 			Worker/WorkerStatic.cu \
 			Worker/WorkerGen.cu \
 
-SRCS_NODIR := $(strip $(SRCS))
 OBJS := $(patsubst %.cpp,$(OBJDIR)/%.o, $(strip $(SRCS)))
 DEPS := $(patsubst %.cpp,$(OBJDIR)/%.d, $(strip $(SRCS)))
 
@@ -36,6 +35,9 @@ CUDAOBJS := $(patsubst %.cu,$(OBJDIR)/%.o, $(strip $(CUDASRCS)))
 CUDADEPS := $(patsubst %.cu,$(OBJDIR)/%.d, $(strip $(CUDASRCS)))
 
 INCS := ./include/
+
+
+GLAD_LINK := "https://gen.glad.sh/generated/tmph71wsf4tglad/glad.zip"
 
 _GREY		= \033[30m
 _RED		= \033[31m
@@ -46,7 +48,6 @@ _PURPLE		= \033[35m
 _CYAN		= \033[36m
 _WHITE		= \033[37m
 _NO_COLOR	= \033[0m
-
 
 all : glad $(NAME)
 
@@ -76,7 +77,7 @@ fclean: clean
 re: fclean all
 
 glad:
-	wget "https://gen.glad.sh/generated/tmph71wsf4tglad/glad.zip" -O glad.zip
+	wget $(GLAD_LINK) -O glad.zip
 	unzip glad.zip -d glad
 	mkdir -p include/glad/
 	mkdir -p src/glad/
