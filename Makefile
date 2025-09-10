@@ -49,7 +49,7 @@ _CYAN		= \033[36m
 _WHITE		= \033[37m
 _NO_COLOR	= \033[0m
 
-all : glad $(NAME)
+all : $(NAME)
 
 $(NAME): $(OBJS) $(CUDAOBJS) Makefile
 	$(CC) $(CPPFLAGS) -o $(NAME) $(OBJS) $(CUDAOBJS) $(GLFLAGS) 
@@ -84,10 +84,10 @@ glad:
 	mv glad/include/glad/gl.h include/glad/gl.h
 	mv glad/src/gl.c src/glad/gl.cpp
 
-cleanglad:
+gclean:
 	rm -f glad.zip
 	rm -rfd glad/
 	rm -rfd include/glad
 	rm -rfd src/glad
 
-.PHONY: re fclean clean all cleanglad
+.PHONY: re fclean clean all gclean

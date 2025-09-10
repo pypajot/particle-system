@@ -19,5 +19,4 @@ void main()
 
     float dist = sqrt(distX * distX + distY * distY + distZ * distZ);
     FragColor = vec4(frameTimeX / dist, frameTimeY / dist, frameTimeZ / dist, 1.0f);
-    // FragColor = vec4(1.0f);
 } 
