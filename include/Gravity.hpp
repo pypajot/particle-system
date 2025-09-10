@@ -5,12 +5,17 @@
 #define BASE_GRAVITY 1.0f
 #define MAX_GRAVITY 2.0f
 #define MIN_GRAVITY 0.3f
+#define GRAVITY_STEP 0.1f
 
+/// @brief A gravity point
 class Gravity
 {
     public:
+        /// @brief The position of the point in world coordinates
         vec3 pos;
+        /// @brief THe strength of the gravity
         float strength;
+        /// @brief Is this point active
         bool active;
         
         Gravity();

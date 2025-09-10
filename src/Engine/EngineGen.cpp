@@ -21,7 +21,7 @@ EngineGen::EngineGen(int particleQuantity, int ttl) : AEngine(particleQuantity),
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
-    // With a generator initialization, we need the particle position (dim 3), its speed (dim 3), and how long it has been alive (dim 1) 
+    // With a generator initialization, we need the particle position (dim 3), its speed (dim 3), and how for long it has been alive (dim 1) 
 
     glBufferData(GL_ARRAY_BUFFER, _particleQty * 7 * sizeof(float), 0, GL_STREAM_DRAW);
 
@@ -114,23 +114,27 @@ void EngineGen::run()
 /// @brief Increment the number of particle generated per frame 
 void EngineGen::ppfUp()
 {
-    if (_particlePerFrame >= MAX_PPF)
+    if (_particlePerFrame == MAX_PPF)
     {
         std::cout << "Particle per frame at max value : " << _particlePerFrame << "\n";
         return;
     }
-    _particlePerFrame += 500;
+    _particlePerFrame += PPF_STEP;
+    if (_particlePerFrame >= MAX_PPF)
+        _particlePerFrame = MAX_PPF;
     std::cout << "Particle per frame increased, new value : " << _particlePerFrame << "\n";
 }
 
 /// @brief Decrement the number of particle generated per frame 
 void EngineGen::ppfDown()
 {
-    if (_particlePerFrame <= MIN_PPF)
+    if (_particlePerFrame == MIN_PPF)
     {
         std::cout << "Particle per frame at min value : " << _particlePerFrame << "\n";
         return;
     }   
-    _particlePerFrame -= 500;
+    _particlePerFrame -= PPF_STEP;
+    if (_particlePerFrame <= MIN_PPF)
+        _particlePerFrame = MIN_PPF;
     std::cout << "Particle per frame decreased, new value : " << _particlePerFrame << "\n";
 }

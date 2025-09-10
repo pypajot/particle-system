@@ -8,6 +8,8 @@
 
 #define TIME_FACTOR 1.0f / 60.0f
 
+/// @brief Get the last cuda error and display it
+/// @param function The function after which the check was performed, used for information purposes
 void checkCudaError(const char *function)
 {
     cudaError_t error = cudaGetLastError();
@@ -125,6 +127,7 @@ AWorker &AWorker::operator=(AWorker &&other)
     return *this;
 }
 
+/// @brief Wrapper around cudaGraphicsMapResources and cudaGraphicsResourceGetMappedPointer
 void AWorker::Map()
 {
     size_t bufferSize = _particleQty * _elemSize * sizeof(float);
@@ -135,6 +138,7 @@ void AWorker::Map()
     checkCudaError("Get Mapped pointer");
 }
 
+/// @brief Wrapper around cudaGraphicsUnmapResources
 void AWorker::Unmap()
 {
     cudaGraphicsUnmapResources(1, &_cudaGL_ptr);

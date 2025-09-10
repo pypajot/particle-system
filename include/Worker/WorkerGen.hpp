@@ -2,11 +2,12 @@
 
 #include "Worker/AWorker.hpp"
 
+/// @brief The class used to parallelize calculation par a system with a generator
 class WorkerGen : public AWorker
 {
     private:
+        /// @brief The index used to track the next p[rticle to be generated
         int _currentParticle;
-        int _particlePerFrame;
         
     public:
         WorkerGen();

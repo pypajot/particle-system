@@ -44,8 +44,6 @@ class AEngine
     
         vec3 _cursorToWorld(float cursorX, float cursorY, float width, float height) const;
 
-        // AWorker *_worker;
-
     public:
         /// @brief The buffer vertex object
         GLuint VBO;
@@ -70,8 +68,6 @@ class AEngine
 
         AEngine &operator=(const AEngine &other);
 
-
-        // void bindWorker(AWorker *worker);
         void deleteArrays();
 
         virtual void useShader(float frameTime, float cursorX, float cursorY, float currentHeight) = 0;

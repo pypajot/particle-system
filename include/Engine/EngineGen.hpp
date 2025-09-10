@@ -6,6 +6,8 @@
 #define BASE_PPF 5000
 #define MAX_PPF 10000
 #define MIN_PPF 500
+#define PPF_STEP 500
+
 #define BASE_TTL 300
 
 #define GEN_VERTEX_PATH "shaders/vertexShaderGen.vs"

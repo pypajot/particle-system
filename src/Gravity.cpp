@@ -37,27 +37,36 @@ Gravity &Gravity::operator=(const Gravity &other)
     return *this;
 }
 
-
+/// @brief Set the position of the gravity point
+/// @param newPos The new position
 void Gravity::SetPos(vec3 newPos)
 {
     pos = newPos;
 }
 
-
+/// @brief Increment the strength of the gravity point
 void Gravity::GravityUp()
 {
-    if (strength >= MAX_GRAVITY)
+    if (strength == MAX_GRAVITY)
         return;
-    strength += 0.1f;
+    strength += GRAVITY_STEP;
+    if (strength >= MAX_GRAVITY)
+        strength = MAX_GRAVITY;
 }
 
+/// @brief Decrement the strength of the gravity point
 void Gravity::GravityDown()
 {
-    if (strength <= MIN_GRAVITY)
+    if (strength == MIN_GRAVITY)
         return;
-    strength -= 0.1f;
+    strength -= GRAVITY_STEP;
+    if (strength <= MIN_GRAVITY)
+        strength = MIN_GRAVITY;
 }
 
+/// @brief Check the activity status of a gravity point
+/// @param gravity Thje gravity point to check
+/// @return True if active, false if not
 bool checkActive(const Gravity &gravity)
 {
     return gravity.active;

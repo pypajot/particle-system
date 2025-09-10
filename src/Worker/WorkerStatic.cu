@@ -108,6 +108,9 @@ void GravityActionStatic(float *buffer, int bufferIndexMax, Gravity *gravity)
     }
 }
 
+/// @brief Call the worker gravity and speed calculation
+/// @param gravity The gravity points array
+/// @note Maps and unmaps the cuda resources
 void WorkerStatic::call(std::vector<Gravity> &gravity)
 {
     Map();
@@ -148,6 +151,8 @@ void InitSphere(float *buffer, int bufferIndexMax, curandState *d_state)
     current[5] = uniformDisToBoundsF(curand_uniform(&d_state[index]), 0, 0.1f);
 }
 
+/// @brief Initialize the simulation to a sphere
+/// @note Maps and unmaps the cuda resources
 void WorkerStatic::init()
 {
     Map();
@@ -208,6 +213,8 @@ void InitCube(float *buffer, int bufferIndexMax, curandState *d_state)
     current[5] = uniformDisToBoundsF(curand_uniform(&d_state[index]), 0, 0.1f);
 }
 
+/// @brief Initialize the simulation to a sphere
+/// @note Maps and unmaps the cuda resources
 void WorkerStatic::initCube()
 {
     Map();

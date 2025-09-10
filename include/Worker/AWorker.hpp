@@ -9,18 +9,27 @@
 
 #define THREAD_PER_BLOCK 1024
 
+/// @brief Base class for a cuda worker that will be used to parallelize calculations
 class AWorker
 {
     protected:
+        /// @brief The buffer management status
         bool _managesBuffer;
+        /// @brief The OpenGL / Cuda interop resource
         cudaGraphicsResource *_cudaGL_ptr;
+        /// @brief The buffer that will be used for cuda device functions
         float *_buffer;
         
+        /// @brief The size of the elements of the buffer
         int _elemSize;
+        /// @brief The number of particles, ie. the number of elements in the buffer
         int _particleQty;
+        /// @brief The number of threads per blocks used for the different kernels
         int _threadPerBlocks;
+        /// @brief The number of blocks used for he different kernels
         int _blocks;
         
+        /// @brief The random state used for initialization
         curandState *_d_state;
         
     public:
@@ -45,5 +54,3 @@ class AWorker
 };
 
 void checkCudaError(const char *function);
-
-// __global__ void GravityAction(float *buffer, int bufferIndexMax, Gravity *gravity, int stride);

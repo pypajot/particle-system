@@ -138,6 +138,9 @@ void GravityActionGen(float *buffer, int bufferIndexMax, Gravity *gravity)
     }
 }
 
+/// @brief Call the worker gravity and speed calculation
+/// @param gravity The gravity points array
+/// @note Does not map and unmap the cuda resources
 void WorkerGen::call(std::vector<Gravity> &gravity)
 {
     Gravity *test;
@@ -147,14 +150,20 @@ void WorkerGen::call(std::vector<Gravity> &gravity)
         cudaMalloc(&test, gravity.size() * sizeof(Gravity));
         cudaMemcpy(test, gravity.data(), gravity.size() * sizeof(Gravity), cudaMemcpyHostToDevice);
         GravityActionGen<<<dim3(_blocks, gravity.size()), _threadPerBlocks>>>(_buffer, _particleQty, test);
+        checkCudaError("GravityActionGen kernel");
         cudaFree(test);
     }
     LoopActionGen<<<_blocks, _threadPerBlocks>>>(_buffer, _particleQty);
+    checkCudaError("LoopActionGen kernel");
 }
 
+/// @brief Call the generation of particle
+/// @param particlePerFrame the number of particle generated per frame
+/// @note Does not map and unmap the cuda resources
 void WorkerGen::generate(int particlePerFrame)
 {
     GeneratorAction<<<_blocks, _threadPerBlocks>>>(_buffer, _particleQty, _d_state, particlePerFrame, _currentParticle);
+    checkCudaError("GeneratorAction kernel");
     _currentParticle = (_currentParticle + particlePerFrame) % _particleQty;
 }
 
@@ -176,12 +185,13 @@ void InitGenerator(float *buffer, int bufferIndexMax)
     current[5] = 0.0f;
     current[6] = 301.0f;
 }
-#include <iostream>
+
+/// @brief Initialize the simulation to a generator
+/// @note Maps and unmaps the cuda resources
 void WorkerGen::init()
 {
     Map();
-    std::cout << _blocks << " " << _threadPerBlocks << "\n";
     InitGenerator<<<_blocks, _threadPerBlocks>>>(_buffer, _particleQty);
-    checkCudaError("kernel");
+    checkCudaError("InitGenerator kernel");
     Unmap();
 }
