@@ -8,6 +8,7 @@
 #include "Engine/EngineStatic.hpp"
 #include "Engine/EngineGen.hpp"
 
+#define MAX_PARTICLE 50000000
 
 uint getParticleQty(int ac, char **av)
 {
@@ -42,6 +43,12 @@ int main(int ac, char **av)
     {
         std::cerr << "Valid argument needed: format './particle <number of particle> [-g <time to live>]'\n";
         return 1;
+    }
+
+    if (particleQty > MAX_PARTICLE)
+    {
+        particleQty = MAX_PARTICLE;
+        std::cout << "Particle number was too high and was reduced to " << particleQty << " to avoid potential crashes.\n";
     }
 
     glfwInit();
