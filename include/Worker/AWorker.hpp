@@ -5,9 +5,12 @@
 #include <curand_kernel.h>
 #include <vector>
 
-#include "Gravity.hpp"
+#include "Gravity.cuh"
+#include "constants.hpp"
 
 #define THREAD_PER_BLOCK 1024
+
+#define TIME_FACTOR 1.0f / TARGET_FRAMERATE
 
 /// @brief Base class for a cuda worker that will be used to parallelize calculations
 class AWorker

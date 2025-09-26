@@ -37,7 +37,7 @@ int getGeneratorOption(int ac, char **av)
 int main(int ac, char **av)
 {
     uint particleQty = getParticleQty(ac, av);
-    uint ttl = getGeneratorOption(ac, av);
+    int ttl = getGeneratorOption(ac, av);
 
     if (particleQty == 0 || ttl < 0)
     {
@@ -75,7 +75,7 @@ int main(int ac, char **av)
     else
         particle = new EngineStatic(particleQty);
 
-        
+    std::cout << TIME_FACTOR << "\n";
     window.bindEngine(particle);
 
     std::cout << "Particle system started !\n\n";

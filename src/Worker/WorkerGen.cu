@@ -7,7 +7,6 @@
 #include "Worker/WorkerGen.hpp"
 
 #define GRAVITY_FACTOR 1
-#define TIME_FACTOR 1.0f / 60.0f
 
 __device__
 float uniformDisToBounds(float input, float min, float max)
@@ -114,8 +113,8 @@ void LoopActionGen(float *buffer, int bufferIndexMax)
 __global__ 
 void GravityActionGen(float *buffer, int bufferIndexMax, Gravity *gravity)
 {
-    int index = blockIdx.x * blockDim.x + threadIdx.x;
-    int gravityIndex = blockIdx.y;
+    int index = blockIdx.y * blockDim.x + threadIdx.x;
+    int gravityIndex = blockIdx.x;
     
     if (index >= bufferIndexMax)
         return;
@@ -130,11 +129,12 @@ void GravityActionGen(float *buffer, int bufferIndexMax, Gravity *gravity)
     
         float distance = powf(distanceX, 2) + powf(distanceY, 2) + powf(distanceZ, 2);
     
-        float speedFactor = TIME_FACTOR * gravity[gravityIndex].strength / distance;
+        float gravityForce = gravity[gravityIndex].strength / distance;
+        gravityForce *= TIME_FACTOR;
     
-        current[3] -= distanceX * speedFactor;
-        current[4] -= distanceY * speedFactor;
-        current[5] -= distanceZ * speedFactor;
+        current[3] -= distanceX * gravityForce;
+        current[4] -= distanceY * gravityForce;
+        current[5] -= distanceZ * gravityForce;
     }
 }
 
@@ -149,7 +149,7 @@ void WorkerGen::call(std::vector<Gravity> &gravity)
     {
         cudaMalloc(&test, gravity.size() * sizeof(Gravity));
         cudaMemcpy(test, gravity.data(), gravity.size() * sizeof(Gravity), cudaMemcpyHostToDevice);
-        GravityActionGen<<<dim3(_blocks, gravity.size()), _threadPerBlocks>>>(_buffer, _particleQty, test);
+        GravityActionGen<<<dim3(gravity.size(), _blocks), _threadPerBlocks>>>(_buffer, _particleQty, test);
         checkCudaError("GravityActionGen kernel");
         cudaFree(test);
     }

@@ -7,6 +7,7 @@
 #include "Engine/EngineGen.hpp"
 #include "Engine/EngineStatic.hpp"
 #include "FPSCounter.hpp"
+#include "constants.hpp"
 
 /// @brief The constructor for the window class, using opengl 4.6 core
 Window::Window()
@@ -208,7 +209,7 @@ int Window::Init()
 void Window::RenderLoop()
 {
     float currentFrame = 0.0f;
-    FPSCounter counter(60, glfwGetTime());
+    FPSCounter counter(TARGET_FRAMERATE, glfwGetTime());
 
     while(!glfwWindowShouldClose(window))
     {

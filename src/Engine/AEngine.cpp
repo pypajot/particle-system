@@ -4,7 +4,7 @@
 #include "math/transform.hpp"
 #include "math/vec4.hpp"
 #include "Engine/AEngine.hpp"
-
+#include "constants.hpp"
 
 AEngine::AEngine()
 {
@@ -89,6 +89,11 @@ vec3 AEngine::_cursorToWorld(float cursorX, float cursorY, float width, float he
 /// @param height The window height
 void AEngine::addGravity(float cursorX, float cursorY, float width, float height)
 {
+    if (_gravity.size() == MAX_GRAVITY_POINTS)
+    {
+        std::cout << "Max gravity points reached, cannot add more.\n";
+        return;
+    }
     _gravity.push_back(Gravity(_cursorToWorld(cursorX, cursorY, width, height)));
 }
 

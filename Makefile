@@ -1,6 +1,6 @@
 NAME := particle
-CC := c++
-GLFLAGS := -lGL -lGLU -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi -lcudart
+CC := g++
+GLFLAGS := -lGL -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi -lcudart
 CPPFLAGS := -Wall -Wextra -Werror -g -MMD --std c++11
 
 CUDACC := nvcc
@@ -13,7 +13,6 @@ SRCS := main.cpp \
 		Window.cpp \
 		Shader.cpp \
 		Camera.cpp \
-		Gravity.cpp \
 		FPSCounter.cpp \
 		Engine/AEngine.cpp \
 		Engine/EngineStatic.cpp \
@@ -26,7 +25,8 @@ SRCS := main.cpp \
 
 CUDASRCS:=  Worker/AWorker.cu \
 			Worker/WorkerStatic.cu \
-			Worker/WorkerGen.cu \
+			Worker/WorkerGen.cu
+# 			Gravity.cuh 
 
 OBJS := $(patsubst %.cpp,$(OBJDIR)/%.o, $(strip $(SRCS)))
 DEPS := $(patsubst %.cpp,$(OBJDIR)/%.d, $(strip $(SRCS)))
@@ -37,7 +37,7 @@ CUDADEPS := $(patsubst %.cu,$(OBJDIR)/%.d, $(strip $(CUDASRCS)))
 INCS := ./include/
 
 
-GLAD_LINK := "https://gen.glad.sh/generated/tmph71wsf4tglad/glad.zip"
+GLAD_LINK := "https://gen.glad.sh/generated/tmplq48v6whglad/glad.zip"
 
 _GREY		= \033[30m
 _RED		= \033[31m

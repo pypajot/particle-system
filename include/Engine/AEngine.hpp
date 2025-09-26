@@ -8,7 +8,7 @@
 
 #include "Shader.hpp"
 #include "Camera.hpp"
-#include "Gravity.hpp"
+#include "Gravity.cuh"
 
 #define BASE_MOUSE_DEPTH 2.0f
 

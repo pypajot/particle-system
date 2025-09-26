@@ -1,5 +1,6 @@
 #include <chrono>
 
+#include "constants.hpp"
 #include "FPSCounter.hpp"
 
 double getSecondsFromTimepoint(std::chrono::_V2::steady_clock::time_point point)
@@ -8,7 +9,7 @@ double getSecondsFromTimepoint(std::chrono::_V2::steady_clock::time_point point)
 }
 
 /// @brief Construct a FPSCounter object with using system time and a fps period of 60
-FPSCounter::FPSCounter() : FPSCounter(60, 0)
+FPSCounter::FPSCounter() : FPSCounter(TARGET_FRAMERATE, 0)
 {
 }
 
@@ -68,15 +69,21 @@ void FPSCounter::addFrame()
 /// @param time Need to be used with the constructor using a custom time system and itself, or else the result may be undefined
 void FPSCounter::addFrame(double time)
 {
-    _frameTimes[_currentFrame] = time;
     _currentFrame = (_currentFrame + 1) % (_calculatePeriod + 1);
+    _frameTimes[_currentFrame] = time;
 }
+
+#include <iostream>
 
 /// @brief Calculate the mean fps over the fps period
 /// @return The frame per second over the last period
 int FPSCounter::getFPS() const
 {
-    return 1 / (_frameTimes[(_currentFrame + 1) % (_calculatePeriod + 1)] - _frameTimes[_currentFrame] + __FLT_EPSILON__);
+    std::cout << _frameTimes[_currentFrame] << "\n";
+    std::cout << _frameTimes[(_currentFrame + 1) % (_calculatePeriod + 1)]<< "\n";
+    std::cout << _frameTimes[(_currentFrame - 1) % (_calculatePeriod + 1)] << "\n\n";
+    std::cout << (_currentFrame - 1) % (_calculatePeriod + 1) << "\n\n";
+    return _calculatePeriod / (_frameTimes[_currentFrame] - _frameTimes[(_currentFrame + 1) % (_calculatePeriod + 1)] + __FLT_EPSILON__);
 }
 
 /// @brief Get the current frame in the frame period time frame
