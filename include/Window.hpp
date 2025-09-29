@@ -3,8 +3,8 @@
 #include "glad/gl.h"
 #include <GLFW/glfw3.h>
 
-#define BASE_WIN_HEIGHT 1080
-#define BASE_WIN_WIDTH 1920
+#define BASE_WIN_HEIGHT 1500
+#define BASE_WIN_WIDTH 3000
 
 class AEngine;
 

@@ -145,7 +145,7 @@ void WorkerGen::call(std::vector<Gravity> &gravity)
 {
     Gravity *test;
     
-    if (std::any_of(gravity.begin(), gravity.end(), checkActive) && gravity.size() != 0)
+    if (std::any_of(gravity.begin(), gravity.end(), checkGravityActive) && gravity.size() != 0)
     {
         cudaMalloc(&test, gravity.size() * sizeof(Gravity));
         cudaMemcpy(test, gravity.data(), gravity.size() * sizeof(Gravity), cudaMemcpyHostToDevice);

@@ -8,7 +8,7 @@
 #include "Gravity.hpp"
 #include "constants.hpp"
 
-#define THREAD_PER_BLOCK 1024
+#define THREAD_PER_BLOCK 512
 
 #define TIME_FACTOR 1.0f / TARGET_FRAMERATE
 
@@ -57,3 +57,4 @@ class AWorker
 };
 
 void checkCudaError(const char *function);
+bool checkGravityActive(const Gravity &gravity);

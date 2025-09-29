@@ -81,34 +81,43 @@ void LoopActionStatic(float *buffer, int bufferIndexMax)
     current[0] += current[3] * TIME_FACTOR;
     current[1] += current[4] * TIME_FACTOR;
     current[2] += current[5] * TIME_FACTOR;
+    // printf("%f, %f, %f\n", current[0], current[1], current[2]);
+    // printf("%f, %f, %f\n\n", current[3], current[4], current[5]);
 }
 
 __global__ 
 void GravityActionStatic(float *buffer, int bufferIndexMax)
 {
     int index = blockIdx.y * blockDim.x + threadIdx.x;
+    
     int gravityIndex = blockIdx.x;
 
     if (index >= bufferIndexMax)
         return;
 
     float *current = buffer + index * 6;
+    
+    if (!gravity[gravityIndex].active)
+        return;
+    
+    float distanceX = current[0] - gravity[gravityIndex].pos.x;
+    float distanceY = current[1] - gravity[gravityIndex].pos.y;
+    float distanceZ = current[2] - gravity[gravityIndex].pos.z;
 
-    if (gravity[gravityIndex].active)
-    {
-        float distanceX = current[0] - gravity[gravityIndex].pos.x;
-        float distanceY = current[1] - gravity[gravityIndex].pos.y;
-        float distanceZ = current[2] - gravity[gravityIndex].pos.z;
+    float distance = distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ;
+    float gravityForce = gravity[gravityIndex].strength / distance;
+    gravityForce *=  TIME_FACTOR;
     
-        float distance = powf(distanceX, 2) + powf(distanceY, 2) + powf(distanceZ, 2);
-    
-        float gravityForce = gravity[gravityIndex].strength / distance;
-        gravityForce *= TIME_FACTOR;
-    
-        current[3] -= distanceX * gravityForce;
-        current[4] -= distanceY * gravityForce;
-        current[5] -= distanceZ * gravityForce;
-    }
+    float r = 0.3f;
+    float test = sqrt(distance);
+    if (test >= r)
+        gravityForce /= test;    
+    else
+        gravityForce *=  test * test / (r * r * r);    
+
+    current[3] -= distanceX * gravityForce;
+    current[4] -= distanceY * gravityForce;
+    current[5] -= distanceZ * gravityForce;
 }
 
 /// @brief Call the worker gravity and speed calculation
@@ -118,7 +127,7 @@ void WorkerStatic::call(std::vector<Gravity> &gravityArray)
 {
     Map();
     
-    if (std::any_of(gravityArray.begin(), gravityArray.end(), checkActive) && gravityArray.size() != 0)
+    if (std::any_of(gravityArray.begin(), gravityArray.end(), checkGravityActive) && gravityArray.size() != 0)
     {
         // cudaMalloc(&test, gravity.size() * sizeof(Gravity));
         cudaMemcpyToSymbol(gravity, gravityArray.data(), gravityArray.size() * sizeof(Gravity));
@@ -148,9 +157,12 @@ void InitSphere(float *buffer, int bufferIndexMax, curandState *d_state)
     current[0] = cos(angleY) * cos(angleXZ) * INIT_SIZE;
     current[1] = sin(angleY) * INIT_SIZE;
     current[2] = cos(angleY) * sin(angleXZ) * INIT_SIZE;
-    current[3] = uniformDisToBoundsF(curand_uniform(&d_state[index]), 0, 0.1f);
-    current[4] = uniformDisToBoundsF(curand_uniform(&d_state[index]), 0, 0.1f);
-    current[5] = uniformDisToBoundsF(curand_uniform(&d_state[index]), 0, 0.1f);
+    // current[3] = uniformDisToBoundsF(curand_uniform(&d_state[index]), 0, 0.1f);
+    // current[4] = uniformDisToBoundsF(curand_uniform(&d_state[index]), 0, 0.1f);
+    // current[5] = uniformDisToBoundsF(curand_uniform(&d_state[index]), 0, 0.1f);
+    current[3] = 0.0f;
+    current[4] = 0.0f;
+    current[5] = 0.0f;
 }
 
 /// @brief Initialize the simulation to a sphere

@@ -143,3 +143,10 @@ void AWorker::Unmap()
     checkCudaError("Unmap resource");
 }
 
+/// @brief Check the activity status of a gravity point
+/// @param gravity Thje gravity point to check
+/// @return True if active, false if not
+bool checkGravityActive(const Gravity &gravity)
+{
+    return gravity.active;
+}

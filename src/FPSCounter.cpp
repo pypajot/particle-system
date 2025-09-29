@@ -79,10 +79,10 @@ void FPSCounter::addFrame(double time)
 /// @return The frame per second over the last period
 int FPSCounter::getFPS() const
 {
-    std::cout << _frameTimes[_currentFrame] << "\n";
-    std::cout << _frameTimes[(_currentFrame + 1) % (_calculatePeriod + 1)]<< "\n";
-    std::cout << _frameTimes[(_currentFrame - 1) % (_calculatePeriod + 1)] << "\n\n";
-    std::cout << (_currentFrame - 1) % (_calculatePeriod + 1) << "\n\n";
+    // std::cout << _frameTimes[_currentFrame] << "\n";
+    // std::cout << _frameTimes[(_currentFrame + 1) % (_calculatePeriod + 1)]<< "\n";
+    // std::cout << _frameTimes[(_currentFrame - 1) % (_calculatePeriod + 1)] << "\n\n";
+    // std::cout << (_currentFrame - 1) % (_calculatePeriod + 1) << "\n\n";
     return _calculatePeriod / (_frameTimes[_currentFrame] - _frameTimes[(_currentFrame + 1) % (_calculatePeriod + 1)] + __FLT_EPSILON__);
 }
 

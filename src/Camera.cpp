@@ -70,8 +70,8 @@ void Camera::move()
     if (movement.length() == 0)
         return;
 
-    movement *= 1 / movement.length();
-    rotate = glm::rotate(rotate, -_direction.y, glm::vec3(0.0f, 1.0f, 0.0f));
+    movement /= movement.length();
+    rotate = glm::rotate(rotate, _direction.y, glm::vec3(0.0f, 1.0f, 0.0f));
     movement = rotate * glm::vec4(movement, 1.0f);
     _position += movement * _moveSpeed;
 }
@@ -93,7 +93,7 @@ void Camera::computeProjectionMatrix(float height, float width)
 }
 
 /// @brief Computes the matrix to convert world coordinates to screen coordinate sfor use by openGL
-/// @return The ematrix
+/// @return The matrix
 glm::mat4 Camera::coordToScreenMatrix() const
 {
     glm::vec3 cameraFront(-std::sin(_direction.y), 0.0f, -std::cos(_direction.y));

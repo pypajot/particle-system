@@ -82,14 +82,14 @@
 
 // bool checkActive(const Gravity &gravity);
 
-Gravity::Gravity() : pos((glm::vec3(0, 0, 0))), strength(BASE_GRAVITY), active(false)
+Gravity::Gravity()
 {
-    // pos = glm::vec3(0, 0, 0);
-    // strength = BASE_GRAVITY;
-    // active = false;
+    pos = vec3(0, 0, 0);
+    strength = BASE_GRAVITY;
+    active = false;
 }
 
-Gravity::Gravity(const glm::vec3 &basePos)
+Gravity::Gravity(const vec3 &basePos)
 {
     pos = basePos;
     strength = BASE_GRAVITY;
@@ -120,7 +120,7 @@ Gravity &Gravity::operator=(const Gravity &other)
 
 /// @brief Set the position of the gravity point
 /// @param newPos The new position
-void Gravity::SetPos(const glm::vec3 &newPos)
+void Gravity::SetPos(vec3 newPos)
 {
     pos = newPos;
 }

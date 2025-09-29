@@ -17,6 +17,7 @@ AEngine::AEngine()
 AEngine::AEngine(int particleQuantity)
 {
     _gravity = std::vector<Gravity>(1);
+    _gravity[0].strength = BASE_GRAVITY;
     _particleQty = particleQuantity;
     simulationOn = false;
     mousePressed = false;
@@ -93,12 +94,17 @@ glm::vec3 AEngine::_cursorToWorld(float cursorX, float cursorY, float width, flo
 /// @param height The window height
 void AEngine::addGravity(float cursorX, float cursorY, float width, float height)
 {
+    (void)cursorX;
+    (void)cursorY;
+    (void)height;
+    (void)width;
     if (_gravity.size() == MAX_GRAVITY_POINTS)
     {
         std::cout << "Max gravity points reached, cannot add more.\n";
         return;
     }
     _gravity.push_back(Gravity(_cursorToWorld(cursorX, cursorY, width, height)));
+    // _gravity.push_back(Gravity(glm::vec3(0.0f, 0.0f, 0.0f)));
 }
 
 /// @brief Update the gravity point corresponding to the mouse to match the cursor coordinates and acivate it

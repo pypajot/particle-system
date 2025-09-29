@@ -13,7 +13,6 @@ SRCS := main.cpp \
 		Window.cpp \
 		Shader.cpp \
 		Camera.cpp \
-		Gravity.cpp \
 		FPSCounter.cpp \
 		Engine/AEngine.cpp \
 		Engine/EngineStatic.cpp \
@@ -61,6 +60,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	fi
 	$(CC) $(CPPFLAGS) -o $@ -c $< -I$(INCS)
 
+
 $(OBJDIR)/%.o: $(SRCDIR)/%.cu
 	@if [ ! -d $(dir $@) ]; then \
 		mkdir -p $(dir $@); \
@@ -68,6 +68,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cu
 	$(CUDACC) $(CUDAFLAGS) -o $@ -c $< -I$(INCS)
 
 -include $(DEPS)
+-include $(CUDADEPS)
 
 clean:
 	rm -rfd $(OBJDIR)
