@@ -11,7 +11,7 @@ class vec3
 
         float value[3];
 
-        vec3();
+        constexpr vec3();
         vec3(float val);
         vec3(float x, float y, float z);
         vec3(const vec4 &vector);

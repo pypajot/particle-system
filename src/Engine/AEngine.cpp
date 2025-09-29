@@ -1,8 +1,12 @@
 #include <iostream>
 #include <random>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+// #include "math/transform.hpp"
+// #include "math/vec4.hpp"
 
-#include "math/transform.hpp"
-#include "math/vec4.hpp"
+
 #include "Engine/AEngine.hpp"
 #include "constants.hpp"
 
@@ -69,7 +73,7 @@ void AEngine::draw() const
 /// @param height The window height
 /// @return The world coordinate corresponding to the cursor
 /// @note The cursor is assumed to be at a distance of _mouseDepth from the screen in world coordinates
-vec3 AEngine::_cursorToWorld(float cursorX, float cursorY, float width, float height) const
+glm::vec3 AEngine::_cursorToWorld(float cursorX, float cursorY, float width, float height) const
 {
     float cursorXNdc = 2 * cursorX / width - 1;
     float cursorYNdc = 2 * cursorY / height - 1;
@@ -77,8 +81,8 @@ vec3 AEngine::_cursorToWorld(float cursorX, float cursorY, float width, float he
         (camera.far + camera.near - (2.0 * camera.near * camera.far) / _mouseDepth) 
         / (camera.far - camera.near);
 
-    vec4 mouseNdc = vec4(cursorXNdc, -cursorYNdc, depthNdc, 1.0f);
-    vec4 mouseWorld = inverse(camera.coordToScreenMatrix()) * mouseNdc;
+    glm::vec4 mouseNdc = glm::vec4(cursorXNdc, -cursorYNdc, depthNdc, 1.0f);
+    glm::vec4 mouseWorld = glm::inverse(camera.coordToScreenMatrix()) * mouseNdc;
     return mouseWorld * (1 / mouseWorld.w);
 }
 

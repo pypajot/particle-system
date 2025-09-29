@@ -5,7 +5,7 @@
 #include <curand_kernel.h>
 #include <vector>
 
-#include "Gravity.cuh"
+#include "Gravity.hpp"
 #include "constants.hpp"
 
 #define THREAD_PER_BLOCK 1024

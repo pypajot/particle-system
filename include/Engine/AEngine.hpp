@@ -8,7 +8,7 @@
 
 #include "Shader.hpp"
 #include "Camera.hpp"
-#include "Gravity.cuh"
+#include "Gravity.hpp"
 
 #define BASE_MOUSE_DEPTH 2.0f
 
@@ -42,7 +42,7 @@ class AEngine
         /// @brief The shader used for display in the engine
         Shader _shader;
     
-        vec3 _cursorToWorld(float cursorX, float cursorY, float width, float height) const;
+        glm::vec3 _cursorToWorld(float cursorX, float cursorY, float width, float height) const;
 
     public:
         /// @brief The buffer vertex object

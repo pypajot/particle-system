@@ -122,7 +122,7 @@ void WorkerStatic::call(std::vector<Gravity> &gravityArray)
     {
         // cudaMalloc(&test, gravity.size() * sizeof(Gravity));
         cudaMemcpyToSymbol(gravity, gravityArray.data(), gravityArray.size() * sizeof(Gravity));
-        GravityActionStatic<<<dim3(gravityArray.size(), _blocks)>>>(_buffer, _particleQty);
+        GravityActionStatic<<<dim3(gravityArray.size(), _blocks), _threadPerBlocks>>>(_buffer, _particleQty);
         // cudaFree(test);
     }
     LoopActionStatic<<<_blocks, _threadPerBlocks>>>(_buffer, _particleQty);

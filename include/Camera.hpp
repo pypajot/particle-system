@@ -1,15 +1,15 @@
 #pragma once
 
-#include "math/transform.hpp"
-#include "math/vec3.hpp"
-#include "math/mat4.hpp"
+#include <glm/trigonometric.hpp>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
 
 /// @brief The class dealing with the movement of the camera but also the projection matrix and coordinate change from screen to world
 class Camera
 {
     private:
         /// @brief The current projection matrix
-        mat4 _proj;
+        glm::mat4 _proj;
         
         /// @brief The camera rotation speed in radians
         const float _rotateSpeed = 0.01f;
@@ -17,13 +17,13 @@ class Camera
         const float _moveSpeed = 0.01f;
         
         /// @brief The camera posistion
-        vec3 _position;
+        glm::vec3 _position;
         /// @brief The camera direction
-        vec3 _direction;
+        glm::vec3 _direction;
     
     public:
         /// @brief The fov of the camera
-        const float fov = toRadians(60.0f);
+        const float fov = glm::radians(60.0f);
         /// @brief the distance to the near clipping plane
         const float near = 0.1f;
         /// @brief the distance to the far clipping plane
@@ -39,7 +39,7 @@ class Camera
         int rotateLeftRight;
 
         Camera();
-        Camera(vec3 postiion);
+        Camera(const glm::vec3 &position);
         Camera(const Camera &other);
         ~Camera();
 
@@ -49,5 +49,5 @@ class Camera
         void resetPosition();
         
         void computeProjectionMatrix(float height, float width);
-        mat4 coordToScreenMatrix() const;
+        glm::mat4 coordToScreenMatrix() const;
 };

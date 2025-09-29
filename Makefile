@@ -13,15 +13,16 @@ SRCS := main.cpp \
 		Window.cpp \
 		Shader.cpp \
 		Camera.cpp \
+		Gravity.cpp \
 		FPSCounter.cpp \
 		Engine/AEngine.cpp \
 		Engine/EngineStatic.cpp \
 		Engine/EngineGen.cpp \
-		math/transform.cpp \
-		math/vec3.cpp \
-		math/vec4.cpp \
-		math/mat4.cpp \
 		glad/gl.cpp
+# 		math/transform.cpp \
+# 		math/vec3.cpp \
+# 		math/vec4.cpp \
+# 		math/mat4.cpp \
 
 CUDASRCS:=  Worker/AWorker.cu \
 			Worker/WorkerStatic.cu \

@@ -3,12 +3,14 @@
 #include "math/vec4.hpp"
 #include "math/vec3.hpp"
 
-vec3::vec3()
-{
-    x = 0.0f;
-    y = 0.0f;
-    z = 0.0f;
+constexpr vec3::vec3()
+{    
 }
+// {
+//     // x = 0.0f;
+//     // y = 0.0f;
+//     // z = 0.0f;
+// }
 vec3::vec3(float val)
 {
     x = val;

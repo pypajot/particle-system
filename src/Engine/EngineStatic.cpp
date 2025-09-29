@@ -1,4 +1,5 @@
 #include <random>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Engine/EngineStatic.hpp"
 
@@ -78,10 +79,10 @@ void EngineStatic::reset()
 /// @param height The window height
 void EngineStatic::useShader(float frameTime, float cursorX, float cursorY, float height)
 {
-    mat4 toScreen = camera.coordToScreenMatrix();
+    glm::mat4 toScreen = camera.coordToScreenMatrix();
     int camLoc = glGetUniformLocation(_shader.program, "camera");
     
-    glUniformMatrix4fv(camLoc, 1, GL_FALSE, &toScreen.value[0][0]);
+    glUniformMatrix4fv(camLoc, 1, GL_FALSE, glm::value_ptr(toScreen));
     _shader.setFloatUniform("frameTimeX", (1 + sin(frameTime)) / 2);
     _shader.setFloatUniform("frameTimeY", (1 + sin(frameTime + 2 * M_PI / 3)) / 2);
     _shader.setFloatUniform("frameTimeZ", (1 + sin(frameTime - 2 * M_PI / 3)) / 2);
