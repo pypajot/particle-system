@@ -8,7 +8,7 @@
 #include "Engine/EngineStatic.hpp"
 #include "Engine/EngineGen.hpp"
 
-#define MAX_PARTICLE 50000000
+#define MAX_PARTICLE 30000000
 
 uint getParticleQty(int ac, char **av)
 {
