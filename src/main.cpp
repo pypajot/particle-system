@@ -48,7 +48,7 @@ int main(int ac, char **av)
     if (particleQty > MAX_PARTICLE)
     {
         particleQty = MAX_PARTICLE;
-        std::cout << "Particle number was too high and was reduced to " << particleQty << " to avoid potential crashes.\n";
+        std::cout << "Particle number was too high and was reduced to " << particleQty << " to avoid potential issues.\n";
     }
 
     glfwInit();
