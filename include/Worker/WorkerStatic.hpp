@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Worker/AWorker.hpp"
+#include "Worker/AWorker.cuh"
 
 /// @brief The class used to parallelize calculation par a system with a static initialization
 class WorkerStatic : public AWorker
@@ -16,7 +16,7 @@ class WorkerStatic : public AWorker
         WorkerStatic &operator=(const WorkerStatic &other);
         WorkerStatic &operator=(WorkerStatic &&other);
 
-        void call(std::vector<Gravity> &gravity);
+        void call(std::vector<Gravity> &gravityArray);
         void init();
         void initCube();
 

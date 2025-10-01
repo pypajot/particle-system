@@ -14,7 +14,7 @@ class Camera
         /// @brief The camera rotation speed in radians
         const float _rotateSpeed = 0.01f;
         /// @brief The camera movement speed in world coordinates
-        const float _moveSpeed = 0.01f;
+        const float _moveSpeed = 0.05f;
         
         /// @brief The camera posistion
         glm::vec3 _position;

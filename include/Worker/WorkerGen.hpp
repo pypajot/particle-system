@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Worker/AWorker.hpp"
+#include "Worker/AWorker.cuh"
 
 /// @brief The class used to parallelize calculation par a system with a generator
 class WorkerGen : public AWorker

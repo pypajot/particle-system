@@ -1,6 +1,6 @@
 NAME := particle
 CC := g++
-GLFLAGS := -lGL -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi -lcudart
+GLFLAGS := -lGL -lglfw -lX11 -lXxf86vm -lXrandr -lXi -lcudart
 CPPFLAGS := -Wall -Wextra -Werror -g -MMD --std c++11
 
 CUDACC := nvcc
@@ -18,15 +18,10 @@ SRCS := main.cpp \
 		Engine/EngineStatic.cpp \
 		Engine/EngineGen.cpp \
 		glad/gl.cpp
-# 		math/transform.cpp \
-# 		math/vec3.cpp \
-# 		math/vec4.cpp \
-# 		math/mat4.cpp \
 
 CUDASRCS:=  Worker/AWorker.cu \
 			Worker/WorkerStatic.cu \
 			Worker/WorkerGen.cu
-# 			Gravity.cuh 
 
 OBJS := $(patsubst %.cpp,$(OBJDIR)/%.o, $(strip $(SRCS)))
 DEPS := $(patsubst %.cpp,$(OBJDIR)/%.d, $(strip $(SRCS)))
@@ -52,7 +47,7 @@ _NO_COLOR	= \033[0m
 all : $(NAME)
 
 $(NAME): $(OBJS) $(CUDAOBJS) Makefile
-	$(CC) $(CPPFLAGS) -o $(NAME) $(OBJS) $(CUDAOBJS) $(GLFLAGS) 
+	$(CUDACC) $(CUDAFLAGS) -o $(NAME) $(OBJS) $(CUDAOBJS) $(GLFLAGS) 
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@if [ ! -d $(dir $@) ]; then \
@@ -65,7 +60,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cu
 	@if [ ! -d $(dir $@) ]; then \
 		mkdir -p $(dir $@); \
 	fi
-	$(CUDACC) $(CUDAFLAGS) -o $@ -c $< -I$(INCS)
+	$(CUDACC) $(CUDAFLAGS) -dc -o $@ -c $< -I$(INCS)
 
 -include $(DEPS)
 -include $(CUDADEPS)

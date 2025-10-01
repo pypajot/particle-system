@@ -12,6 +12,8 @@
 
 #define TIME_FACTOR 1.0f / TARGET_FRAMERATE
 
+extern __constant__ Gravity gravity[MAX_GRAVITY_POINTS];
+
 /// @brief Base class for a cuda worker that will be used to parallelize calculations
 class AWorker
 {
@@ -53,8 +55,8 @@ class AWorker
 
         virtual void call(std::vector<Gravity> &gravity) = 0;
         virtual void init() = 0;
-
 };
 
 void checkCudaError(const char *function);
-bool checkGravityActive(const Gravity &gravity);
+bool checkGravityActive(const Gravity &gravityPoint);
+__global__ void GravityAction(float *buffer, int bufferIndexMax, int elemSize);

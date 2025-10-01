@@ -3,9 +3,6 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
-// #include "math/transform.hpp"
-// #include "math/vec4.hpp"
-
 
 #include "Engine/AEngine.hpp"
 #include "constants.hpp"
@@ -104,7 +101,6 @@ void AEngine::addGravity(float cursorX, float cursorY, float width, float height
         return;
     }
     _gravity.push_back(Gravity(_cursorToWorld(cursorX, cursorY, width, height)));
-    // _gravity.push_back(Gravity(glm::vec3(0.0f, 0.0f, 0.0f)));
 }
 
 /// @brief Update the gravity point corresponding to the mouse to match the cursor coordinates and acivate it

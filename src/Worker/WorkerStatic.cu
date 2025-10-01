@@ -11,8 +11,6 @@
 
 #define INIT_SIZE 1.0f
 
-__constant__ Gravity gravity[MAX_GRAVITY_POINTS];
-
 __device__
 float uniformDisToBoundsF(float input, float min, float max)
 {
@@ -36,10 +34,6 @@ WorkerStatic::WorkerStatic(GLuint VBO, int particleQuantity) : AWorker(VBO, part
 
 WorkerStatic::WorkerStatic(const WorkerStatic &other) : AWorker(other)
 {
-    // _particleQty = other._particleQty;
-    // _elemSize = other._elemSize;
-    // _threadPerBlocks = other._threadPerBlocks;
-    // _blocks = other._blocks;
 }
 
 WorkerStatic::WorkerStatic(WorkerStatic &&other) : AWorker(std::move(other))
@@ -81,47 +75,10 @@ void LoopActionStatic(float *buffer, int bufferIndexMax)
     current[0] += current[3] * TIME_FACTOR;
     current[1] += current[4] * TIME_FACTOR;
     current[2] += current[5] * TIME_FACTOR;
-    // printf("%f, %f, %f\n", current[0], current[1], current[2]);
-    // printf("%f, %f, %f\n\n", current[3], current[4], current[5]);
-}
-
-__global__ 
-void GravityActionStatic(float *buffer, int bufferIndexMax)
-{
-    int index = blockIdx.y * blockDim.x + threadIdx.x;
-    
-    int gravityIndex = blockIdx.x;
-
-    if (index >= bufferIndexMax)
-        return;
-
-    float *current = buffer + index * 6;
-    
-    if (!gravity[gravityIndex].active)
-        return;
-    
-    float distanceX = current[0] - gravity[gravityIndex].pos.x;
-    float distanceY = current[1] - gravity[gravityIndex].pos.y;
-    float distanceZ = current[2] - gravity[gravityIndex].pos.z;
-
-    float distance = distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ;
-    float gravityForce = gravity[gravityIndex].strength / distance;
-    gravityForce *=  TIME_FACTOR;
-    
-    float r = 0.3f;
-    float test = sqrt(distance);
-    if (test >= r)
-        gravityForce /= test;    
-    else
-        gravityForce *=  test * test / (r * r * r);    
-
-    current[3] -= distanceX * gravityForce;
-    current[4] -= distanceY * gravityForce;
-    current[5] -= distanceZ * gravityForce;
 }
 
 /// @brief Call the worker gravity and speed calculation
-/// @param gravity The gravity points array
+/// @param gravityArray The gravity points array
 /// @note Maps and unmaps the cuda resources
 void WorkerStatic::call(std::vector<Gravity> &gravityArray)
 {
@@ -129,10 +86,9 @@ void WorkerStatic::call(std::vector<Gravity> &gravityArray)
     
     if (std::any_of(gravityArray.begin(), gravityArray.end(), checkGravityActive) && gravityArray.size() != 0)
     {
-        // cudaMalloc(&test, gravity.size() * sizeof(Gravity));
         cudaMemcpyToSymbol(gravity, gravityArray.data(), gravityArray.size() * sizeof(Gravity));
-        GravityActionStatic<<<dim3(gravityArray.size(), _blocks), _threadPerBlocks>>>(_buffer, _particleQty);
-        // cudaFree(test);
+        GravityAction<<<dim3(gravityArray.size(), _blocks), _threadPerBlocks>>>(_buffer, _particleQty, _elemSize);
+        checkCudaError("GravityAction kernel");
     }
     LoopActionStatic<<<_blocks, _threadPerBlocks>>>(_buffer, _particleQty);
     Unmap();
@@ -157,12 +113,9 @@ void InitSphere(float *buffer, int bufferIndexMax, curandState *d_state)
     current[0] = cos(angleY) * cos(angleXZ) * INIT_SIZE;
     current[1] = sin(angleY) * INIT_SIZE;
     current[2] = cos(angleY) * sin(angleXZ) * INIT_SIZE;
-    // current[3] = uniformDisToBoundsF(curand_uniform(&d_state[index]), 0, 0.1f);
-    // current[4] = uniformDisToBoundsF(curand_uniform(&d_state[index]), 0, 0.1f);
-    // current[5] = uniformDisToBoundsF(curand_uniform(&d_state[index]), 0, 0.1f);
-    current[3] = 0.0f;
-    current[4] = 0.0f;
-    current[5] = 0.0f;
+    current[3] = uniformDisToBoundsF(curand_uniform(&d_state[index]), 0, 0.1f);
+    current[4] = uniformDisToBoundsF(curand_uniform(&d_state[index]), 0, 0.1f);
+    current[5] = uniformDisToBoundsF(curand_uniform(&d_state[index]), 0, 0.1f);
 }
 
 /// @brief Initialize the simulation to a sphere

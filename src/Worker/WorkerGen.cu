@@ -110,54 +110,22 @@ void LoopActionGen(float *buffer, int bufferIndexMax)
     current[6] += 1;
 }
 
-__global__ 
-void GravityActionGen(float *buffer, int bufferIndexMax, Gravity *gravity)
-{
-    int index = blockIdx.y * blockDim.x + threadIdx.x;
-    int gravityIndex = blockIdx.x;
-    
-    if (index >= bufferIndexMax)
-        return;
-
-    float *current = buffer + index * 7;
-
-    if (gravity[gravityIndex].active)
-    {
-        float distanceX = current[0] - gravity[gravityIndex].pos.x;
-        float distanceY = current[1] - gravity[gravityIndex].pos.y;
-        float distanceZ = current[2] - gravity[gravityIndex].pos.z;
-    
-        float distance = powf(distanceX, 2) + powf(distanceY, 2) + powf(distanceZ, 2);
-    
-        float gravityForce = gravity[gravityIndex].strength / distance;
-        gravityForce *= TIME_FACTOR;
-    
-        current[3] -= distanceX * gravityForce;
-        current[4] -= distanceY * gravityForce;
-        current[5] -= distanceZ * gravityForce;
-    }
-}
-
-/// @brief Call the worker gravity and speed calculation
+/// @brief Call the gravity and speed calculation kernels
 /// @param gravity The gravity points array
 /// @note Does not map and unmap the cuda resources
-void WorkerGen::call(std::vector<Gravity> &gravity)
-{
-    Gravity *test;
-    
-    if (std::any_of(gravity.begin(), gravity.end(), checkGravityActive) && gravity.size() != 0)
+void WorkerGen::call(std::vector<Gravity> &gravityArray)
+{    
+    if (std::any_of(gravityArray.begin(), gravityArray.end(), checkGravityActive) && gravityArray.size() != 0)
     {
-        cudaMalloc(&test, gravity.size() * sizeof(Gravity));
-        cudaMemcpy(test, gravity.data(), gravity.size() * sizeof(Gravity), cudaMemcpyHostToDevice);
-        GravityActionGen<<<dim3(gravity.size(), _blocks), _threadPerBlocks>>>(_buffer, _particleQty, test);
-        checkCudaError("GravityActionGen kernel");
-        cudaFree(test);
+        cudaMemcpyToSymbol(gravity, gravityArray.data(), gravityArray.size() * sizeof(Gravity));
+        GravityAction<<<dim3(gravityArray.size(), _blocks), _threadPerBlocks>>>(_buffer, _particleQty, _elemSize);
+        checkCudaError("GravityAction kernel");
     }
     LoopActionGen<<<_blocks, _threadPerBlocks>>>(_buffer, _particleQty);
     checkCudaError("LoopActionGen kernel");
 }
 
-/// @brief Call the generation of particle
+/// @brief Call the particle generation kernel
 /// @param particlePerFrame the number of particle generated per frame
 /// @note Does not map and unmap the cuda resources
 void WorkerGen::generate(int particlePerFrame)

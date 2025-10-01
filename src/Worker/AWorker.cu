@@ -4,7 +4,12 @@
 #include <curand.h>
 #include <curand_kernel.h>
 
-#include "Worker/AWorker.hpp"
+#include "Worker/AWorker.cuh"
+
+#define GRAVITY_RADIUS 0.25f
+
+/// @brief The gavity points array in
+__constant__ Gravity gravity[MAX_GRAVITY_POINTS];
 
 /// @brief Get the last cuda error and display it
 /// @param function The function after which the check was performed, used for information purposes
@@ -146,7 +151,45 @@ void AWorker::Unmap()
 /// @brief Check the activity status of a gravity point
 /// @param gravity Thje gravity point to check
 /// @return True if active, false if not
-bool checkGravityActive(const Gravity &gravity)
+bool checkGravityActive(const Gravity &gravityPoint)
 {
-    return gravity.active;
+    return gravityPoint.active;
+}
+
+/// @brief The gravity calulation kernel
+/// @param buffer The buffer containing all particles
+/// @param bufferIndexMax The maximum number of particle
+/// @param elemSize The size of a particle in the buffer
+__global__ void GravityAction(float *buffer, int bufferIndexMax, int elemSize)
+{
+    int index = blockIdx.y * blockDim.x + threadIdx.x;
+    
+    int gravityIndex = blockIdx.x;
+
+    if (index >= bufferIndexMax)
+        return;
+
+    float *current = buffer + index * elemSize;
+    
+    if (!gravity[gravityIndex].active)
+        return;
+    
+    float distanceX = current[0] - gravity[gravityIndex].pos.x;
+    float distanceY = current[1] - gravity[gravityIndex].pos.y;
+    float distanceZ = current[2] - gravity[gravityIndex].pos.z;
+
+    float d2 = powf(distanceX, 2) + powf(distanceY, 2) + powf(distanceZ, 2);
+    float gravityForce = gravity[gravityIndex].strength / d2;
+    
+    // We use a spherical gravity instead of a punctual one to avoid divergence due to the discrete time step
+    float distance = sqrt(d2);
+    if (distance >= GRAVITY_RADIUS)
+        gravityForce /= distance;    
+    else
+        gravityForce *=  powf(distance, 2) / powf(GRAVITY_RADIUS, 3);    
+    
+    gravityForce *=  TIME_FACTOR;
+    current[3] -= distanceX * gravityForce;
+    current[4] -= distanceY * gravityForce;
+    current[5] -= distanceZ * gravityForce;
 }
