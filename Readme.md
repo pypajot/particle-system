@@ -1,6 +1,6 @@
 # Particle system
 
-The goal of this project was to simulate and display a high number of particle (several millions) using OpenGL and CUDA.
+The goal of this project was to simulate and display a gravity system with a high number of particle (several millions) using OpenGL and CUDA.
 
 ![alt text](image.png)
 
